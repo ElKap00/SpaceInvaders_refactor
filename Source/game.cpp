@@ -28,7 +28,7 @@ bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) // Uses pytha
 	}
 }
 
-
+// TODO: break up into smaller utility functions if possible
 void Game::Start()
 {
 	// creating walls 
@@ -89,6 +89,7 @@ void Game::Launch()
 	resources.Load();
 }
 
+// TODO: break up this huge function into smaller functions
 void Game::Update()
 {
 	switch (gameState)
@@ -155,6 +156,8 @@ void Game::Update()
 			Walls[i].Update();
 		}
 
+		// TODO: improve nested loops here
+		// // TODO: check logic
 		//CHECK ALL COLLISONS HERE
 		for (int i = 0; i < Projectiles.size(); i++)
 		{
@@ -345,7 +348,7 @@ void Game::Update()
 	}
 }
 
-
+// TODO: break up into smaller functions
 void Game::Render()
 {
 	switch (gameState)
@@ -529,6 +532,7 @@ void Game::InsertNewHighScore(std::string name)
 	}
 }
 
+// TODO: remove unused code
 void Game::LoadLeaderboard()
 {
 	// CLEAR LEADERBOARD
@@ -542,6 +546,8 @@ void Game::LoadLeaderboard()
 	//CLOSE FILE
 }
 
+// TODO: improve error handling
+// TODO: close file properly?
 void Game::SaveLeaderboard()
 {
 	// SAVE LEADERBOARD AS ARRAY
@@ -893,7 +899,7 @@ void Background::Render()
 
 
 
-
+// TODO: remove legacy code
 
 
 /*LEGACY CODE

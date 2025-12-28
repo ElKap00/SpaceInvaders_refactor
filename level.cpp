@@ -3,7 +3,9 @@
 #include <vector> 
 #include <string>
 #include "level.h"
-
+ 
+// TODO: improve error handling and validation when loading level files
+// TODO: make into function definition for Entity struct
 void LoadLevelFromFile(const std::string& filename) 
 {
 	std::ifstream file(filename); 
@@ -23,6 +25,7 @@ void LoadLevelFromFile(const std::string& filename)
 
 	    file.close(); 
 
+		// TODO: use range-based for loop
 		for (int i = 0; i < entities.size(); i++)
 		{
 			const Entity& entity = entities[i]; 

@@ -20,8 +20,7 @@
 *   Copyright (c) 2013-2022 Ramon Santamaria (@raysan5)
 *
 ********************************************************************************************/
-
-#include "raylib.h"
+#include "raylib_wrapper.h"
 #include "game.h"
 
 

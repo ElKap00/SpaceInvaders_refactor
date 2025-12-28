@@ -1,7 +1,8 @@
 #pragma once
-#include "raylib.h"
+#include "raylib_wrapper.h"
 #include "vector"
 
+// TODO: implement rule of zero/five for resource management
 struct Resources 
 {
 	void Load();

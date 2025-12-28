@@ -1,5 +1,5 @@
 #pragma once
-#include "raylib.h"
+#include "raylib_wrapper.h"
 #include <vector>
 #include "Resources.h"
 #include <string>
@@ -145,7 +145,7 @@ struct Game
 	int formationHeight = 5;
 	int alienSpacing = 80;
 	int formationX = 100;
-	int formationY = 50;
+		int formationY = 50;
 
 	bool newHighScore = false;
 	
