@@ -1,4 +1,3 @@
-#pragma once
 #include "raylib_wrapper.h"
 #include "Background.h"
 

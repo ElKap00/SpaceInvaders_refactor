@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Background.h"
 #include "EntityType.h"
+#include "Alien.h"
 
 
 enum struct State
@@ -52,26 +53,6 @@ public:
 
 	void Render(Texture2D texture); 
 	void Update(); 
-};
-
-struct Alien
-{
-public:
-	
-	Color color = WHITE; 
-	Vector2 position = {0, 0};
-	int x = 0; 
-	int y = 0; 
-	float radius = 30;
-	bool active = true;  
-	bool moveRight = true; 
-	
-	EntityType type = EntityType::ENEMY; 
-
-	int speed = 2; 
-		 
-	void Update(); 
-	void Render(Texture2D texture); 
 };
 
 // TODO: write Game constructor for proper initialization
