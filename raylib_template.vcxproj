@@ -172,6 +172,7 @@
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\Projectile.cpp" />
     <ClCompile Include="Source\Resources.cpp" />
+    <ClCompile Include="Source\Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Alien.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Source\Projectile.h" />
     <ClInclude Include="Source\raylib_wrapper.h" />
     <ClInclude Include="Source\Resources.h" />
+    <ClInclude Include="Source\Wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
