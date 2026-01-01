@@ -165,11 +165,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Background.cpp" />
     <ClCompile Include="Source\game.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Resources.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Background.h" />
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\raylib_wrapper.h" />
     <ClInclude Include="Source\Resources.h" />
