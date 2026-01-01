@@ -9,6 +9,7 @@
 // MATH FUNCTIONS
 float lineLength(Vector2 A, Vector2 B) //Uses pythagoras to calculate the length of a line
 {
+	// TODO: make variable const
 	float length = sqrtf(pow(B.x - A.x, 2) + pow(B.y - A.y, 2));
 
 	return length;
@@ -16,6 +17,7 @@ float lineLength(Vector2 A, Vector2 B) //Uses pythagoras to calculate the length
 
 bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) // Uses pythagoras to calculate if a point is within a circle or not
 {
+	// TODO:  make variables const
 	float distanceToCentre = lineLength(circlePos, point);
 
 	if (distanceToCentre < radius)
@@ -31,6 +33,7 @@ bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) // Uses pytha
 // TODO: break up into smaller utility functions if possible
 void Game::Start()
 {
+	// TODO: fix C-style casts, mark variables as const
 	// creating walls 
 	float window_width = (float)GetScreenWidth(); 
 	float window_height = (float)GetScreenHeight(); 
@@ -45,7 +48,7 @@ void Game::Start()
 
 	}
 
-
+	// TODO: remove multi-step initialization
 	//creating player
 	Player newPlayer;
 	player = newPlayer;
@@ -145,6 +148,7 @@ void Game::Update()
 		background.Update(offset / 15);
 
 
+		// TODO: use ranged for-loops
 		//UPDATE PROJECTILE
 		for (int i = 0; i < Projectiles.size(); i++)
 		{
@@ -489,6 +493,7 @@ void Game::SpawnAliens()
 {
 	for (int row = 0; row < formationHeight; row++) {
 		for (int col = 0; col < formationWidth; col++) {
+			// TODO: remove multi-step initialization
 			Alien newAlien = Alien();
 			newAlien.active = true;
 			newAlien.position.x = formationX + 450 + (col * alienSpacing);
@@ -641,7 +646,7 @@ bool Game::CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineSta
 
 void Player::Initialize() 
 {
-	
+	// TODO: fix C-style casts
 	float window_width = (float)GetScreenWidth();
 	x_pos = window_width / 2;
 	std::cout<< "Find Player -X:" << GetScreenWidth() / 2 << "Find Player -Y" << GetScreenHeight() - player_base_height << std::endl;
@@ -693,6 +698,7 @@ void Player::Update()
 
 void Player::Render(Texture2D texture) 
 {
+	// TODO: make variable const int
 	float window_height = GetScreenHeight(); 
 
 	DrawTexturePro(texture,
@@ -732,6 +738,7 @@ void Projectile::Update()
 
 void Projectile::Render(Texture2D texture)
 {
+	// TODO: remove commented out code
 	//DrawCircle((int)position.x, (int)position.y, 10, RED);
 	DrawTexturePro(texture,
 		{
@@ -787,6 +794,7 @@ void Wall::Update()
 
 void Alien::Update() 
 {
+	// TODO: remove unused variable window_width
 	int window_width = GetScreenWidth(); 
 
 	if (moveRight)
@@ -813,6 +821,7 @@ void Alien::Update()
 
 void Alien::Render(Texture2D texture) 
 {
+	// TODO: remove commented out code
 	//DrawRectangle((int)position.x - 25, (int)position.y, 30, 30, RED);
 	//DrawCircle((int)position.x, (int)position.y, radius, GREEN);
 	
@@ -836,6 +845,7 @@ void Alien::Render(Texture2D texture)
 }
 
 
+// TODO: write constructor for Star?
 //BACKGROUND
 void Star::Update(float starOffset)
 {
@@ -846,14 +856,16 @@ void Star::Update(float starOffset)
 
 void Star::Render()
 {
+	// TODO: fix C-style casts
 	DrawCircle((int)position.x, (int)position.y, size, color);
 }
 
-
+// TODO: write constructor for Background
 void Background::Initialize(int starAmount)
 {
 	for (int i = 0; i < starAmount; i++)
 	{
+		// TODO: remove multi-step initialization
 		Star newStar;
 
 		newStar.initPosition.x = GetRandomValue(-150, GetScreenWidth() + 150);
@@ -869,6 +881,7 @@ void Background::Initialize(int starAmount)
 	}
 }
 
+// TODO: use ranged for-loops
 void Background::Update(float offset)
 {
 	for (int i = 0; i < Stars.size(); i++)

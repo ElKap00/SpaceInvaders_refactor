@@ -6,6 +6,7 @@
  
 // TODO: improve error handling and validation when loading level files
 // TODO: make into function definition for Entity struct
+// TODO: is this even used?! remove?
 void LoadLevelFromFile(const std::string& filename) 
 {
 	std::ifstream file(filename); 

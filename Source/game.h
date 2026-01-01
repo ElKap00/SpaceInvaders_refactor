@@ -26,10 +26,12 @@ struct PlayerData
 	int score;
 };
 
+// TODO: write constructor for Player
 struct Player
 {
+	// TODO: make variables private and add getters/setters as needed
 public:
-
+	// TODO: change from float to int if no fractional values are needed
 	float x_pos = 0;
 	float speed = 7;
 	float player_base_height = 70.0f;  
@@ -124,11 +126,13 @@ struct Background
 
 };
 
+// TODO: write Game constructor for proper initialization
 struct Game
 {
 	// Gamestate
 	State gameState = {};
 
+	// TODO: initialize score to zero
 	// Score
 	int score;
 
@@ -138,6 +142,7 @@ struct Game
 	//Aliens shooting
 	float shootTimer = 0;
 
+	// TODO: find out if/how this Rectangle is used; if useful, find better name
 	//Aliens stuff? (idk cause liv wrote this)
 	Rectangle rec = { 0, 0 ,0 ,0 }; 
 

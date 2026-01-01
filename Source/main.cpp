@@ -34,10 +34,12 @@ int main(void)
     const int screenWidth = 1920;
     const int screenHeight = 1080;
 
+    // TODO: make char[] "SPACE INVADERS" into a string variable
     InitWindow(screenWidth, screenHeight, "SPACE INVADERS");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
+	// TODO: initialize game object properly
     Game game = { State::STARTSCREEN };
     Resources resources;
     game.resources = resources;
@@ -46,6 +48,7 @@ int main(void)
     
     //--------------------------------------------------------------------------------------
 
+    // TODO: remove or fix sound
     InitAudioDevice();
 
     auto sound = LoadSound("./hitHurt.ogg");
@@ -61,15 +64,15 @@ int main(void)
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
 
-        //if (IsKeyPressed(KEY_SPACE))
-        //{
-        //    PlaySound(sound);
-        //}
+        if (IsKeyPressed(KEY_SPACE))
+        {
+            PlaySound(sound);
+        }
 
-        //if (IsKeyPressed(KEY_BACKSPACE))
-        //{
-        //    StopSound(sound);
-        //}
+        if (IsKeyPressed(KEY_BACKSPACE))
+        {
+            StopSound(sound);
+        }
 
         game.Update();
       
