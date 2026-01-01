@@ -31,11 +31,8 @@ int main(void)
 {    
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 1920;
-    const int screenHeight = 1080;
 
-    // TODO: make char[] "SPACE INVADERS" into a string variable
-    InitWindow(screenWidth, screenHeight, "SPACE INVADERS");
+    InitWindow(1920, 1080, "SPACE INVADERS");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
@@ -48,7 +45,6 @@ int main(void)
     
     //--------------------------------------------------------------------------------------
 
-    // TODO: remove or fix sound
     InitAudioDevice();
 
     auto sound = LoadSound("./hitHurt.ogg");

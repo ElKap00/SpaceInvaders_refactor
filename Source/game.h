@@ -132,19 +132,14 @@ struct Game
 	// Gamestate
 	State gameState = {};
 
-	// TODO: initialize score to zero
 	// Score
-	int score;
+	int score = 0;
 
 	// for later, make a file where you can adjust the number of walls (config file) 
 	int wallCount = 5;
 
 	//Aliens shooting
 	float shootTimer = 0;
-
-	// TODO: find out if/how this Rectangle is used; if useful, find better name
-	//Aliens stuff? (idk cause liv wrote this)
-	Rectangle rec = { 0, 0 ,0 ,0 }; 
 
 	int formationWidth = 8;
 	int formationHeight = 5;
