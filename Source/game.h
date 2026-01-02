@@ -33,12 +33,11 @@ struct Game
 	State gameState = {};
 	int score = 0;
 	int wallCount = 5;
+	bool newHighScore = false;
 
 	// Aliens shooting
 	float shootTimer = 0;
 
-	bool newHighScore = false;
-	
 	// Entity Storage and Resources
 	Resources resources;
 	Player player;

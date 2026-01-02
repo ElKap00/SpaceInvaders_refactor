@@ -30,6 +30,17 @@ bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) // Uses pytha
 	}
 }
 
+bool PointOnLine(Vector2 lineStart, Vector2 lineEnd, Vector2 point, float buffer = 0.1f)
+{
+	const float length = lineLength(lineStart, lineEnd);
+	const float distanceToStart = lineLength(lineStart, point);
+	const float distanceToEnd = lineLength(lineEnd, point);
+	const float combinedDistance = distanceToStart + distanceToEnd;
+
+	return (combinedDistance >= length - buffer && combinedDistance <= length + buffer);
+}
+
+
 // TODO: break up into smaller utility functions if possible
 void Game::Start()
 {
@@ -370,70 +381,33 @@ void Game::SpawnAliens()
 			std::cout << "Find Alien -Y:" << newAlien.position.y << std::endl;
 		}
 	}
-
 }
 
 bool Game::CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineStart, Vector2 lineEnd)
 {
-	// our objective is to calculate the distance between the closest point on the line to the centre of the circle, 
-	// and determine if it is shorter than the radius.
-
-	// check if either edge of line is within circle
 	if (pointInCircle(circlePos, circleRadius, lineStart) || pointInCircle(circlePos, circleRadius, lineEnd))
 	{
 		return true;
 	}
 
-	// simplify variables
-	Vector2 A = lineStart;
-	Vector2 B = lineEnd;
-	Vector2 C = circlePos;
-
-	// calculate the length of the line
-	float length = lineLength(A, B);
+	const float lineLen = lineLength(lineStart, lineEnd);
 	
-	// calculate the dot product
-	float dotP = (((C.x - A.x) * (B.x - A.x)) + ((C.y - A.y) * (B.y - A.y))) / pow(length, 2);
+	const float dotProduct = (((circlePos.x - lineStart.x) * (lineEnd.x - lineStart.x)) 
+						+ ((circlePos.y - lineStart.y) * (lineEnd.y - lineStart.y))) / pow(lineLen, 2);
 
-	// use dot product to find closest point
-	float closestX = A.x + (dotP * (B.x - A.x));
-	float closestY = A.y + (dotP * (B.y - A.y));
+	const Vector2 closestPoint = {
+		lineStart.x + (dotProduct * (lineEnd.x - lineStart.x)),
+		lineStart.y + (dotProduct * (lineEnd.y - lineStart.y))
+	};
 
-	//find out if coordinates are on the line.
-	// we do this by comparing the distance of the dot to the edges, with two vectors
-	// if the distance of the vectors combined is the same as the length the point is on the line
-
-	//since we are using floating points, we will allow the distance to be slightly innaccurate to create a smoother collision
-	float buffer = 0.1;
-
-	float closeToStart = lineLength(A, { closestX, closestY }); //closestX + Y compared to line Start
-	float closeToEnd = lineLength(B, { closestX, closestY });	//closestX + Y compared to line End
-
-	float closestLength = closeToStart + closeToEnd;
-
-	if (closestLength == length + buffer || closestLength == length - buffer)
+	if (PointOnLine(lineStart, lineEnd, closestPoint))
 	{
-		//Point is on the line!
-
-		//Compare length between closest point and circle centre with circle radius
-
-		float closeToCentre = lineLength(A, { closestX, closestY }); //closestX + Y compared to circle centre
+		const float closeToCentre = lineLength(circlePos, closestPoint);
 
 		if (closeToCentre < circleRadius)
 		{
-			//Line is colliding with circle!
 			return true;
 		}
-		else
-		{
-			//Line is not colliding
-			return false;
-		}
 	}
-	else
-	{
-		// Point is not on the line, line is not colliding
-		return false;
-	}
-
+	return false;
 }
