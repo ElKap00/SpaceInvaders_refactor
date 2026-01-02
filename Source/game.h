@@ -9,19 +9,13 @@
 #include "Alien.h"
 #include "Projectile.h"
 #include "Wall.h"
+#include "Leaderboard.h"
 
 enum struct State
 {
 	STARTSCREEN,
 	GAMEPLAY,
 	ENDSCREEN
-};
-
-// TODO: maybe add separate Leaderboard struct for better organization
-struct PlayerData
-{
-	std::string name;
-	int score;
 };
 
 struct AlienFormation 
@@ -52,22 +46,12 @@ struct Game
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
 	AlienFormation alienFormation;
-	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
+	Leaderboard leaderboard;
 	Background background;
 
 	Vector2 playerPos;
 	Vector2 cornerPos;
 	float offset;
-
-	//TEXTBOX ENTER
-	char name[9 + 1] = "\0";      //One extra space required for null terminator char '\0'
-	int letterCount = 0;
-
-	Rectangle textBox = { 600, 500, 225, 50 };
-	bool mouseOnText = false;
-
-	int framesCounter = 0;
-
 
 	void Start();
 	void End();
@@ -81,22 +65,4 @@ struct Game
 	void SpawnAliens();
 
 	bool CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
-
-	bool CheckNewHighScore();
-
-	void InsertNewHighScore(std::string name);
-
-	void SaveLeaderboard();
-
-private:
-	void RenderHighscoreEntry();
-	void RenderHighscoreNameInput();
-	void RenderLeaderboard();
-	void UpdateMouseCursor();
-	void HandleTextInput();
-	void HandleBackspace();
-	void UpdateFrameCounter();
-	bool IsNameValid() const;
-	void HandleNameSubmission();
-	void UpdateHighScoreNameEntry();
 };
