@@ -44,20 +44,7 @@ bool PointOnLine(Vector2 lineStart, Vector2 lineEnd, Vector2 point, float buffer
 // TODO: break up into smaller utility functions if possible
 void Game::start()
 {
-	// TODO: fix C-style casts, mark variables as const
-	// creating walls 
-	float window_width = (float)GetScreenWidth(); 
-	float window_height = (float)GetScreenHeight(); 
-	float wall_distance = window_width / (wallCount_ + 1); 
-	for (int i = 0; i < wallCount_; i++)
-	{
-		Wall newWalls;
-		newWalls.position_.y = window_height - 250; 
-		newWalls.position_.x = wall_distance * (i + 1); 
-
-		walls_.push_back(newWalls); 
-
-	}
+	createWalls();
 
 	// TODO: remove multi-step initialization
 	//creating player
@@ -273,7 +260,7 @@ void Game::update()
 		}
 		for (int i = 0; i < walls_.size(); i++)
 		{
-			if (walls_[i].isActive_ == false)
+			if (walls_[i].isActive() == false)
 			{
 				walls_.erase(walls_.begin() + i);
 				i--;
@@ -410,4 +397,17 @@ bool Game::checkCollision(Vector2 circlePos, float circleRadius, Vector2 lineSta
 		}
 	}
 	return false;
+}
+
+void Game::createWalls()
+{
+	// TODO: fix C-style casts, mark variables as const
+	const float window_width = (float)GetScreenWidth();
+	const float window_height = (float)GetScreenHeight();
+	const float wall_distance = window_width / (wallCount_ + 1);
+	for (int i = 0; i < wallCount_; i++)
+	{
+		Wall newWall{ {wall_distance * (i + 1), window_height - 250 } };
+		walls_.push_back(newWall);
+	}
 }
