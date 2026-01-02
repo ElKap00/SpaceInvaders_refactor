@@ -42,82 +42,82 @@ bool PointOnLine(Vector2 lineStart, Vector2 lineEnd, Vector2 point, float buffer
 
 
 // TODO: break up into smaller utility functions if possible
-void Game::Start()
+void Game::start()
 {
 	// TODO: fix C-style casts, mark variables as const
 	// creating walls 
 	float window_width = (float)GetScreenWidth(); 
 	float window_height = (float)GetScreenHeight(); 
-	float wall_distance = window_width / (wallCount + 1); 
-	for (int i = 0; i < wallCount; i++)
+	float wall_distance = window_width / (wallCount_ + 1); 
+	for (int i = 0; i < wallCount_; i++)
 	{
 		Wall newWalls;
-		newWalls.position.y = window_height - 250; 
-		newWalls.position.x = wall_distance * (i + 1); 
+		newWalls.position_.y = window_height - 250; 
+		newWalls.position_.x = wall_distance * (i + 1); 
 
-		Walls.push_back(newWalls); 
+		walls_.push_back(newWalls); 
 
 	}
 
 	// TODO: remove multi-step initialization
 	//creating player
 	Player newPlayer;
-	player = newPlayer;
-	player.Initialize();
+	player_ = newPlayer;
+	player_.initialize();
 
 	//creating aliens
-	SpawnAliens();
+	createAlienFormation();
 	
 
 	//creating background
 	Background newBackground;
-	newBackground.Initialize(600);
-	background = newBackground;
+	newBackground.initialize(600);
+	background_ = newBackground;
 
 	//reset score
-	score = 0;
+	score_ = 0;
 
-	gameState = State::GAMEPLAY;
+	gameState_ = State::GAMEPLAY;
 
 }
 
-void Game::End()
+void Game::end()
 {
 	//SAVE SCORE AND UPDATE SCOREBOARD
-	Projectiles.clear();
-	Walls.clear();
-	Aliens.clear();
-	newHighScore = leaderboard.CheckNewHighScore(score);
-	if (newHighScore)
+	projectiles_.clear();
+	walls_.clear();
+	aliens_.clear();
+	isNewHighScore_ = leaderboard_.isNewHighScore(score_);
+	if (isNewHighScore_)
 	{
-		leaderboard.StartNameEntry();
+		leaderboard_.startNameEntry();
 	}
-	gameState = State::ENDSCREEN;
+	gameState_ = State::ENDSCREEN;
 }
 
-void Game::Continue()
+void Game::resume()
 {
-	leaderboard.SaveLeaderboard();
-	leaderboard.ResetNameEntry();
-	gameState = State::STARTSCREEN;
+	leaderboard_.saveLeaderboard();
+	leaderboard_.resetNameEntry();
+	gameState_ = State::STARTSCREEN;
 }
 
-void Game::Launch()
+void Game::launch()
 {
 	//LOAD SOME RESOURCES HERE
-	resources.Load();
+	resources_.load();
 }
 
 // TODO: break up this huge function into smaller functions
-void Game::Update()
+void Game::update()
 {
-	switch (gameState)
+	switch (gameState_)
 	{
 	case State::STARTSCREEN:
 		//Code 
 		if (IsKeyReleased(KEY_SPACE))
 		{
-			Start();
+			start();
 		}
 
 		break;
@@ -125,98 +125,98 @@ void Game::Update()
 		//Code
 		if (IsKeyReleased(KEY_Q))
 		{
-			End();
+			end();
 		}
 
 		//Update Player
-		player.Update();
+		player_.update();
 		
 		//Update Aliens and Check if they are past player
-		for (int i = 0; i < Aliens.size(); i++)
+		for (int i = 0; i < aliens_.size(); i++)
 		{
-			Aliens[i].Update(); 
+			aliens_[i].update(); 
 
-			if (Aliens[i].position.y > GetScreenHeight() - player.player_base_height)
+			if (aliens_[i].position_.y > GetScreenHeight() - player_.height_)
 			{
-				End();
+				end();
 			}
 		}
 
 		//End game if player dies
-		if (player.lives < 1)
+		if (player_.lives_ < 1)
 		{
-			End();
+			end();
 		}
 
 		//Spawn new aliens if aliens run out
-		if (Aliens.size() < 1)
+		if (aliens_.size() < 1)
 		{
-			SpawnAliens();
+			createAlienFormation();
 		}
 
 		// Update background with offset
-		background.playerPos = { player.x_pos, (float)player.player_base_height };
-		background.cornerPos = { 0, (float)player.player_base_height };
-		background.offset = lineLength(background.playerPos, background.cornerPos) * -1;
-		background.Update(background.offset / 15);
+		background_.playerPos_ = { player_.positionX_, (float)player_.height_ };
+		background_.cornerPos_ = { 0, (float)player_.height_ };
+		background_.offset_ = lineLength(background_.playerPos_, background_.cornerPos_) * -1;
+		background_.update(background_.offset_ / 15);
 
 		// TODO: use ranged for-loops
 		//UPDATE PROJECTILE
-		for (int i = 0; i < Projectiles.size(); i++)
+		for (int i = 0; i < projectiles_.size(); i++)
 		{
-			Projectiles[i].Update();
+			projectiles_[i].update();
 		}
 		//UPDATE PROJECTILE
-		for (int i = 0; i < Walls.size(); i++)
+		for (int i = 0; i < walls_.size(); i++)
 		{
-			Walls[i].Update();
+			walls_[i].update();
 		}
 
 		// TODO: improve nested loops here
 		// TODO: check logic
 		//CHECK ALL COLLISONS HERE
-		for (int i = 0; i < Projectiles.size(); i++)
+		for (int i = 0; i < projectiles_.size(); i++)
 		{
-			if (Projectiles[i].type == EntityType::PLAYER_PROJECTILE)
+			if (projectiles_[i].type_ == EntityType::PLAYER_PROJECTILE)
 			{
-				for (int a = 0; a < Aliens.size(); a++)
+				for (int a = 0; a < aliens_.size(); a++)
 				{
-					if (CheckCollision(Aliens[a].position, Aliens[a].radius, Projectiles[i].lineStart, Projectiles[i].lineEnd))
+					if (checkCollision(aliens_[a].position_, aliens_[a].radius_, projectiles_[i].lineStart_, projectiles_[i].lineEnd_))
 					{
 						// Kill!
 						std::cout << "Hit! \n";
 						// Set them as inactive, will be killed later
-						Projectiles[i].active = false;
-						Aliens[a].active = false;
-						score += 100;
+						projectiles_[i].active_ = false;
+						aliens_[a].isActive_ = false;
+						score_ += 100;
 					}
 				}
 			}
 
 			//ENEMY PROJECTILES HERE
-			for (int i = 0; i < Projectiles.size(); i++)
+			for (int i = 0; i < projectiles_.size(); i++)
 			{
-				if (Projectiles[i].type == EntityType::ENEMY_PROJECTILE)
+				if (projectiles_[i].type_ == EntityType::ENEMY_PROJECTILE)
 				{
-					if (CheckCollision({player.x_pos, GetScreenHeight() - player.player_base_height }, player.radius, Projectiles[i].lineStart, Projectiles[i].lineEnd))
+					if (checkCollision({player_.positionX_, GetScreenHeight() - player_.height_ }, player_.radius_, projectiles_[i].lineStart_, projectiles_[i].lineEnd_))
 					{
 						std::cout << "dead!\n"; 
-						Projectiles[i].active = false; 
-						player.lives -= 1; 
+						projectiles_[i].active_ = false; 
+						player_.lives_ -= 1; 
 					}
 				}
 			}
 
 
-			for (int b = 0; b < Walls.size(); b++)
+			for (int b = 0; b < walls_.size(); b++)
 			{
-				if (CheckCollision(Walls[b].position, Walls[b].radius, Projectiles[i].lineStart, Projectiles[i].lineEnd))
+				if (checkCollision(walls_[b].position_, walls_[b].radius_, projectiles_[i].lineStart_, projectiles_[i].lineEnd_))
 				{
 					// Kill!
 					std::cout << "Hit! \n";
 					// Set them as inactive, will be killed later
-					Projectiles[i].active = false;
-					Walls[b].health -= 1;
+					projectiles_[i].active_ = false;
+					walls_[b].health_ -= 1;
 				}
 			}
 		}
@@ -226,77 +226,77 @@ void Game::Update()
 		{
 			float window_height = (float)GetScreenHeight();
 			Projectile newProjectile;
-			newProjectile.position.x = player.x_pos;
-			newProjectile.position.y = window_height - 130;
-			newProjectile.type = EntityType::PLAYER_PROJECTILE;
-			Projectiles.push_back(newProjectile);
+			newProjectile.position_.x = player_.positionX_;
+			newProjectile.position_.y = window_height - 130;
+			newProjectile.type_ = EntityType::PLAYER_PROJECTILE;
+			projectiles_.push_back(newProjectile);
 		}
 
 		//Aliens Shooting
-		shootTimer += 1;
-		if (shootTimer > 59) //once per second
+		shootTimerSeconds_ += 1;
+		if (shootTimerSeconds_ > 59) //once per second
 		{
 			int randomAlienIndex = 0;
 
-			if (Aliens.size() > 1)
+			if (aliens_.size() > 1)
 			{
-				randomAlienIndex = rand() % Aliens.size();
+				randomAlienIndex = rand() % aliens_.size();
 			}
 
 			Projectile newProjectile;
-			newProjectile.position = Aliens[randomAlienIndex].position;
-			newProjectile.position.y += 40;
-			newProjectile.speed = -15;
-			newProjectile.type = EntityType::ENEMY_PROJECTILE;
-			Projectiles.push_back(newProjectile);
-			shootTimer = 0;
+			newProjectile.position_ = aliens_[randomAlienIndex].position_;
+			newProjectile.position_.y += 40;
+			newProjectile.speed_ = -15;
+			newProjectile.type_ = EntityType::ENEMY_PROJECTILE;
+			projectiles_.push_back(newProjectile);
+			shootTimerSeconds_ = 0;
 		}
 
 		// REMOVE INACTIVE/DEAD ENTITIES
-		for (int i = 0; i < Projectiles.size(); i++)
+		for (int i = 0; i < projectiles_.size(); i++)
 		{
-			if (Projectiles[i].active == false)
+			if (projectiles_[i].active_ == false)
 			{
-				Projectiles.erase(Projectiles.begin() + i);
+				projectiles_.erase(projectiles_.begin() + i);
 				// Prevent the loop from skipping an instance because of index changes, since all insances after
 				// the killed objects are moved down in index. This is the same for all loops with similar function
 				i--;
 			}
 		}
-		for (int i = 0; i < Aliens.size(); i++)
+		for (int i = 0; i < aliens_.size(); i++)
 		{
-			if (Aliens[i].active == false)
+			if (aliens_[i].isActive_ == false)
 			{
-				Aliens.erase(Aliens.begin() + i);
+				aliens_.erase(aliens_.begin() + i);
 				i--;
 			}
 		}
-		for (int i = 0; i < Walls.size(); i++)
+		for (int i = 0; i < walls_.size(); i++)
 		{
-			if (Walls[i].active == false)
+			if (walls_[i].isActive_ == false)
 			{
-				Walls.erase(Walls.begin() + i);
+				walls_.erase(walls_.begin() + i);
 				i--;
 			}
 		}
 	break;
 	case State::ENDSCREEN:
 		//Exit endscreen
- 		if (IsKeyReleased(KEY_ENTER) && !newHighScore)
+ 		if (IsKeyReleased(KEY_ENTER) && !isNewHighScore_)
 		{
-			Continue();
+			resume();
 		}
 
-		if (newHighScore)
+		if (isNewHighScore_)
 		{
-			leaderboard.UpdateHighScoreNameEntry();
+			leaderboard_.updateHighScoreNameEntry();
 			
 			// Check if name entry is complete
-			if (!leaderboard.IsEnteringName())
+			if (!leaderboard_.isEnteringName())
 			{
 				// Insert the high score with the player's name
-				leaderboard.InsertNewHighScore(leaderboard.GetEnteredName(), score);
-				newHighScore = false;
+				leaderboard_.insertNewHighScore(leaderboard_.getEnteredName(), score_);
+				isNewHighScore_ = false;
 			}
 		}
 		break;
@@ -307,9 +307,9 @@ void Game::Update()
 }
 
 // TODO: break up into smaller functions
-void Game::Render()
+void Game::render()
 {
-	switch (gameState)
+	switch (gameState_)
 	{
 	case State::STARTSCREEN:
 		//Code
@@ -321,43 +321,43 @@ void Game::Render()
 	case State::GAMEPLAY:
 
 		//background render LEAVE THIS AT TOP
-		background.Render();
+		background_.render();
 
 		//DrawText("GAMEPLAY", 50, 30, 40, YELLOW);
-		DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
-		DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
+		DrawText(TextFormat("Score: %i", score_), 50, 20, 40, YELLOW);
+		DrawText(TextFormat("Lives: %i", player_.lives_), 50, 70, 40, YELLOW);
 
 		//player rendering 
-		player.Render(resources.shipTextures[player.activeTexture]);
+		player_.render(resources_.shipTextures_[player_.activeTexture_]);
 
 		//projectile rendering
-		for (int i = 0; i < Projectiles.size(); i++)
+		for (int i = 0; i < projectiles_.size(); i++)
 		{
-			Projectiles[i].Render(resources.laserTexture);
+			projectiles_[i].render(resources_.laserTexture_);
 		}
 
 		// wall rendering 
-		for (int i = 0; i < Walls.size(); i++)
+		for (int i = 0; i < walls_.size(); i++)
 		{
-			Walls[i].Render(resources.barrierTexture); 
+			walls_[i].render(resources_.barrierTexture_); 
 		}
 
 		//alien rendering  
-		for (int i = 0; i < Aliens.size(); i++)
+		for (int i = 0; i < aliens_.size(); i++)
 		{
-			Aliens[i].Render(resources.alienTexture);
+			aliens_[i].render(resources_.alienTexture_);
 		}
 
 		break;
 	case State::ENDSCREEN:
 
-		if (newHighScore)
+		if (isNewHighScore_)
 		{
-			leaderboard.RenderHighscoreEntry();
-			leaderboard.RenderHighscoreNameInput();
+			leaderboard_.renderHighScoreEntry();
+			leaderboard_.renderHighScoreNameInput();
 		}
 		else {
-			leaderboard.RenderLeaderboard();
+			leaderboard_.renderLeaderboard();
 		}
 
 		break;
@@ -367,23 +367,23 @@ void Game::Render()
 	}
 }
 
-void Game::SpawnAliens()
+void Game::createAlienFormation()
 {
-	for (int row = 0; row < alienFormation.formationHeight; row++) {
-		for (int col = 0; col < alienFormation.formationWidth; col++) {
+	for (int row = 0; row < alienFormation_.formationHeight_; row++) {
+		for (int col = 0; col < alienFormation_.formationWidth_; col++) {
 			// TODO: remove multi-step initialization
 			Alien newAlien = Alien();
-			newAlien.active = true;
-			newAlien.position.x = alienFormation.formationX + 450 + (col * alienFormation.alienSpacing);
-			newAlien.position.y = alienFormation.formationY + (row * alienFormation.alienSpacing);
-			Aliens.push_back(newAlien);
-			std::cout << "Find Alien -X:" << newAlien.position.x << std::endl;
-			std::cout << "Find Alien -Y:" << newAlien.position.y << std::endl;
+			newAlien.isActive_ = true;
+			newAlien.position_.x = alienFormation_.formationX_ + 450 + (col * alienFormation_.alienSpacing_);
+			newAlien.position_.y = alienFormation_.formationY_ + (row * alienFormation_.alienSpacing_);
+			aliens_.push_back(newAlien);
+			std::cout << "Find Alien -X:" << newAlien.position_.x << std::endl;
+			std::cout << "Find Alien -Y:" << newAlien.position_.y << std::endl;
 		}
 	}
 }
 
-bool Game::CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineStart, Vector2 lineEnd)
+bool Game::checkCollision(Vector2 circlePos, float circleRadius, Vector2 lineStart, Vector2 lineEnd)
 {
 	if (pointInCircle(circlePos, circleRadius, lineStart) || pointInCircle(circlePos, circleRadius, lineEnd))
 	{

@@ -1,11 +1,11 @@
-#include "Leaderboard.h"
+#include "leaderboard.h"
 #include <iostream>
 #include <fstream>
 
 Leaderboard::Leaderboard()
 {
 	// Initialize with default leaderboard entries
-	entries = { 
+	entries_ = { 
 		{"Player 1", 500}, 
 		{"Player 2", 400}, 
 		{"Player 3", 300}, 
@@ -14,9 +14,9 @@ Leaderboard::Leaderboard()
 	};
 }
 
-bool Leaderboard::CheckNewHighScore(int score) const
+bool Leaderboard::isNewHighScore(int score) const
 {
-	if (score > entries[4].score)
+	if (score > entries_[4].score_)
 	{
 		return true;
 	}
@@ -24,26 +24,26 @@ bool Leaderboard::CheckNewHighScore(int score) const
 	return false;
 }
 
-void Leaderboard::InsertNewHighScore(const std::string& name, int score)
+void Leaderboard::insertNewHighScore(const std::string& name, int score)
 {
 	PlayerData newData;
-	newData.name = name;
-	newData.score = score;
+	newData.name_ = name;
+	newData.score_ = score;
 
-	for (int i = 0; i < entries.size(); i++)
+	for (int i = 0; i < entries_.size(); i++)
 	{
-		if (newData.score > entries[i].score)
+		if (newData.score_ > entries_[i].score_)
 		{
-			entries.insert(entries.begin() + i, newData);
-			entries.pop_back();
-			i = entries.size();
+			entries_.insert(entries_.begin() + i, newData);
+			entries_.pop_back();
+			i = entries_.size();
 		}
 	}
 }
 
 // TODO: improve error handling
 // TODO: close file properly?
-void Leaderboard::SaveLeaderboard()
+void Leaderboard::saveLeaderboard()
 {
 	// SAVE LEADERBOARD AS ARRAY
 
@@ -67,116 +67,116 @@ void Leaderboard::SaveLeaderboard()
 	// CLOSE FILE
 }
 
-void Leaderboard::UpdateMouseCursor()
+void Leaderboard::updateMouseCursor()
 {
-	if (CheckCollisionPointRec(GetMousePosition(), textBox))
+	if (CheckCollisionPointRec(GetMousePosition(), textBox_))
 	{
-		mouseOnText = true;
+		isTextBoxHovered_ = true;
 		SetMouseCursor(MOUSE_CURSOR_IBEAM);
 	}
 	else
 	{
-		mouseOnText = false;
+		isTextBoxHovered_ = false;
 		SetMouseCursor(MOUSE_CURSOR_DEFAULT);
 	}
 }
 
-void Leaderboard::HandleTextInput()
+void Leaderboard::handleTextInput()
 {
 	int key = GetCharPressed();
 
 	while (key > 0)
 	{
 		// NOTE: Only allow keys in range [32..125]
-		if ((key >= 32) && (key <= 125) && (letterCount < 9))
+		if ((key >= 32) && (key <= 125) && (letterCount_ < 9))
 		{
-			name[letterCount] = (char)key;
-			name[letterCount + 1] = '\0';
-			letterCount++;
+			name_[letterCount_] = (char)key;
+			name_[letterCount_ + 1] = '\0';
+			letterCount_++;
 		}
 
 		key = GetCharPressed();
 	}
 }
 
-void Leaderboard::HandleBackspace()
+void Leaderboard::handleBackspace()
 {
 	if (IsKeyPressed(KEY_BACKSPACE))
 	{
-		letterCount--;
-		if (letterCount < 0)
+		letterCount_--;
+		if (letterCount_ < 0)
 		{
-			letterCount = 0;
+			letterCount_ = 0;
 		}
-		name[letterCount] = '\0';
+		name_[letterCount_] = '\0';
 	}
 }
 
-void Leaderboard::UpdateFrameCounter()
+void Leaderboard::updateFrameCounter()
 {
-	if (mouseOnText)
+	if (isTextBoxHovered_)
 	{
-		framesCounter++;
+		cursorFrameCounter_++;
 	}
 	else
 	{
-		framesCounter = 0;
+		cursorFrameCounter_ = 0;
 	}
 }
 
-bool Leaderboard::IsNameValid() const
+bool Leaderboard::isNameValid() const
 {
-	return letterCount > 0 && letterCount < 9;
+	return letterCount_ > 0 && letterCount_ < 9;
 }
 
-void Leaderboard::HandleNameSubmission()
+void Leaderboard::handleNameSubmission()
 {
-	if (IsNameValid() && IsKeyReleased(KEY_ENTER))
+	if (isNameValid() && IsKeyReleased(KEY_ENTER))
 	{
 		// Don't insert here - will be done externally with actual score
-		enteringName = false;
+		isEnteringName_ = false;
 	}
 }
 
-void Leaderboard::UpdateHighScoreNameEntry()
+void Leaderboard::updateHighScoreNameEntry()
 {
-	UpdateMouseCursor();
+	updateMouseCursor();
 
-	if (mouseOnText)
+	if (isTextBoxHovered_)
 	{
-		HandleTextInput();
-		HandleBackspace();
+		handleTextInput();
+		handleBackspace();
 	}
 
-	UpdateFrameCounter();
-	HandleNameSubmission();
+	updateFrameCounter();
+	handleNameSubmission();
 }
 
-void Leaderboard::RenderLeaderboard()
+void Leaderboard::renderLeaderboard()
 {
 	// If no highscore or name is entered, show scoreboard and call it a day
 	DrawText("PRESS ENTER TO CONTINUE", 600, 200, 40, YELLOW);
 
 	DrawText("LEADERBOARD", 50, 100, 40, YELLOW);
 
-	for (int i = 0; i < entries.size(); i++)
+	for (int i = 0; i < entries_.size(); i++)
 	{
-		char* tempNameDisplay = entries[i].name.data();
+		char* tempNameDisplay = entries_[i].name_.data();
 		DrawText(tempNameDisplay, 50, 140 + (i * 40), 40, YELLOW);
-		DrawText(TextFormat("%i", entries[i].score), 350, 140 + (i * 40), 40, YELLOW);
+		DrawText(TextFormat("%i", entries_[i].score_), 350, 140 + (i * 40), 40, YELLOW);
 	}
 }
 
-void Leaderboard::RenderHighscoreNameInput()
+void Leaderboard::renderHighScoreNameInput()
 {
-	if (mouseOnText)
+	if (isTextBoxHovered_)
 	{
-		if (letterCount < 9)
+		if (letterCount_ < 9)
 		{
 			// Draw blinking underscore char
-			if (((framesCounter / 20) % 2) == 0)
+			if (((cursorFrameCounter_ / 20) % 2) == 0)
 			{
-				DrawText("_", (int)textBox.x + 8 + MeasureText(name, 40), (int)textBox.y + 12, 40, MAROON);
+				DrawText("_", (int)textBox_.x + 8 + MeasureText(name_, 40), (int)textBox_.y + 12, 40, MAROON);
 			}
 		}
 		else
@@ -187,42 +187,42 @@ void Leaderboard::RenderHighscoreNameInput()
 	}
 
 	// Explain how to continue when name is input
-	if (letterCount > 0 && letterCount < 9)
+	if (letterCount_ > 0 && letterCount_ < 9)
 	{
 		DrawText("PRESS ENTER TO CONTINUE", 600, 800, 40, YELLOW);
 	}
 }
 
-void Leaderboard::RenderHighscoreEntry()
+void Leaderboard::renderHighScoreEntry()
 {
 	DrawText("NEW HIGHSCORE!", 600, 300, 60, YELLOW);
 
 	// BELOW CODE IS FOR NAME INPUT RENDER
 	DrawText("PLACE MOUSE OVER INPUT BOX!", 600, 400, 20, YELLOW);
 
-	DrawRectangleRec(textBox, LIGHTGRAY);
-	if (mouseOnText)
+	DrawRectangleRec(textBox_, LIGHTGRAY);
+	if (isTextBoxHovered_)
 	{
 		// HOVER CONFIRMIATION
-		DrawRectangleLines((int)textBox.x, (int)textBox.y, (int)textBox.width, (int)textBox.height, RED);
+		DrawRectangleLines((int)textBox_.x, (int)textBox_.y, (int)textBox_.width, (int)textBox_.height, RED);
 	}
 	else
 	{
-		DrawRectangleLines((int)textBox.x, (int)textBox.y, (int)textBox.width, (int)textBox.height, DARKGRAY);
+		DrawRectangleLines((int)textBox_.x, (int)textBox_.y, (int)textBox_.width, (int)textBox_.height, DARKGRAY);
 	}
 
 	//Draw the name being typed out
-	DrawText(name, (int)textBox.x + 5, (int)textBox.y + 8, 40, MAROON);
+	DrawText(name_, (int)textBox_.x + 5, (int)textBox_.y + 8, 40, MAROON);
 
 	//Draw the text explaining how many characters are used
-	DrawText(TextFormat("INPUT CHARS: %i/%i", letterCount, 8), 600, 600, 20, YELLOW);
+	DrawText(TextFormat("INPUT CHARS: %i/%i", letterCount_, 8), 600, 600, 20, YELLOW);
 }
 
-void Leaderboard::ResetNameEntry()
+void Leaderboard::resetNameEntry()
 {
-	letterCount = 0;
-	name[0] = '\0';
-	mouseOnText = false;
-	framesCounter = 0;
-	enteringName = false;
+	letterCount_ = 0;
+	name_[0] = '\0';
+	isTextBoxHovered_ = false;
+	cursorFrameCounter_ = 0;
+	isEnteringName_ = false;
 }

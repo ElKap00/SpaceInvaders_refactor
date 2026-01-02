@@ -1,18 +1,18 @@
 #pragma once
 #include "raylib_wrapper.h"
-#include "EntityType.h"
+#include "entity_type.h"
 
 struct Alien
 {
 public:
-	EntityType type = EntityType::ENEMY;
-	Color color = WHITE;
-	Vector2 position = { 0, 0 };
-	float radius = 30;
-	bool active = true;
-	bool moveRight = true;
-	int speed = 2;
+	EntityType type_ = EntityType::ENEMY;
+	Color color_ = WHITE;
+	Vector2 position_ = { 0, 0 };
+	float radius_ = 30;
+	bool isActive_ = true;
+	bool moveRight_ = true;
+	int speed_ = 2;
 
-	void Update();
-	void Render(Texture2D texture);
+	void update();
+	void render(Texture2D texture);
 };

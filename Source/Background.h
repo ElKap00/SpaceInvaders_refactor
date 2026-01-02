@@ -4,23 +4,23 @@
 
 struct Star
 {
-	Vector2 initPosition = { 0, 0 };
-	Vector2 position = { 0, 0 };
-	Color color = GRAY;
-	float size = 0;
+	Vector2 initPosition_ = { 0, 0 };
+	Vector2 position_ = { 0, 0 };
+	Color color_ = GRAY;
+	float size_ = 0;
 
-	void Update(float starOffset);
-	void Render();
+	void update(float starOffset);
+	void render();
 };
 
 struct Background
 {
-	std::vector<Star> Stars;
-	Vector2 playerPos;
-	Vector2 cornerPos;
-	float offset;
+	std::vector<Star> stars_;
+	Vector2 playerPos_;
+	Vector2 cornerPos_;
+	float offset_;
 
-	void Initialize(int starAmount);
-	void Update(float offset);
-	void Render();
+	void initialize(int starAmount);
+	void update(float offset);
+	void render();
 };

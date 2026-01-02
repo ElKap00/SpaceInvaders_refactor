@@ -5,8 +5,8 @@
 
 struct PlayerData
 {
-	std::string name;
-	int score;
+	std::string name_;
+	int score_;
 };
 
 class Leaderboard
@@ -14,38 +14,38 @@ class Leaderboard
 public:
 	Leaderboard();
 
-	bool CheckNewHighScore(int score) const;
-	void InsertNewHighScore(const std::string& name, int score);
-	void SaveLeaderboard();
+	bool isNewHighScore(int score) const;
+	void insertNewHighScore(const std::string& name, int score);
+	void saveLeaderboard();
 
 	// High score name entry UI
-	void UpdateHighScoreNameEntry();
-	void RenderHighscoreEntry();
-	void RenderHighscoreNameInput();
-	void RenderLeaderboard();
+	void updateHighScoreNameEntry();
+	void renderHighScoreEntry();
+	void renderHighScoreNameInput();
+	void renderLeaderboard();
 
-	bool IsEnteringName() const { return enteringName; }
-	void StartNameEntry() { enteringName = true; }
-	void ResetNameEntry();
+	bool isEnteringName() const { return isEnteringName_; }
+	void startNameEntry() { isEnteringName_ = true; }
+	void resetNameEntry();
 	
-	std::string GetEnteredName() const { return std::string(name); }
+	std::string getEnteredName() const { return std::string(name_); }
 
 private:
-	std::vector<PlayerData> entries;
+	std::vector<PlayerData> entries_;
 	
 	// Name input state
-	char name[9 + 1] = "\0";
-	int letterCount = 0;
-	Rectangle textBox = { 600, 500, 225, 50 };
-	bool mouseOnText = false;
-	int framesCounter = 0;
-	bool enteringName = false;
+	char name_[9 + 1] = "\0";
+	int letterCount_ = 0;
+	Rectangle textBox_ = { 600, 500, 225, 50 };
+	bool isTextBoxHovered_ = false;
+	int cursorFrameCounter_ = 0;
+	bool isEnteringName_ = false;
 
 	// Helper methods
-	void UpdateMouseCursor();
-	void HandleTextInput();
-	void HandleBackspace();
-	void UpdateFrameCounter();
-	bool IsNameValid() const;
-	void HandleNameSubmission();
+	void updateMouseCursor();
+	void handleTextInput();
+	void handleBackspace();
+	void updateFrameCounter();
+	bool isNameValid() const;
+	void handleNameSubmission();
 };

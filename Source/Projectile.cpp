@@ -1,24 +1,24 @@
-#include "Projectile.h"
+#include "projectile.h"
 
 
-void Projectile::Update()
+void Projectile::update()
 {
-	position.y -= speed;
+	position_.y -= speed_;
 
 	// UPDATE LINE POSITION
-	lineStart.y = position.y - 15;
-	lineEnd.y = position.y + 15;
+	lineStart_.y = position_.y - 15;
+	lineEnd_.y = position_.y + 15;
 
-	lineStart.x = position.x;
-	lineEnd.x = position.x;
+	lineStart_.x = position_.x;
+	lineEnd_.x = position_.x;
 
-	if (position.y < 0 || position.y > 1500)
+	if (position_.y < 0 || position_.y > 1500)
 	{
-		active = false;
+		active_ = false;
 	}
 }
 
-void Projectile::Render(Texture2D texture)
+void Projectile::render(Texture2D texture)
 {
 	DrawTexturePro(texture,
 		{
@@ -28,8 +28,8 @@ void Projectile::Render(Texture2D texture)
 			176,
 		},
 		{
-			position.x,
-			position.y,
+			position_.x,
+			position_.y,
 			50,
 			50,
 		}, { 25 , 25 },

@@ -165,27 +165,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Alien.cpp" />
-    <ClCompile Include="Source\Background.cpp" />
+    <ClCompile Include="Source\alien.cpp" />
+    <ClCompile Include="Source\background.cpp" />
     <ClCompile Include="Source\game.cpp" />
-    <ClCompile Include="Source\Leaderboard.cpp" />
+    <ClCompile Include="Source\leaderboard.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\Player.cpp" />
-    <ClCompile Include="Source\Projectile.cpp" />
-    <ClCompile Include="Source\Resources.cpp" />
-    <ClCompile Include="Source\Wall.cpp" />
+    <ClCompile Include="Source\player.cpp" />
+    <ClCompile Include="Source\projectile.cpp" />
+    <ClCompile Include="Source\resources.cpp" />
+    <ClCompile Include="Source\wall.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Alien.h" />
-    <ClInclude Include="Source\Background.h" />
-    <ClInclude Include="Source\EntityType.h" />
+    <ClInclude Include="Source\alien.h" />
+    <ClInclude Include="Source\background.h" />
+    <ClInclude Include="Source\entity_type.h" />
     <ClInclude Include="Source\game.h" />
-    <ClInclude Include="Source\Leaderboard.h" />
-    <ClInclude Include="Source\Player.h" />
-    <ClInclude Include="Source\Projectile.h" />
+    <ClInclude Include="Source\leaderboard.h" />
+    <ClInclude Include="Source\player.h" />
+    <ClInclude Include="Source\projectile.h" />
     <ClInclude Include="Source\raylib_wrapper.h" />
-    <ClInclude Include="Source\Resources.h" />
-    <ClInclude Include="Source\Wall.h" />
+    <ClInclude Include="Source\resources.h" />
+    <ClInclude Include="Source\wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,10 +5,10 @@
 // TODO: implement rule of zero/five for resource management?
 struct Resources 
 {
-	std::vector<Texture2D> shipTextures;
-	Texture2D alienTexture;
-	Texture2D barrierTexture;
-	Texture2D laserTexture;
+	std::vector<Texture2D> shipTextures_;
+	Texture2D alienTexture_;
+	Texture2D barrierTexture_;
+	Texture2D laserTexture_;
 
-	void Load();
+	void load();
 };

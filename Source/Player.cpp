@@ -1,59 +1,59 @@
-#include "Player.h"
+#include "player.h"
 #include <iostream>
 
-void Player::Initialize()
+void Player::initialize()
 {
 	// TODO: fix C-style casts
 	float window_width = (float)GetScreenWidth();
-	x_pos = window_width / 2;
-	std::cout << "Find Player -X:" << GetScreenWidth() / 2 << "Find Player -Y" << GetScreenHeight() - player_base_height << std::endl;
+	positionX_ = window_width / 2;
+	std::cout << "Find Player -X:" << GetScreenWidth() / 2 << "Find Player -Y" << GetScreenHeight() - height_ << std::endl;
 
 }
 
-void Player::Update()
+void Player::update()
 {
 
 	//Movement
-	direction = 0;
+	direction_ = 0;
 	if (IsKeyDown(KEY_LEFT))
 	{
-		direction--;
+		direction_--;
 	}
 	if (IsKeyDown(KEY_RIGHT))
 	{
-		direction++;
+		direction_++;
 	}
 
-	x_pos += speed * direction;
+	positionX_ += speed_ * direction_;
 
-	if (x_pos < 0 + radius)
+	if (positionX_ < 0 + radius_)
 	{
-		x_pos = 0 + radius;
+		positionX_ = 0 + radius_;
 	}
-	else if (x_pos > GetScreenWidth() - radius)
+	else if (positionX_ > GetScreenWidth() - radius_)
 	{
-		x_pos = GetScreenWidth() - radius;
+		positionX_ = GetScreenWidth() - radius_;
 	}
 
 
 	//Determine frame for animation
-	timer += GetFrameTime();
+	timer_ += GetFrameTime();
 
-	if (timer > 0.4 && activeTexture == 2)
+	if (timer_ > 0.4 && activeTexture_ == 2)
 	{
-		activeTexture = 0;
-		timer = 0;
+		activeTexture_ = 0;
+		timer_ = 0;
 	}
-	else if (timer > 0.4)
+	else if (timer_ > 0.4)
 	{
-		activeTexture++;
-		timer = 0;
+		activeTexture_++;
+		timer_ = 0;
 	}
 
 
 }
 
-void Player::Render(Texture2D texture)
+void Player::render(Texture2D texture)
 {
 	// TODO: make variable const int
 	float window_height = GetScreenHeight();
@@ -66,7 +66,7 @@ void Player::Render(Texture2D texture)
 			352,
 		},
 		{
-			x_pos, window_height - player_base_height,
+			positionX_, window_height - height_,
 			100,
 			100,
 		}, { 50, 50 },

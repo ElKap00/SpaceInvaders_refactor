@@ -1,15 +1,15 @@
 #pragma once
 #include "raylib_wrapper.h"
 #include <vector>
-#include "Resources.h"
+#include "resources.h"
 #include <string>
-#include "Player.h"
-#include "Background.h"
-#include "EntityType.h"
-#include "Alien.h"
-#include "Projectile.h"
-#include "Wall.h"
-#include "Leaderboard.h"
+#include "player.h"
+#include "background.h"
+#include "entity_type.h"
+#include "alien.h"
+#include "projectile.h"
+#include "wall.h"
+#include "leaderboard.h"
 
 enum struct State
 {
@@ -20,44 +20,44 @@ enum struct State
 
 struct AlienFormation 
 {
-	int formationWidth = 8;
-	int formationHeight = 5;
-	int alienSpacing = 80;
-	int formationX = 100;
-	int formationY = 50;
+	int formationWidth_ = 8;
+	int formationHeight_ = 5;
+	int alienSpacing_ = 80;
+	int formationX_ = 100;
+	int formationY_ = 50;
 };
 
 // TODO: write Game constructor for proper initialization
 struct Game
 {
-	State gameState = {};
-	int score = 0;
-	int wallCount = 5;
-	bool newHighScore = false;
+	State gameState_ = {};
+	int score_ = 0;
+	int wallCount_ = 5;
+	bool isNewHighScore_ = false;
 
 	// Aliens shooting
-	float shootTimer = 0;
+	float shootTimerSeconds_ = 0;
 
 	// Entity Storage and Resources
-	Resources resources;
-	Player player;
-	std::vector<Projectile> Projectiles;
-	std::vector<Wall> Walls;
-	std::vector<Alien> Aliens;
-	AlienFormation alienFormation;
-	Leaderboard leaderboard;
-	Background background;
+	Resources resources_;
+	Player player_;
+	std::vector<Projectile> projectiles_;
+	std::vector<Wall> walls_;
+	std::vector<Alien> aliens_;
+	AlienFormation alienFormation_;
+	Leaderboard leaderboard_;
+	Background background_;
 
-	void Start();
-	void End();
+	void start();
+	void end();
 
-	void Continue();
-	void Launch();
+	void resume();
+	void launch();
 
-	void Update();
-	void Render();
+	void update();
+	void render();
 
-	void SpawnAliens();
+	void createAlienFormation();
 
-	bool CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
+	bool checkCollision(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
 };

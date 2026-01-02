@@ -39,8 +39,8 @@ int main(void)
 	// TODO: initialize game object properly
     Game game = { State::STARTSCREEN };
     Resources resources;
-    game.resources = resources;
-    game.Launch();
+    game.resources_ = resources;
+    game.launch();
 
     
     //--------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ int main(void)
             StopSound(sound);
         }
 
-        game.Update();
+        game.update();
       
 
         // Draw
@@ -81,7 +81,7 @@ int main(void)
 
        
 
-        game.Render();
+        game.render();
 
         EndDrawing();
         //----------------------------------------------------------------------------------

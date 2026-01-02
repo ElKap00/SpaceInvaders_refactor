@@ -1,30 +1,30 @@
-#include "Alien.h"
+#include "alien.h"
 
-void Alien::Update()
+void Alien::update()
 {
-	if (moveRight)
+	if (moveRight_)
 	{
-		position.x += speed;
+		position_.x += speed_;
 
-		if (position.x >= GetScreenWidth())
+		if (position_.x >= GetScreenWidth())
 		{
-			moveRight = false;
-			position.y += 50;
+			moveRight_ = false;
+			position_.y += 50;
 		}
 	}
 	else
 	{
-		position.x -= speed;
+		position_.x -= speed_;
 
-		if (position.x <= 0)
+		if (position_.x <= 0)
 		{
-			moveRight = true;
-			position.y += 50;
+			moveRight_ = true;
+			position_.y += 50;
 		}
 	}
 }
 
-void Alien::Render(Texture2D texture)
+void Alien::render(Texture2D texture)
 {
 	DrawTexturePro(texture,
 		{
@@ -34,8 +34,8 @@ void Alien::Render(Texture2D texture)
 			352,
 		},
 		{
-			position.x,
-			position.y,
+			position_.x,
+			position_.y,
 			100,
 			100,
 		}, { 50 , 50 },

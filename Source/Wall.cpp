@@ -1,6 +1,6 @@
-#include "Wall.h"
+#include "wall.h"
 
-void Wall::Render(Texture2D texture)
+void Wall::render(Texture2D texture)
 {
 	DrawTexturePro(texture,
 		{
@@ -10,8 +10,8 @@ void Wall::Render(Texture2D texture)
 			704,
 		},
 		{
-			position.x,
-			position.y,
+			position_.x,
+			position_.y,
 			200,
 			200,
 		}, { 100 , 100 },
@@ -19,17 +19,17 @@ void Wall::Render(Texture2D texture)
 		WHITE);
 
 
-	DrawText(TextFormat("%i", health), position.x - 21, position.y + 10, 40, RED);
+	DrawText(TextFormat("%i", health_), position_.x - 21, position_.y + 10, 40, RED);
 
 }
 
-void Wall::Update()
+void Wall::update()
 {
 
 	// set walls as inactive when out of health
-	if (health < 1)
+	if (health_ < 1)
 	{
-		active = false;
+		isActive_ = false;
 	}
 
 

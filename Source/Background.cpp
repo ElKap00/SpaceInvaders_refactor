@@ -4,54 +4,54 @@
 
 // TODO: write constructor for Star?
 //BACKGROUND
-void Star::Update(float starOffset)
+void Star::update(float starOffset)
 {
-	position.x = initPosition.x + starOffset;
-	position.y = initPosition.y;
+	position_.x = initPosition_.x + starOffset;
+	position_.y = initPosition_.y;
 
 }
 
-void Star::Render()
+void Star::render()
 {
 	// TODO: fix C-style casts
-	DrawCircle((int)position.x, (int)position.y, size, color);
+	DrawCircle((int)position_.x, (int)position_.y, size_, color_);
 }
 
 // TODO: write constructor for Background
-void Background::Initialize(int starAmount)
+void Background::initialize(int starAmount)
 {
 	for (int i = 0; i < starAmount; i++)
 	{
 		// TODO: remove multi-step initialization
 		Star newStar;
 
-		newStar.initPosition.x = GetRandomValue(-150, GetScreenWidth() + 150);
-		newStar.initPosition.y = GetRandomValue(0, GetScreenHeight());
+		newStar.initPosition_.x = GetRandomValue(-150, GetScreenWidth() + 150);
+		newStar.initPosition_.y = GetRandomValue(0, GetScreenHeight());
 
 		//random color?
-		newStar.color = SKYBLUE;
+		newStar.color_ = SKYBLUE;
 
-		newStar.size = GetRandomValue(1, 4) / 2;
+		newStar.size_ = GetRandomValue(1, 4) / 2;
 
-		Stars.push_back(newStar);
+		stars_.push_back(newStar);
 
 	}
 }
 
 // TODO: use ranged for-loops
-void Background::Update(float offset)
+void Background::update(float offset)
 {
-	for (int i = 0; i < Stars.size(); i++)
+	for (int i = 0; i < stars_.size(); i++)
 	{
-		Stars[i].Update(offset);
+		stars_[i].update(offset);
 	}
 
 }
 
-void Background::Render()
+void Background::render()
 {
-	for (int i = 0; i < Stars.size(); i++)
+	for (int i = 0; i < stars_.size(); i++)
 	{
-		Stars[i].Render();
+		stars_[i].render();
 	}
 }
