@@ -345,13 +345,13 @@ void Game::Render()
 
 void Game::SpawnAliens()
 {
-	for (int row = 0; row < formationHeight; row++) {
-		for (int col = 0; col < formationWidth; col++) {
+	for (int row = 0; row < alienFormation.formationHeight; row++) {
+		for (int col = 0; col < alienFormation.formationWidth; col++) {
 			// TODO: remove multi-step initialization
 			Alien newAlien = Alien();
 			newAlien.active = true;
-			newAlien.position.x = formationX + 450 + (col * alienSpacing);
-			newAlien.position.y = formationY + (row * alienSpacing);
+			newAlien.position.x = alienFormation.formationX + 450 + (col * alienFormation.alienSpacing);
+			newAlien.position.y = alienFormation.formationY + (row * alienFormation.alienSpacing);
 			Aliens.push_back(newAlien);
 			std::cout << "Find Alien -X:" << newAlien.position.x << std::endl;
 			std::cout << "Find Alien -Y:" << newAlien.position.y << std::endl;

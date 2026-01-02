@@ -24,6 +24,15 @@ struct PlayerData
 	int score;
 };
 
+struct AlienFormation 
+{
+	int formationWidth = 8;
+	int formationHeight = 5;
+	int alienSpacing = 80;
+	int formationX = 100;
+	int formationY = 50;
+};
+
 // TODO: write Game constructor for proper initialization
 struct Game
 {
@@ -34,13 +43,6 @@ struct Game
 	// Aliens shooting
 	float shootTimer = 0;
 
-	// Alien Formation
-	int formationWidth = 8;
-	int formationHeight = 5;
-	int alienSpacing = 80;
-	int formationX = 100;
-	int formationY = 50;
-
 	bool newHighScore = false;
 	
 	// Entity Storage and Resources
@@ -49,6 +51,7 @@ struct Game
 	std::vector<Projectile> Projectiles;
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
+	AlienFormation alienFormation;
 	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
 	Background background;
 
