@@ -16,6 +16,5 @@ public:
 	Vector2 lineEnd = { 0, 0 };
 
 	void Update();
-
 	void Render(Texture2D texture);
 };

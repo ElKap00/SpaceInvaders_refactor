@@ -8,18 +8,16 @@ struct Star
 	Vector2 position = { 0, 0 };
 	Color color = GRAY;
 	float size = 0;
+
 	void Update(float starOffset);
 	void Render();
 };
 
 struct Background
 {
-
-
 	std::vector<Star> Stars;
 
 	void Initialize(int starAmount);
 	void Update(float offset);
 	void Render();
-
 };
