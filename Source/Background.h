@@ -20,6 +20,8 @@ struct Background
 	Vector2 cornerPos_;
 	float offset_;
 
+	Background();
+
 	void initialize(int starAmount);
 	void update(float offset);
 	void render();

@@ -8,7 +8,7 @@ struct Player
 	// TODO: make variables private and add getters/setters as needed
 public:
 	// TODO: change from float to int if no fractional values are needed
-	float positionX_ = 0;
+	float positionX_ = (float)GetScreenWidth()/2;
 	float speed_ = 7;
 	float height_ = 70.0f;
 	float radius_ = 50;

@@ -40,25 +40,30 @@ bool PointOnLine(Vector2 lineStart, Vector2 lineEnd, Vector2 point, float buffer
 	return (combinedDistance >= length - buffer && combinedDistance <= length + buffer);
 }
 
+void Game::setGameState(State state)
+{
+	gameState_ = state;
+}
+
+void Game::setPlayer(Player player)
+{
+	player_ = player;
+}
+
+void Game::setBackground(Background background)
+{
+	background_ = background;
+}
+
 // TODO: break up into smaller utility functions if possible
 void Game::start()
 {
+	resetScore();
 	createWalls();
-
-	Player newPlayer{(float)GetScreenWidth()/2};
-	player_ = newPlayer;
-
 	createAlienFormation();
-	
-	//creating background
-	Background newBackground;
-	newBackground.initialize(600);
-	background_ = newBackground;
-
-	//reset score
-	score_ = 0;
-
-	gameState_ = State::GAMEPLAY;
+	setPlayer(Player{});
+	setBackground(Background{});
+	setGameState(State::GAMEPLAY);
 }
 
 void Game::end()
@@ -390,6 +395,11 @@ bool Game::checkCollision(Vector2 circlePos, float circleRadius, Vector2 lineSta
 		}
 	}
 	return false;
+}
+
+void Game::resetScore()
+{
+	score_ = 0;
 }
 
 void Game::createWalls()

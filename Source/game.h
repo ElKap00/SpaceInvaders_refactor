@@ -50,6 +50,10 @@ struct Game
 
 	Game() = default;
 
+	void setGameState(State state);
+	void setPlayer(Player player);
+	void setBackground(Background background);
+
 	void start();
 	void end();
 
@@ -64,5 +68,6 @@ struct Game
 	bool checkCollision(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
 
 private:
+	void resetScore();
 	void createWalls();
 };

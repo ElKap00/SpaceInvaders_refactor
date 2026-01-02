@@ -1,6 +1,10 @@
 #include "raylib_wrapper.h"
 #include "Background.h"
 
+Background::Background()
+{
+	initialize(600);
+}
 
 // TODO: write constructor for Star?
 //BACKGROUND
