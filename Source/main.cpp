@@ -33,15 +33,10 @@ int main(void)
     //--------------------------------------------------------------------------------------
 
     InitWindow(1920, 1080, "SPACE INVADERS");
+    SetTargetFPS(60);
 
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-
-	// TODO: initialize game object properly
-    Game game = { State::STARTSCREEN };
-    Resources resources;
-    game.resources_ = resources;
+    Game game{};
     game.launch();
-
     
     //--------------------------------------------------------------------------------------
 
@@ -49,9 +44,6 @@ int main(void)
 
     auto sound = LoadSound("./hitHurt.ogg");
     
-
-
-
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
@@ -79,8 +71,6 @@ int main(void)
 
         ClearBackground(BLACK);
 
-       
-
         game.render();
 
         EndDrawing();
@@ -93,8 +83,6 @@ int main(void)
     //--------------------------------------------------------------------------------------
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
-
-    std::string filename = "level.txt";  
 
     return 0;
 }

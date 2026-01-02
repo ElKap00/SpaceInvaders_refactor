@@ -30,7 +30,7 @@ struct AlienFormation
 // TODO: write Game constructor for proper initialization
 struct Game
 {
-	State gameState_ = {};
+	State gameState_ = State::STARTSCREEN;
 	int score_ = 0;
 	int wallCount_ = 5;
 	bool isNewHighScore_ = false;
@@ -40,13 +40,15 @@ struct Game
 
 	// Entity Storage and Resources
 	Resources resources_;
-	Player player_;
+	Player player_{(float)GetScreenWidth()/2};
 	std::vector<Projectile> projectiles_;
 	std::vector<Wall> walls_;
 	std::vector<Alien> aliens_;
 	AlienFormation alienFormation_;
 	Leaderboard leaderboard_;
 	Background background_;
+
+	Game() = default;
 
 	void start();
 	void end();

@@ -1,6 +1,9 @@
 #include "player.h"
 #include <iostream>
 
+Player::Player(float positionX)
+	: positionX_(positionX) {}
+
 void Player::initialize()
 {
 	// TODO: fix C-style casts

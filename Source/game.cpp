@@ -40,22 +40,16 @@ bool PointOnLine(Vector2 lineStart, Vector2 lineEnd, Vector2 point, float buffer
 	return (combinedDistance >= length - buffer && combinedDistance <= length + buffer);
 }
 
-
 // TODO: break up into smaller utility functions if possible
 void Game::start()
 {
 	createWalls();
 
-	// TODO: remove multi-step initialization
-	//creating player
-	Player newPlayer;
+	Player newPlayer{(float)GetScreenWidth()/2};
 	player_ = newPlayer;
-	player_.initialize();
 
-	//creating aliens
 	createAlienFormation();
 	
-
 	//creating background
 	Background newBackground;
 	newBackground.initialize(600);
@@ -65,7 +59,6 @@ void Game::start()
 	score_ = 0;
 
 	gameState_ = State::GAMEPLAY;
-
 }
 
 void Game::end()

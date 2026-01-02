@@ -19,6 +19,9 @@ public:
 
 	EntityType type_ = EntityType::PLAYER;
 
+	Player() = default;
+	Player(float positionX);
+
 	void initialize();
 	void render(Texture2D texture);
 	void update();
