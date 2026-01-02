@@ -16,6 +16,9 @@ struct Star
 struct Background
 {
 	std::vector<Star> Stars;
+	Vector2 playerPos;
+	Vector2 cornerPos;
+	float offset;
 
 	void Initialize(int starAmount);
 	void Update(float offset);

@@ -144,10 +144,10 @@ void Game::Update()
 		}
 
 		// Update background with offset
-		playerPos = { player.x_pos, (float)player.player_base_height };
-		cornerPos = { 0, (float)player.player_base_height };
-		offset = lineLength(playerPos, cornerPos) * -1;
-		background.Update(offset / 15);
+		background.playerPos = { player.x_pos, (float)player.player_base_height };
+		background.cornerPos = { 0, (float)player.player_base_height };
+		background.offset = lineLength(background.playerPos, background.cornerPos) * -1;
+		background.Update(background.offset / 15);
 
 		// TODO: use ranged for-loops
 		//UPDATE PROJECTILE

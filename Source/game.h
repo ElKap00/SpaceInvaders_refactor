@@ -49,10 +49,6 @@ struct Game
 	Leaderboard leaderboard;
 	Background background;
 
-	Vector2 playerPos;
-	Vector2 cornerPos;
-	float offset;
-
 	void Start();
 	void End();
 
