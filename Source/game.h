@@ -60,4 +60,7 @@ struct Game
 	void createAlienFormation();
 
 	bool checkCollision(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
+
+private:
+	void createWalls();
 };

@@ -1,5 +1,21 @@
 #include "wall.h"
 
+Wall::Wall(Vector2 position) noexcept
+{
+	position_ = position;
+}
+
+bool Wall::isActive() const noexcept
+{
+	return isActive_;
+}
+
+void Wall::makeInactive() noexcept
+{
+	isActive_ = false;
+}
+
+
 void Wall::render(Texture2D texture)
 {
 	DrawTexturePro(texture,
@@ -23,14 +39,10 @@ void Wall::render(Texture2D texture)
 
 }
 
-void Wall::update()
+void Wall::update() noexcept
 {
-
-	// set walls as inactive when out of health
 	if (health_ < 1)
 	{
-		isActive_ = false;
+		makeInactive();
 	}
-
-
 }
