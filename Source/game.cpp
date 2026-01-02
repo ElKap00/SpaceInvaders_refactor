@@ -67,6 +67,18 @@ void Game::start()
 	gameState_ = State::GAMEPLAY;
 
 }
+void Game::createWalls()
+{
+	// TODO: fix C-style casts, mark variables as const
+	const float window_width = (float)GetScreenWidth();
+	const float window_height = (float)GetScreenHeight();
+	const float wall_distance = window_width / (wallCount_ + 1);
+	for (int i = 0; i < wallCount_; i++)
+	{
+		Wall newWall{ {wall_distance * (i + 1), window_height - 250 } };
+		walls_.push_back(newWall);
+	}
+}
 
 void Game::end()
 {
