@@ -17,6 +17,7 @@ enum struct State
 	ENDSCREEN
 };
 
+// TODO: maybe add separate Leaderboard struct for better organization
 struct PlayerData
 {
 	std::string name;
@@ -83,4 +84,16 @@ struct Game
 	void InsertNewHighScore(std::string name);
 
 	void SaveLeaderboard();
+
+private:
+	void RenderHighscoreEntry();
+	void RenderHighscoreNameInput();
+	void RenderLeaderboard();
+	void UpdateMouseCursor();
+	void HandleTextInput();
+	void HandleBackspace();
+	void UpdateFrameCounter();
+	bool IsNameValid() const;
+	void HandleNameSubmission();
+	void UpdateHighScoreNameEntry();
 };
