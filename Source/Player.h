@@ -22,6 +22,8 @@ public:
 	Player() = default;
 	Player(float positionX);
 
+	int getLives();
+
 	void initialize();
 	void render(Texture2D texture);
 	void update();

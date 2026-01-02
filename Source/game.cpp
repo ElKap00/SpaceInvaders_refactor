@@ -55,6 +55,11 @@ void Game::setBackground(Background background)
 	background_ = background;
 }
 
+Player& Game::getPlayer() noexcept
+{
+	return player_;
+}
+
 // TODO: break up into smaller utility functions if possible
 void Game::start()
 {
@@ -77,19 +82,18 @@ void Game::end()
 	{
 		leaderboard_.startNameEntry();
 	}
-	gameState_ = State::ENDSCREEN;
+	setGameState(State::ENDSCREEN);
 }
 
 void Game::resume()
 {
 	leaderboard_.saveLeaderboard();
 	leaderboard_.resetNameEntry();
-	gameState_ = State::STARTSCREEN;
+	setGameState(State::ENDSCREEN);
 }
 
 void Game::launch()
 {
-	//LOAD SOME RESOURCES HERE
 	resources_.load();
 }
 
@@ -99,7 +103,6 @@ void Game::update()
 	switch (gameState_)
 	{
 	case State::STARTSCREEN:
-		//Code 
 		if (IsKeyReleased(KEY_SPACE))
 		{
 			start();
@@ -107,37 +110,24 @@ void Game::update()
 
 		break;
 	case State::GAMEPLAY:
-		//Code
 		if (IsKeyReleased(KEY_Q))
 		{
 			end();
 		}
-
-		//Update Player
-		player_.update();
-		
-		//Update Aliens and Check if they are past player
-		for (int i = 0; i < aliens_.size(); i++)
-		{
-			aliens_[i].update(); 
-
-			if (aliens_[i].position_.y > GetScreenHeight() - player_.height_)
-			{
-				end();
-			}
-		}
-
-		//End game if player dies
-		if (player_.lives_ < 1)
+		if (getPlayer().getLives() < 1)
 		{
 			end();
 		}
 
-		//Spawn new aliens if aliens run out
+		getPlayer().update();
+		updateAliens();
+
 		if (aliens_.size() < 1)
 		{
 			createAlienFormation();
 		}
+
+		checkCollisions();
 
 		// Update background with offset
 		background_.playerPos_ = { player_.positionX_, (float)player_.height_ };
@@ -145,125 +135,20 @@ void Game::update()
 		background_.offset_ = lineLength(background_.playerPos_, background_.cornerPos_) * -1;
 		background_.update(background_.offset_ / 15);
 
-		// TODO: use ranged for-loops
-		//UPDATE PROJECTILE
-		for (int i = 0; i < projectiles_.size(); i++)
+		for (auto& projectile : projectiles_)
 		{
-			projectiles_[i].update();
-		}
-		//UPDATE PROJECTILE
-		for (int i = 0; i < walls_.size(); i++)
-		{
-			walls_[i].update();
+			projectile.update();
 		}
 
-		// TODO: improve nested loops here
-		// TODO: check logic
-		//CHECK ALL COLLISONS HERE
-		for (int i = 0; i < projectiles_.size(); i++)
+		for (auto& wall : walls_)
 		{
-			if (projectiles_[i].type_ == EntityType::PLAYER_PROJECTILE)
-			{
-				for (int a = 0; a < aliens_.size(); a++)
-				{
-					if (checkCollision(aliens_[a].position_, aliens_[a].radius_, projectiles_[i].lineStart_, projectiles_[i].lineEnd_))
-					{
-						// Kill!
-						std::cout << "Hit! \n";
-						// Set them as inactive, will be killed later
-						projectiles_[i].active_ = false;
-						aliens_[a].isActive_ = false;
-						score_ += 100;
-					}
-				}
-			}
-
-			//ENEMY PROJECTILES HERE
-			for (int i = 0; i < projectiles_.size(); i++)
-			{
-				if (projectiles_[i].type_ == EntityType::ENEMY_PROJECTILE)
-				{
-					if (checkCollision({player_.positionX_, GetScreenHeight() - player_.height_ }, player_.radius_, projectiles_[i].lineStart_, projectiles_[i].lineEnd_))
-					{
-						std::cout << "dead!\n"; 
-						projectiles_[i].active_ = false; 
-						player_.lives_ -= 1; 
-					}
-				}
-			}
-
-
-			for (int b = 0; b < walls_.size(); b++)
-			{
-				if (checkCollision(walls_[b].position_, walls_[b].radius_, projectiles_[i].lineStart_, projectiles_[i].lineEnd_))
-				{
-					// Kill!
-					std::cout << "Hit! \n";
-					// Set them as inactive, will be killed later
-					projectiles_[i].active_ = false;
-					walls_[b].health_ -= 1;
-				}
-			}
+			wall.update();
 		}
 
-		//MAKE PROJECTILE
-		if (IsKeyPressed(KEY_SPACE))
-		{
-			float window_height = (float)GetScreenHeight();
-			Projectile newProjectile;
-			newProjectile.position_.x = player_.positionX_;
-			newProjectile.position_.y = window_height - 130;
-			newProjectile.type_ = EntityType::PLAYER_PROJECTILE;
-			projectiles_.push_back(newProjectile);
-		}
+		makeProjectile();
+		aliensShoot();
+		removeInactiveEntities();
 
-		//Aliens Shooting
-		shootTimerSeconds_ += 1;
-		if (shootTimerSeconds_ > 59) //once per second
-		{
-			int randomAlienIndex = 0;
-
-			if (aliens_.size() > 1)
-			{
-				randomAlienIndex = rand() % aliens_.size();
-			}
-
-			Projectile newProjectile;
-			newProjectile.position_ = aliens_[randomAlienIndex].position_;
-			newProjectile.position_.y += 40;
-			newProjectile.speed_ = -15;
-			newProjectile.type_ = EntityType::ENEMY_PROJECTILE;
-			projectiles_.push_back(newProjectile);
-			shootTimerSeconds_ = 0;
-		}
-
-		// REMOVE INACTIVE/DEAD ENTITIES
-		for (int i = 0; i < projectiles_.size(); i++)
-		{
-			if (projectiles_[i].active_ == false)
-			{
-				projectiles_.erase(projectiles_.begin() + i);
-				// Prevent the loop from skipping an instance because of index changes, since all insances after
-				// the killed objects are moved down in index. This is the same for all loops with similar function
-				i--;
-			}
-		}
-		for (int i = 0; i < aliens_.size(); i++)
-		{
-			if (aliens_[i].isActive_ == false)
-			{
-				aliens_.erase(aliens_.begin() + i);
-				i--;
-			}
-		}
-		for (int i = 0; i < walls_.size(); i++)
-		{
-			if (walls_[i].isActive() == false)
-			{
-				walls_.erase(walls_.begin() + i);
-				i--;
-			}
-		}
 	break;
 	case State::ENDSCREEN:
 		//Exit endscreen
@@ -368,7 +253,7 @@ void Game::createAlienFormation()
 	}
 }
 
-bool Game::checkCollision(Vector2 circlePos, float circleRadius, Vector2 lineStart, Vector2 lineEnd)
+bool Game::doCollide(Vector2 circlePos, float circleRadius, Vector2 lineStart, Vector2 lineEnd)
 {
 	if (pointInCircle(circlePos, circleRadius, lineStart) || pointInCircle(circlePos, circleRadius, lineEnd))
 	{
@@ -412,5 +297,129 @@ void Game::createWalls()
 	{
 		Wall newWall{ {wall_distance * (i + 1), window_height - 250 } };
 		walls_.push_back(newWall);
+	}
+}
+
+void Game::updateAliens()
+{
+	for (auto& alien : aliens_)
+	{
+		alien.update();
+
+		if (alien.position_.y > GetScreenHeight() - player_.height_)
+		{
+			end();
+		}
+	}
+}
+
+void Game::aliensShoot()
+{
+	shootTimerSeconds_ += 1;
+	if (shootTimerSeconds_ > 59) //once per second
+	{
+		int randomAlienIndex = 0;
+
+		if (aliens_.size() > 1)
+		{
+			randomAlienIndex = rand() % aliens_.size();
+		}
+
+		Projectile newProjectile;
+		newProjectile.position_ = aliens_[randomAlienIndex].position_;
+		newProjectile.position_.y += 40;
+		newProjectile.speed_ = -15;
+		newProjectile.type_ = EntityType::ENEMY_PROJECTILE;
+		projectiles_.push_back(newProjectile);
+		shootTimerSeconds_ = 0;
+	}
+}
+
+// TODO: move this to Projectile class?
+void Game::makeProjectile()
+{
+	if (IsKeyPressed(KEY_SPACE))
+	{
+		float window_height = (float)GetScreenHeight();
+		Projectile newProjectile;
+		newProjectile.position_.x = player_.positionX_;
+		newProjectile.position_.y = window_height - 130;
+		newProjectile.type_ = EntityType::PLAYER_PROJECTILE;
+		projectiles_.push_back(newProjectile);
+	}
+}
+
+void Game::removeInactiveEntities()
+{
+	for (int i = 0; i < projectiles_.size(); i++)
+	{
+		if (projectiles_[i].active_ == false)
+		{
+			projectiles_.erase(projectiles_.begin() + i);
+			// Prevent the loop from skipping an instance because of index changes, since all insances after
+			// the killed objects are moved down in index. This is the same for all loops with similar function
+			i--;
+		}
+	}
+	for (int i = 0; i < aliens_.size(); i++)
+	{
+		if (aliens_[i].isActive_ == false)
+		{
+			aliens_.erase(aliens_.begin() + i);
+			i--;
+		}
+	}
+	for (int i = 0; i < walls_.size(); i++)
+	{
+		if (walls_[i].isActive() == false)
+		{
+			walls_.erase(walls_.begin() + i);
+			i--;
+		}
+	}
+}
+
+void Game::checkCollisions()
+{
+	//CHECK ALL COLLISONS HERE
+	for (auto& projectile : projectiles_)
+	{
+		if (projectile.type_ == EntityType::PLAYER_PROJECTILE)
+		{
+			for (auto& alien : aliens_)
+			{
+				if (doCollide(alien.position_, alien.radius_, projectile.lineStart_, projectile.lineEnd_))
+				{
+					// Kill!
+					std::cout << "Hit! \n";
+					// Set them as inactive, will be killed later
+					projectile.active_ = false;
+					alien.isActive_ = false;
+					score_ += 100;
+				}
+			}
+		}
+
+		if (projectile.type_ == EntityType::ENEMY_PROJECTILE)
+		{
+			if (doCollide({ player_.positionX_, GetScreenHeight() - player_.height_ }, player_.radius_, projectile.lineStart_, projectile.lineEnd_))
+			{
+				std::cout << "dead!\n";
+				projectile.active_ = false;
+				player_.lives_ -= 1;
+			}
+		}
+
+		for (auto& wall : walls_)
+		{
+			if (doCollide(wall.position_, wall.radius_, projectile.lineStart_, projectile.lineEnd_))
+			{
+				// Kill!
+				std::cout << "Hit! \n";
+				// Set them as inactive, will be killed later
+				projectile.active_ = false;
+				wall.health_ -= 1;
+			}
+		}
 	}
 }

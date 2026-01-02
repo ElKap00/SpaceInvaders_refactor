@@ -4,6 +4,11 @@
 Player::Player(float positionX)
 	: positionX_(positionX) {}
 
+int Player::getLives()
+{
+	return lives_;
+}
+
 void Player::initialize()
 {
 	// TODO: fix C-style casts

@@ -38,6 +38,7 @@ struct Game
 	// Aliens shooting
 	float shootTimerSeconds_ = 0;
 
+	// TODO: consider Entities manager class for better organization
 	// Entity Storage and Resources
 	Resources resources_;
 	Player player_{(float)GetScreenWidth()/2};
@@ -54,6 +55,8 @@ struct Game
 	void setPlayer(Player player);
 	void setBackground(Background background);
 
+	Player& getPlayer() noexcept;
+
 	void start();
 	void end();
 
@@ -65,9 +68,14 @@ struct Game
 
 	void createAlienFormation();
 
-	bool checkCollision(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
+	bool doCollide(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
 
 private:
 	void resetScore();
 	void createWalls();
+	void updateAliens();
+	void aliensShoot();
+	void makeProjectile();
+	void removeInactiveEntities();
+	void checkCollisions();
 };
