@@ -368,32 +368,23 @@ void Game::playerShoot()
 
 void Game::removeInactiveEntities()
 {
-	for (int i = 0; i < projectiles_.size(); i++)
-	{
-		if (projectiles_[i].isActive_ == false)
-		{
-			projectiles_.erase(projectiles_.begin() + i);
-			// Prevent the loop from skipping an instance because of index changes, since all insances after
-			// the killed objects are moved down in index. This is the same for all loops with similar function
-			i--;
-		}
-	}
-	for (int i = 0; i < aliens_.size(); i++)
-	{
-		if (aliens_[i].isActive_ == false)
-		{
-			aliens_.erase(aliens_.begin() + i);
-			i--;
-		}
-	}
-	for (int i = 0; i < walls_.size(); i++)
-	{
-		if (walls_[i].isActive() == false)
-		{
-			walls_.erase(walls_.begin() + i);
-			i--;
-		}
-	}
+	projectiles_.erase(
+		std::remove_if(projectiles_.begin(), projectiles_.end(),
+			[](const Projectile& projectile) { return !projectile.isActive_; }),
+		projectiles_.end()
+	);
+
+	aliens_.erase(
+		std::remove_if(aliens_.begin(), aliens_.end(),
+			[](const Alien& alien) { return !alien.isActive_; }),
+		aliens_.end()
+	);
+
+	walls_.erase(
+		std::remove_if(walls_.begin(), walls_.end(),
+			[](const Wall& wall) { return !wall.isActive(); }),
+		walls_.end()
+	);
 }
 
 void Game::checkCollisions()
