@@ -80,7 +80,7 @@ private:
 	void createWalls();
 	void updateAliens();
 	void aliensShoot();
-	void makeProjectile();
+	void playerShoot();
 	void removeInactiveEntities();
 	void checkCollisions();
 };

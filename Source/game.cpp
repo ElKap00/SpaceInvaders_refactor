@@ -145,7 +145,7 @@ void Game::update()
 			wall.update();
 		}
 
-		makeProjectile();
+		playerShoot();
 		aliensShoot();
 		removeInactiveEntities();
 
@@ -260,6 +260,7 @@ void Game::renderStartScreen()
 	DrawText("SPACE INVADERS", 200, 100, 160, YELLOW);
 	DrawText("PRESS SPACE TO BEGIN", 200, 350, 40, YELLOW);
 }
+
 void Game::renderProjectiles()
 {
 	for (auto& projectile : projectiles_)
@@ -333,26 +334,20 @@ void Game::aliensShoot()
 			randomAlienIndex = rand() % aliens_.size();
 		}
 
-		Projectile newProjectile;
-		newProjectile.position_ = aliens_[randomAlienIndex].position_;
-		newProjectile.position_.y += 40;
-		newProjectile.speed_ = -15;
-		newProjectile.type_ = EntityType::ENEMY_PROJECTILE;
+		const Vector2 projectilePosition = { aliens_[randomAlienIndex].position_.x, aliens_[randomAlienIndex].position_.y + 40 };
+		const Projectile newProjectile(projectilePosition, -15, EntityType::ENEMY_PROJECTILE);
 		projectiles_.push_back(newProjectile);
 		shootTimerSeconds_ = 0;
 	}
 }
 
 // TODO: move this to Projectile class?
-void Game::makeProjectile()
+void Game::playerShoot()
 {
 	if (IsKeyPressed(KEY_SPACE))
 	{
-		float window_height = (float)GetScreenHeight();
-		Projectile newProjectile;
-		newProjectile.position_.x = player_.positionX_;
-		newProjectile.position_.y = window_height - 130;
-		newProjectile.type_ = EntityType::PLAYER_PROJECTILE;
+		const float window_height = (float)GetScreenHeight();
+		const Projectile newProjectile({ player_.positionX_, window_height - 130 }, EntityType::PLAYER_PROJECTILE);
 		projectiles_.push_back(newProjectile);
 	}
 }
@@ -361,7 +356,7 @@ void Game::removeInactiveEntities()
 {
 	for (int i = 0; i < projectiles_.size(); i++)
 	{
-		if (projectiles_[i].active_ == false)
+		if (projectiles_[i].isActive_ == false)
 		{
 			projectiles_.erase(projectiles_.begin() + i);
 			// Prevent the loop from skipping an instance because of index changes, since all insances after
@@ -401,7 +396,7 @@ void Game::checkCollisions()
 					// Kill!
 					std::cout << "Hit! \n";
 					// Set them as inactive, will be killed later
-					projectile.active_ = false;
+					projectile.isActive_ = false;
 					alien.isActive_ = false;
 					score_ += 100;
 				}
@@ -413,7 +408,7 @@ void Game::checkCollisions()
 			if (doCollide({ player_.positionX_, GetScreenHeight() - player_.height_ }, player_.radius_, projectile.lineStart_, projectile.lineEnd_))
 			{
 				std::cout << "dead!\n";
-				projectile.active_ = false;
+				projectile.isActive_ = false;
 				player_.lives_ -= 1;
 			}
 		}
@@ -425,7 +420,7 @@ void Game::checkCollisions()
 				// Kill!
 				std::cout << "Hit! \n";
 				// Set them as inactive, will be killed later
-				projectile.active_ = false;
+				projectile.isActive_ = false;
 				wall.health_ -= 1;
 			}
 		}

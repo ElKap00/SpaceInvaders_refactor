@@ -1,5 +1,24 @@
 #include "projectile.h"
 
+Projectile::Projectile(Vector2 position, EntityType type) noexcept
+	: position_(position), type_(type)
+{
+	// INITIAL LINE POSITIONS
+	lineStart_.y = position_.y - 15;
+	lineEnd_.y = position_.y + 15;
+	lineStart_.x = position_.x;
+	lineEnd_.x = position_.x;
+}
+
+Projectile::Projectile(Vector2 position, int speed, EntityType type) noexcept
+	: position_(position), speed_(speed), type_(type)
+{
+	// INITIAL LINE POSITIONS
+	lineStart_.y = position_.y - 15;
+	lineEnd_.y = position_.y + 15;
+	lineStart_.x = position_.x;
+	lineEnd_.x = position_.x;
+}
 
 void Projectile::update()
 {
@@ -14,7 +33,7 @@ void Projectile::update()
 
 	if (position_.y < 0 || position_.y > 1500)
 	{
-		active_ = false;
+		isActive_ = false;
 	}
 }
 
