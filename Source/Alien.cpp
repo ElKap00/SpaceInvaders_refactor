@@ -5,6 +5,11 @@ Alien::Alien(Vector2 position) noexcept
 	position_ = position;
 }
 
+void Alien::setActive(bool isActive) noexcept
+{
+	isActive_ = isActive;
+}
+
 void Alien::update()
 {
 	if (moveRight_)

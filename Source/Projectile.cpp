@@ -20,6 +20,8 @@ Projectile::Projectile(Vector2 position, int speed, EntityType type) noexcept
 	lineEnd_.x = position_.x;
 }
 
+void Projectile::setActive(bool isActive) noexcept { isActive_ = isActive; }
+
 void Projectile::update()
 {
 	position_.y -= speed_;
@@ -33,7 +35,7 @@ void Projectile::update()
 
 	if (position_.y < 0 || position_.y > 1500)
 	{
-		isActive_ = false;
+		setActive(false);
 	}
 }
 

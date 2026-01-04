@@ -15,6 +15,8 @@ public:
 
 	Alien(Vector2 position) noexcept;
 
+	void setActive(bool isActive) noexcept;
+
 	void update();
 	void render(Texture2D texture);
 };

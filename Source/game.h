@@ -56,6 +56,7 @@ struct Game
 	void setBackground(Background background);
 
 	Player& getPlayer() noexcept;
+	State getGameState() const noexcept;
 
 	void start();
 	void end();
@@ -66,10 +67,6 @@ struct Game
 	void update();
 	void render();
 
-	void createAlienFormation();
-
-	bool doCollide(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
-
 private:
 	void renderStartScreen();
 	void updateStartScreen();
@@ -77,15 +74,22 @@ private:
 	void updateGamePlay();
 	void renderEndScreen();
 	void updateEndScreen();
+
 	void renderProjectiles();
 	void renderWalls();
 	void renderAliens();
 	void renderUI();
-	void resetScore();
+
 	void createWalls();
+	void createAlienFormation();
 	void updateAliens();
+
 	void aliensShoot();
 	void playerShoot();
-	void removeInactiveEntities();
+
 	void checkCollisions();
+	bool doCollide(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
+
+	void resetScore();
+	void removeInactiveEntities();
 };

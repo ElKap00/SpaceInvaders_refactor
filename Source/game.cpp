@@ -40,25 +40,15 @@ bool PointOnLine(Vector2 lineStart, Vector2 lineEnd, Vector2 point, float buffer
 	return (combinedDistance >= length - buffer && combinedDistance <= length + buffer);
 }
 
-void Game::setGameState(State state)
-{
-	gameState_ = state;
-}
+void Game::setGameState(State state) { gameState_ = state; }
 
-void Game::setPlayer(Player player)
-{
-	player_ = player;
-}
+void Game::setPlayer(Player player) { player_ = player; }
 
-void Game::setBackground(Background background)
-{
-	background_ = background;
-}
+void Game::setBackground(Background background) { background_ = background; }
 
-Player& Game::getPlayer() noexcept
-{
-	return player_;
-}
+Player& Game::getPlayer() noexcept { return player_; }
+
+State Game::getGameState() const noexcept { return gameState_; }
 
 // TODO: break up into smaller utility functions if possible
 void Game::start()
@@ -420,8 +410,8 @@ void Game::checkCollisions()
 					// Kill!
 					std::cout << "Hit! \n";
 					// Set them as inactive, will be killed later
-					projectile.isActive_ = false;
-					alien.isActive_ = false;
+					projectile.setActive(false);
+					alien.setActive(false);
 					score_ += 100;
 				}
 			}
@@ -432,7 +422,7 @@ void Game::checkCollisions()
 			if (doCollide({ player_.positionX_, GetScreenHeight() - player_.height_ }, player_.radius_, projectile.lineStart_, projectile.lineEnd_))
 			{
 				std::cout << "dead!\n";
-				projectile.isActive_ = false;
+				projectile.setActive(false);
 				player_.lives_ -= 1;
 			}
 		}
@@ -444,7 +434,7 @@ void Game::checkCollisions()
 				// Kill!
 				std::cout << "Hit! \n";
 				// Set them as inactive, will be killed later
-				projectile.isActive_ = false;
+				projectile.setActive(false);
 				wall.health_ -= 1;
 			}
 		}

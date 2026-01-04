@@ -18,6 +18,8 @@ public:
 	Projectile(Vector2 position, EntityType type) noexcept;
 	Projectile(Vector2 position, int speed, EntityType type) noexcept;
 
+	void setActive(bool isActive) noexcept;
+
 	void update();
 	void render(Texture2D texture);
 };
