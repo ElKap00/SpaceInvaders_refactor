@@ -72,6 +72,8 @@ struct Game
 
 private:
 	void renderStartScreen();
+	void renderGamePlay();
+	void renderEndScreen();
 	void renderProjectiles();
 	void renderWalls();
 	void renderAliens();

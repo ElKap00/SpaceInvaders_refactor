@@ -182,33 +182,19 @@ void Game::render()
 	switch (gameState_)
 	{
 	case State::STARTSCREEN:
-
 		renderStartScreen();
-
 		break;
+
 	case State::GAMEPLAY:
-
-		background_.render();
-		renderUI();
-		getPlayer().render(resources_.shipTextures_[player_.activeTexture_]);
-		renderProjectiles();
-		renderWalls();
-		renderAliens();
-
+		renderGamePlay();
 		break;
+
 	case State::ENDSCREEN:
-
-		if (isNewHighScore_)
-		{
-			leaderboard_.renderHighScoreEntry();
-			leaderboard_.renderHighScoreNameInput();
-		}
-		else {
-			leaderboard_.renderLeaderboard();
-		}
-
+		renderEndScreen();
 		break;
+
 	default:
+		// TODO: add exception handling
 		//SHOULD NOT HAPPEN
 		break;
 	}
@@ -259,6 +245,28 @@ void Game::renderStartScreen()
 {
 	DrawText("SPACE INVADERS", 200, 100, 160, YELLOW);
 	DrawText("PRESS SPACE TO BEGIN", 200, 350, 40, YELLOW);
+}
+
+void Game::renderGamePlay()
+{
+	background_.render();
+	renderUI();
+	getPlayer().render(resources_.shipTextures_[player_.activeTexture_]);
+	renderProjectiles();
+	renderWalls();
+	renderAliens();
+}
+
+void Game::renderEndScreen()
+{
+	if (isNewHighScore_)
+	{
+		leaderboard_.renderHighScoreEntry();
+		leaderboard_.renderHighScoreNameInput();
+	}
+	else {
+		leaderboard_.renderLeaderboard();
+	}
 }
 
 void Game::renderProjectiles()
