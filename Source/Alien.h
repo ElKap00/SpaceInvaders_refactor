@@ -13,6 +13,8 @@ public:
 	bool moveRight_ = true;
 	int speed_ = 2;
 
+	Alien(Vector2 position) noexcept;
+
 	void update();
 	void render(Texture2D texture);
 };

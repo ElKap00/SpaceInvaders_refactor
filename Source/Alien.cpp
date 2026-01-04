@@ -1,5 +1,10 @@
 #include "alien.h"
 
+Alien::Alien(Vector2 position) noexcept
+{
+	position_ = position;
+}
+
 void Alien::update()
 {
 	if (moveRight_)

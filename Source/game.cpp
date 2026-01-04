@@ -218,14 +218,10 @@ void Game::createAlienFormation()
 {
 	for (int row = 0; row < alienFormation_.formationHeight_; row++) {
 		for (int col = 0; col < alienFormation_.formationWidth_; col++) {
-			// TODO: remove multi-step initialization
-			Alien newAlien = Alien();
-			newAlien.isActive_ = true;
-			newAlien.position_.x = alienFormation_.formationX_ + 450 + (col * alienFormation_.alienSpacing_);
-			newAlien.position_.y = alienFormation_.formationY_ + (row * alienFormation_.alienSpacing_);
+			const Vector2 alienPosition = { alienFormation_.formationX_ + 450 + (col * alienFormation_.alienSpacing_),
+									alienFormation_.formationY_ + (row * alienFormation_.alienSpacing_) };
+			const Alien newAlien = Alien(alienPosition);
 			aliens_.push_back(newAlien);
-			std::cout << "Find Alien -X:" << newAlien.position_.x << std::endl;
-			std::cout << "Find Alien -Y:" << newAlien.position_.y << std::endl;
 		}
 	}
 }
