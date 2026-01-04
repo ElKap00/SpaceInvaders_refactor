@@ -41,32 +41,6 @@ void Leaderboard::insertNewHighScore(const std::string& name, int score)
 	}
 }
 
-// TODO: improve error handling
-// TODO: close file properly?
-void Leaderboard::saveLeaderboard()
-{
-	// SAVE LEADERBOARD AS ARRAY
-
-	// OPEN FILE
-	std::fstream file;
-
-	file.open("Leaderboard");
-
-	if (!file)
-	{
-		std::cout << "file not found \n";
-	}
-	else
-	{
-		std::cout << "file found \n";
-	}
-	// CLEAR FILE
-
-	// WRITE ARRAY DATA INTO FILE
-
-	// CLOSE FILE
-}
-
 void Leaderboard::updateMouseCursor()
 {
 	if (CheckCollisionPointRec(GetMousePosition(), textBox_))

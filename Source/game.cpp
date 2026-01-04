@@ -87,9 +87,8 @@ void Game::end()
 
 void Game::resume()
 {
-	leaderboard_.saveLeaderboard();
 	leaderboard_.resetNameEntry();
-	setGameState(State::ENDSCREEN);
+	setGameState(State::STARTSCREEN);
 }
 
 void Game::launch()
@@ -103,73 +102,17 @@ void Game::update()
 	switch (gameState_)
 	{
 	case State::STARTSCREEN:
-		if (IsKeyReleased(KEY_SPACE))
-		{
-			start();
-		}
-
+		updateStartScreen();
 		break;
+
 	case State::GAMEPLAY:
-		if (IsKeyReleased(KEY_Q))
-		{
-			end();
-		}
-		if (getPlayer().getLives() < 1)
-		{
-			end();
-		}
-
-		getPlayer().update();
-		updateAliens();
-
-		if (aliens_.size() < 1)
-		{
-			createAlienFormation();
-		}
-
-		checkCollisions();
-
-		// Update background with offset
-		background_.playerPos_ = { player_.positionX_, (float)player_.height_ };
-		background_.cornerPos_ = { 0, (float)player_.height_ };
-		background_.offset_ = lineLength(background_.playerPos_, background_.cornerPos_) * -1;
-		background_.update(background_.offset_ / 15);
-
-		for (auto& projectile : projectiles_)
-		{
-			projectile.update();
-		}
-
-		for (auto& wall : walls_)
-		{
-			wall.update();
-		}
-
-		playerShoot();
-		aliensShoot();
-		removeInactiveEntities();
-
-	break;
-	case State::ENDSCREEN:
-		//Exit endscreen
- 		if (IsKeyReleased(KEY_ENTER) && !isNewHighScore_)
-		{
-			resume();
-		}
-
-		if (isNewHighScore_)
-		{
-			leaderboard_.updateHighScoreNameEntry();
-			
-			// Check if name entry is complete
-			if (!leaderboard_.isEnteringName())
-			{
-				// Insert the high score with the player's name
-				leaderboard_.insertNewHighScore(leaderboard_.getEnteredName(), score_);
-				isNewHighScore_ = false;
-			}
-		}
+		updateGamePlay();
 		break;
+
+	case State::ENDSCREEN:
+		updateEndScreen();
+		break;
+
 	default:
 		//SHOULD NOT HAPPEN
 		break;
@@ -247,6 +190,14 @@ void Game::renderStartScreen()
 	DrawText("PRESS SPACE TO BEGIN", 200, 350, 40, YELLOW);
 }
 
+void Game::updateStartScreen()
+{
+	if (IsKeyReleased(KEY_SPACE))
+	{
+		start();
+	}
+}
+
 void Game::renderGamePlay()
 {
 	background_.render();
@@ -255,6 +206,49 @@ void Game::renderGamePlay()
 	renderProjectiles();
 	renderWalls();
 	renderAliens();
+}
+
+void Game::updateGamePlay()
+{
+	if (IsKeyReleased(KEY_Q))
+	{
+		end();
+	}
+	if (getPlayer().getLives() < 1)
+	{
+		end();
+	}
+
+	getPlayer().update();
+	updateAliens();
+
+	if (aliens_.size() < 1)
+	{
+		createAlienFormation();
+	}
+
+	checkCollisions();
+
+	// TODO: separate background update logic
+	// Update background with offset
+	background_.playerPos_ = { player_.positionX_, (float)player_.height_ };
+	background_.cornerPos_ = { 0, (float)player_.height_ };
+	background_.offset_ = lineLength(background_.playerPos_, background_.cornerPos_) * -1;
+	background_.update(background_.offset_ / 15);
+
+	for (auto& projectile : projectiles_)
+	{
+		projectile.update();
+	}
+
+	for (auto& wall : walls_)
+	{
+		wall.update();
+	}
+
+	playerShoot();
+	aliensShoot();
+	removeInactiveEntities();
 }
 
 void Game::renderEndScreen()
@@ -266,6 +260,28 @@ void Game::renderEndScreen()
 	}
 	else {
 		leaderboard_.renderLeaderboard();
+	}
+}
+
+void Game::updateEndScreen()
+{
+	//Exit endscreen
+	if (IsKeyReleased(KEY_ENTER) && !isNewHighScore_)
+	{
+		resume();
+	}
+
+	if (isNewHighScore_)
+	{
+		leaderboard_.updateHighScoreNameEntry();
+
+		// Check if name entry is complete
+		if (!leaderboard_.isEnteringName())
+		{
+			// Insert the high score with the player's name
+			leaderboard_.insertNewHighScore(leaderboard_.getEnteredName(), score_);
+			isNewHighScore_ = false;
+		}
 	}
 }
 

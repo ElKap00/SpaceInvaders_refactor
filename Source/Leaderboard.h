@@ -16,7 +16,6 @@ public:
 
 	bool isNewHighScore(int score) const;
 	void insertNewHighScore(const std::string& name, int score);
-	void saveLeaderboard();
 
 	// High score name entry UI
 	void updateHighScoreNameEntry();
