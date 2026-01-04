@@ -71,6 +71,11 @@ struct Game
 	bool doCollide(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
 
 private:
+	void renderStartScreen();
+	void renderProjectiles();
+	void renderWalls();
+	void renderAliens();
+	void renderUI();
 	void resetScore();
 	void createWalls();
 	void updateAliens();

@@ -182,41 +182,18 @@ void Game::render()
 	switch (gameState_)
 	{
 	case State::STARTSCREEN:
-		//Code
-		DrawText("SPACE INVADERS", 200, 100, 160, YELLOW);
 
-		DrawText("PRESS SPACE TO BEGIN", 200, 350, 40, YELLOW);
+		renderStartScreen();
 
 		break;
 	case State::GAMEPLAY:
 
-		//background render LEAVE THIS AT TOP
 		background_.render();
-
-		//DrawText("GAMEPLAY", 50, 30, 40, YELLOW);
-		DrawText(TextFormat("Score: %i", score_), 50, 20, 40, YELLOW);
-		DrawText(TextFormat("Lives: %i", player_.lives_), 50, 70, 40, YELLOW);
-
-		//player rendering 
-		player_.render(resources_.shipTextures_[player_.activeTexture_]);
-
-		//projectile rendering
-		for (int i = 0; i < projectiles_.size(); i++)
-		{
-			projectiles_[i].render(resources_.laserTexture_);
-		}
-
-		// wall rendering 
-		for (int i = 0; i < walls_.size(); i++)
-		{
-			walls_[i].render(resources_.barrierTexture_); 
-		}
-
-		//alien rendering  
-		for (int i = 0; i < aliens_.size(); i++)
-		{
-			aliens_[i].render(resources_.alienTexture_);
-		}
+		renderUI();
+		getPlayer().render(resources_.shipTextures_[player_.activeTexture_]);
+		renderProjectiles();
+		renderWalls();
+		renderAliens();
 
 		break;
 	case State::ENDSCREEN:
@@ -280,6 +257,41 @@ bool Game::doCollide(Vector2 circlePos, float circleRadius, Vector2 lineStart, V
 		}
 	}
 	return false;
+}
+
+void Game::renderStartScreen()
+{
+	DrawText("SPACE INVADERS", 200, 100, 160, YELLOW);
+	DrawText("PRESS SPACE TO BEGIN", 200, 350, 40, YELLOW);
+}
+void Game::renderProjectiles()
+{
+	for (auto& projectile : projectiles_)
+	{
+		projectile.render(resources_.laserTexture_);
+	}
+}
+
+void Game::renderWalls()
+{
+	for (auto& wall : walls_)
+	{
+		wall.render(resources_.barrierTexture_);
+	}
+}
+
+void Game::renderAliens()
+{
+	for (auto& alien : aliens_)
+	{
+		alien.render(resources_.alienTexture_);
+	}
+}
+
+void Game::renderUI()
+{
+	DrawText(TextFormat("Score: %i", score_), 50, 20, 40, YELLOW);
+	DrawText(TextFormat("Lives: %i", player_.lives_), 50, 70, 40, YELLOW);
 }
 
 void Game::resetScore()
