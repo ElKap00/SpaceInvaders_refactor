@@ -48,20 +48,18 @@ Player& Game::getPlayer() noexcept { return player_; }
 
 State Game::getGameState() const noexcept { return gameState_; }
 
-// TODO: break up into smaller utility functions if possible
+
 void Game::start()
 {
 	resetScore();
 	createWalls();
 	createAlienFormation();
 	setPlayer(Player{});
-	setBackground(Background{});
 	setGameState(State::GAMEPLAY);
 }
 
 void Game::end()
 {
-	//SAVE SCORE AND UPDATE SCOREBOARD
 	projectiles_.clear();
 	walls_.clear();
 	aliens_.clear();
@@ -210,12 +208,7 @@ void Game::updateGamePlay()
 
 	checkCollisions();
 
-	// TODO: separate background update logic
-	// Update background with offset
-	background_.playerPos_ = { player_.positionX_, (float)player_.height_ };
-	background_.cornerPos_ = { 0, (float)player_.height_ };
-	background_.offset_ = lineLength(background_.playerPos_, background_.cornerPos_) * -1;
-	background_.update(background_.offset_ / 15);
+	background_.updateWithPlayerPosition(player_.positionX_, player_.height_);
 
 	for (auto& projectile : projectiles_)
 	{

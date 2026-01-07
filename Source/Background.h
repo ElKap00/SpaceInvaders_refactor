@@ -9,6 +9,9 @@ struct Star
 	Color color_ = GRAY;
 	float size_ = 0;
 
+	Star(Vector2 initPos, Color col, float sz) noexcept
+		: initPosition_(initPos), position_(initPos), color_(col), size_(sz) {}
+
 	void update(float starOffset) noexcept;
 	void render() noexcept;
 };
@@ -16,13 +19,13 @@ struct Star
 struct Background
 {
 	std::vector<Star> stars_;
-	Vector2 playerPos_;
-	Vector2 cornerPos_;
-	float offset_;
 
 	Background() noexcept;
 
 	void initialize(int starAmount);
-	void update(float offset) noexcept;
+	void updateWithPlayerPosition(float playerX, float playerHeight) noexcept;
 	void render() noexcept;
+
+private:
+	void update(float offset) noexcept;
 };

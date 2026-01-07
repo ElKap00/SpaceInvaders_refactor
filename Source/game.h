@@ -38,18 +38,19 @@ struct Game
 	// Aliens shooting
 	float shootTimerSeconds_ = 0;
 
-	// TODO: consider Entities manager class for better organization
+	// TODO: consider EntityManager class for better organization
 	// Entity Storage and Resources
-	Resources resources_;
+	Resources resources_ = Resources{};
 	Player player_{(float)GetScreenWidth()/2};
 	std::vector<Projectile> projectiles_;
 	std::vector<Wall> walls_;
 	std::vector<Alien> aliens_;
-	AlienFormation alienFormation_;
-	Leaderboard leaderboard_;
-	Background background_;
+	AlienFormation alienFormation_ = AlienFormation{};
+	Leaderboard leaderboard_ = Leaderboard{};
+	Background background_ = Background{};
 
 	Game() = default;
+	~Game() = default;
 
 	void setGameState(State state) noexcept;
 	void setPlayer(Player player) noexcept;
