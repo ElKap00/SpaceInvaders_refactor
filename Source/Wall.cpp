@@ -20,18 +20,18 @@ void Wall::render(Texture2D texture) noexcept
 {
 	DrawTexturePro(texture,
 		{
-			0,
-			0,
-			704,
-			704,
+			0.0f,
+			0.0f,
+			704.0f,
+			704.0f,
 		},
 		{
 			position_.x,
 			position_.y,
-			200,
-			200,
-		}, { 100 , 100 },
-		0,
+			200.0f,
+			200.0f,
+		}, {100.0f , 100.0f},
+		0.0f,
 		WHITE);
 
 

@@ -25,7 +25,7 @@ struct AlienFormation
 	int alienSpacing_ = 80;
 	int formationX_ = 100;
 	int formationY_ = 50;
-	float shootTimerSeconds_ = 0;
+	float shootTimerSeconds_ = 0.0f;
 };
 
 class Game
@@ -49,6 +49,7 @@ private:
 	AlienFormation alienFormation_ = AlienFormation{};
 	Leaderboard leaderboard_ = Leaderboard{};
 	Background background_ = Background{};
+
 public:
 	Game() = default;
 	~Game() = default;

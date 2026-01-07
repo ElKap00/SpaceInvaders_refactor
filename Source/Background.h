@@ -4,10 +4,10 @@
 
 struct Star
 {
-	Vector2 initPosition_ = { 0, 0 };
-	Vector2 position_ = { 0, 0 };
+	Vector2 initPosition_ = {0.0f, 0.0f};
+	Vector2 position_ = {0.0f, 0.0f};
 	Color color_ = GRAY;
-	float size_ = 0;
+	float size_ = 0.0f;
 
 	Star(Vector2 initPos, Color col, float sz) noexcept
 		: initPosition_(initPos), position_(initPos), color_(col), size_(sz) {}

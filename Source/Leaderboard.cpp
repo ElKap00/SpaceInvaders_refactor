@@ -23,6 +23,7 @@ bool Leaderboard::isNewHighScore(int score) const
 	return false;
 }
 
+// TODO: change to string_view to avoid copy
 void Leaderboard::insertNewHighScore(const std::string& name, int score)
 {
 	PlayerData newData;
@@ -60,6 +61,7 @@ void Leaderboard::handleTextInput()
 
 	while (key > 0)
 	{
+		// TODO: fix C-style casts and indexing
 		if ((key >= 32) && (key <= 125) && (letterCount_ < 9))
 		{
 			name_[letterCount_] = (char)key;
@@ -143,6 +145,7 @@ void Leaderboard::renderHighScoreNameInput()
 	{
 		if (letterCount_ < 9)
 		{
+			// TODO: fix C-style casts
 			if (((cursorFrameCounter_ / 20) % 2) == 0)
 			{
 				DrawText("_", (int)textBox_.x + 8 + MeasureText(name_, 40), (int)textBox_.y + 12, 40, MAROON);
@@ -167,6 +170,7 @@ void Leaderboard::renderHighScoreEntry()
 	DrawText("PLACE MOUSE OVER INPUT BOX!", 600, 400, 20, YELLOW);
 
 	DrawRectangleRec(textBox_, LIGHTGRAY);
+	// TODO: fix C-style casts
 	if (isTextBoxHovered_)
 	{
 		DrawRectangleLines((int)textBox_.x, (int)textBox_.y, (int)textBox_.width, (int)textBox_.height, RED);

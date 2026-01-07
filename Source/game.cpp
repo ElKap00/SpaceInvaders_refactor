@@ -126,8 +126,8 @@ void Game::createAlienFormation()
 {
 	for (int row = 0; row < alienFormation_.formationHeight_; row++) {
 		for (int col = 0; col < alienFormation_.formationWidth_; col++) {
-			const Vector2 alienPosition = { alienFormation_.formationX_ + 450 + (col * alienFormation_.alienSpacing_),
-									alienFormation_.formationY_ + (row * alienFormation_.alienSpacing_) };
+			const Vector2 alienPosition = { alienFormation_.formationX_ + 450.0f + (static_cast<float>(col) * static_cast<float>(alienFormation_.alienSpacing_)),
+											alienFormation_.formationY_ + (static_cast<float>(row) * static_cast<float>(alienFormation_.alienSpacing_)) };
 			const Alien newAlien = Alien(alienPosition);
 			aliens_.push_back(newAlien);
 		}
@@ -143,8 +143,10 @@ bool Game::doCollide(Vector2 circlePos, float circleRadius, Vector2 lineStart, V
 
 	const float lineLen = lineLength(lineStart, lineEnd);
 	
-	const float dotProduct = (((circlePos.x - lineStart.x) * (lineEnd.x - lineStart.x)) 
-						+ ((circlePos.y - lineStart.y) * (lineEnd.y - lineStart.y))) / pow(lineLen, 2);
+	const float dotProduct = static_cast<float>(
+		(((circlePos.x - lineStart.x) * (lineEnd.x - lineStart.x))
+			+ ((circlePos.y - lineStart.y) * (lineEnd.y - lineStart.y))) / pow(lineLen, 2)
+		);
 
 	const Vector2 closestPoint = {
 		lineStart.x + (dotProduct * (lineEnd.x - lineStart.x)),
@@ -296,7 +298,7 @@ void Game::createWalls()
 	const float wall_distance = windowWidth_ / (wallCount_ + 1);
 	for (int i = 0; i < wallCount_; i++)
 	{
-		const Wall newWall{ {wall_distance * (i + 1), windowHeight_ - 250 } };
+		const Wall newWall{ {wall_distance * (i + 1), windowHeight_ - 250.0f } };
 		walls_.push_back(newWall);
 	}
 }
@@ -316,8 +318,8 @@ void Game::updateAliens()
 
 void Game::aliensShoot()
 {
-	alienFormation_.shootTimerSeconds_ += 1;
-	if (alienFormation_.shootTimerSeconds_ > 59) //once per second
+	alienFormation_.shootTimerSeconds_ += 1.0f;
+	if (alienFormation_.shootTimerSeconds_ > 59.0f) //once per second
 	{
 		int randomAlienIndex = 0;
 
@@ -326,10 +328,10 @@ void Game::aliensShoot()
 			randomAlienIndex = rand() % aliens_.size();
 		}
 
-		const Vector2 projectilePosition = { aliens_[randomAlienIndex].position_.x, aliens_[randomAlienIndex].position_.y + 40 };
+		const Vector2 projectilePosition = { aliens_[randomAlienIndex].position_.x, aliens_[randomAlienIndex].position_.y + 40.0f };
 		const Projectile newProjectile(projectilePosition, -15, EntityType::ENEMY_PROJECTILE);
 		projectiles_.push_back(newProjectile);
-		alienFormation_.shootTimerSeconds_ = 0;
+		alienFormation_.shootTimerSeconds_ = 0.0f;
 	}
 }
 
@@ -337,7 +339,7 @@ void Game::playerShoot()
 {
 	if (IsKeyPressed(KEY_SPACE))
 	{
-		const Projectile newProjectile({ player_.positionX_, windowHeight_ - 130 }, EntityType::PLAYER_PROJECTILE);
+		const Projectile newProjectile({ player_.positionX_, windowHeight_ - 130.0f }, EntityType::PLAYER_PROJECTILE);
 		projectiles_.push_back(newProjectile);
 	}
 }
@@ -391,7 +393,7 @@ void Game::checkCollisions()
 
 		for (auto& wall : walls_)
 		{
-			if (doCollide(wall.position_, wall.radius_, projectile.lineStart_, projectile.lineEnd_))
+			if (doCollide(wall.position_, static_cast<float>(wall.radius_), projectile.lineStart_, projectile.lineEnd_))
 			{
 				projectile.setActive(false);
 				wall.health_ -= 1;

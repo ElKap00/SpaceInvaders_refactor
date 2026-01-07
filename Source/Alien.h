@@ -7,8 +7,8 @@ struct Alien
 public:
 	EntityType type_ = EntityType::ENEMY;
 	Color color_ = WHITE;
-	Vector2 position_ = { 0, 0 };
-	float radius_ = 30;
+	Vector2 position_ = {0.0f, 0.0f};
+	float radius_ = 30.0f;
 	bool isActive_ = true;
 	bool moveRight_ = true;
 	int speed_ = 2;

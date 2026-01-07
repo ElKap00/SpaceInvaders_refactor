@@ -9,13 +9,6 @@ int Player::getLives() noexcept
 	return lives_;
 }
 
-void Player::initialize()
-{
-	// TODO: fix C-style casts
-	float window_width = (float)GetScreenWidth();
-	positionX_ = window_width / 2;
-}
-
 void Player::update() noexcept
 {
 	//Movement
@@ -31,10 +24,11 @@ void Player::update() noexcept
 
 	positionX_ += speed_ * direction_;
 
-	if (positionX_ < 0 + radius_)
+	if (positionX_ < 0.0f + radius_)
 	{
-		positionX_ = 0 + radius_;
+		positionX_ = 0.0f + radius_;
 	}
+	// TODO: use screenWidth_ variable from Game class instead
 	else if (positionX_ > GetScreenWidth() - radius_)
 	{
 		positionX_ = GetScreenWidth() - radius_;
@@ -43,15 +37,15 @@ void Player::update() noexcept
 	//Determine frame for animation
 	timer_ += GetFrameTime();
 
-	if (timer_ > 0.4 && activeTexture_ == 2)
+	if (timer_ > 0.4f && activeTexture_ == 2)
 	{
 		activeTexture_ = 0;
-		timer_ = 0;
+		timer_ = 0.0f;
 	}
-	else if (timer_ > 0.4)
+	else if (timer_ > 0.4f)
 	{
 		activeTexture_++;
-		timer_ = 0;
+		timer_ = 0.0f;
 	}
 }
 
@@ -61,17 +55,17 @@ void Player::render(Texture2D texture) noexcept
 
 	DrawTexturePro(texture,
 		{
-			0,
-			0,
-			352,
-			352,
+			0.0f,
+			0.0f,
+			352.0f,
+			352.0f,
 		},
 		{
 			positionX_, window_height - height_,
-			100,
-			100,
-		}, { 50, 50 },
-		0,
+			100.0f,
+			100.0f,
+		}, {50.0f, 50.0f},
+		0.0f,
 		WHITE);
 }
 

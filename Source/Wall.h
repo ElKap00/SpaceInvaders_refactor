@@ -4,7 +4,7 @@
 struct Wall
 {
 public:
-	Vector2 position_ = {0.0, 0.0};
+	Vector2 position_ = {0.0f, 0.0f};
 	bool isActive_ = true;
 	int health_ = 50;
 	int radius_ = 60;
