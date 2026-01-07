@@ -293,13 +293,10 @@ void Game::resetScore() noexcept
 
 void Game::createWalls()
 {
-	// TODO: fix C-style casts, mark variables as const
-	const float window_width = (float)GetScreenWidth();
-	const float window_height = (float)GetScreenHeight();
-	const float wall_distance = window_width / (wallCount_ + 1);
+	const float wall_distance = windowWidth_ / (wallCount_ + 1);
 	for (int i = 0; i < wallCount_; i++)
 	{
-		const Wall newWall{ {wall_distance * (i + 1), window_height - 250 } };
+		const Wall newWall{ {wall_distance * (i + 1), windowHeight_ - 250 } };
 		walls_.push_back(newWall);
 	}
 }
@@ -310,7 +307,7 @@ void Game::updateAliens()
 	{
 		alien.update();
 
-		if (alien.position_.y > GetScreenHeight() - player_.height_)
+		if (alien.position_.y > windowHeight_ - player_.height_)
 		{
 			end();
 		}
@@ -340,8 +337,7 @@ void Game::playerShoot()
 {
 	if (IsKeyPressed(KEY_SPACE))
 	{
-		const float window_height = (float)GetScreenHeight();
-		const Projectile newProjectile({ player_.positionX_, window_height - 130 }, EntityType::PLAYER_PROJECTILE);
+		const Projectile newProjectile({ player_.positionX_, windowHeight_ - 130 }, EntityType::PLAYER_PROJECTILE);
 		projectiles_.push_back(newProjectile);
 	}
 }
@@ -386,7 +382,7 @@ void Game::checkCollisions()
 
 		if (projectile.type_ == EntityType::ENEMY_PROJECTILE)
 		{
-			if (doCollide({ player_.positionX_, GetScreenHeight() - player_.height_ }, player_.radius_, projectile.lineStart_, projectile.lineEnd_))
+			if (doCollide({ player_.positionX_, windowHeight_ - player_.height_ }, player_.radius_, projectile.lineStart_, projectile.lineEnd_))
 			{
 				projectile.setActive(false);
 				player_.lives_ -= 1;

@@ -34,13 +34,16 @@ struct Game
 	int wallCount_ = 5;
 	bool isNewHighScore_ = false;
 
+	const float windowHeight_ = static_cast<float>(GetScreenHeight());
+	const float windowWidth_ = static_cast<float>(GetScreenWidth());
+
 	// Aliens shooting
 	float shootTimerSeconds_ = 0;
 
 	// TODO: consider EntityManager class for better organization
 	// Entity Storage and Resources
 	Resources resources_ = Resources{};
-	Player player_{(float)GetScreenWidth()/2};
+	Player player_{windowWidth_/2};
 	std::vector<Projectile> projectiles_;
 	std::vector<Wall> walls_;
 	std::vector<Alien> aliens_;
