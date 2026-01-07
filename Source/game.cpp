@@ -316,8 +316,8 @@ void Game::updateAliens()
 
 void Game::aliensShoot()
 {
-	shootTimerSeconds_ += 1;
-	if (shootTimerSeconds_ > 59) //once per second
+	alienFormation_.shootTimerSeconds_ += 1;
+	if (alienFormation_.shootTimerSeconds_ > 59) //once per second
 	{
 		int randomAlienIndex = 0;
 
@@ -329,7 +329,7 @@ void Game::aliensShoot()
 		const Vector2 projectilePosition = { aliens_[randomAlienIndex].position_.x, aliens_[randomAlienIndex].position_.y + 40 };
 		const Projectile newProjectile(projectilePosition, -15, EntityType::ENEMY_PROJECTILE);
 		projectiles_.push_back(newProjectile);
-		shootTimerSeconds_ = 0;
+		alienFormation_.shootTimerSeconds_ = 0;
 	}
 }
 

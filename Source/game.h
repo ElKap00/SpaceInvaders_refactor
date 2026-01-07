@@ -25,10 +25,12 @@ struct AlienFormation
 	int alienSpacing_ = 80;
 	int formationX_ = 100;
 	int formationY_ = 50;
+	float shootTimerSeconds_ = 0;
 };
 
-struct Game
+class Game
 {
+private:
 	State gameState_ = State::STARTSCREEN;
 	int score_ = 0;
 	int wallCount_ = 5;
@@ -36,9 +38,6 @@ struct Game
 
 	const float windowHeight_ = static_cast<float>(GetScreenHeight());
 	const float windowWidth_ = static_cast<float>(GetScreenWidth());
-
-	// Aliens shooting
-	float shootTimerSeconds_ = 0;
 
 	// TODO: consider EntityManager class for better organization
 	// Entity Storage and Resources
@@ -50,7 +49,7 @@ struct Game
 	AlienFormation alienFormation_ = AlienFormation{};
 	Leaderboard leaderboard_ = Leaderboard{};
 	Background background_ = Background{};
-
+public:
 	Game() = default;
 	~Game() = default;
 
@@ -61,14 +60,14 @@ struct Game
 	Player& getPlayer() noexcept;
 	State getGameState() const noexcept;
 
-	void start();
-	void end();
-	void resume();
-
 	void update();
 	void render();
 
 private:
+	void start();
+	void end();
+	void resume();
+
 	void renderStartScreen() noexcept;
 	void updateStartScreen();
 	void renderGamePlay();
