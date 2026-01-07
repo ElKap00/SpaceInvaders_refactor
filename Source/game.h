@@ -60,9 +60,7 @@ struct Game
 
 	void start();
 	void end();
-
 	void resume();
-	void launch();
 
 	void update();
 	void render();

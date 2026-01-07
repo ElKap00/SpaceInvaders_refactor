@@ -81,11 +81,6 @@ void Game::resume()
 	setGameState(State::STARTSCREEN);
 }
 
-void Game::launch()
-{
-	resources_.load();
-}
-
 // TODO: break up this huge function into smaller functions
 void Game::update()
 {

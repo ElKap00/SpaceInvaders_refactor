@@ -2,7 +2,6 @@
 #include "raylib_wrapper.h"
 #include "vector"
 
-// TODO: implement rule of zero/five for resource management?
 struct Resources 
 {
 	std::vector<Texture2D> shipTextures_;
@@ -10,5 +9,10 @@ struct Resources
 	Texture2D barrierTexture_;
 	Texture2D laserTexture_;
 
-	void load();
+	Resources();
+	~Resources();
+	Resources(const Resources& other);
+	Resources& operator=(const Resources& other);
+	Resources(Resources&& other) noexcept;
+	Resources& operator=(Resources&& other) noexcept;
 };
