@@ -2,7 +2,6 @@
 #include "raylib_wrapper.h"
 #include "entity_type.h"
 
-// TODO: write constructor for Player
 struct Player
 {
 	// TODO: make variables private and add getters/setters as needed

@@ -14,7 +14,6 @@ void Player::initialize()
 	// TODO: fix C-style casts
 	float window_width = (float)GetScreenWidth();
 	positionX_ = window_width / 2;
-	std::cout << "Find Player -X:" << GetScreenWidth() / 2 << "Find Player -Y" << GetScreenHeight() - height_ << std::endl;
 }
 
 void Player::update() noexcept
@@ -58,8 +57,7 @@ void Player::update() noexcept
 
 void Player::render(Texture2D texture) noexcept
 {
-	// TODO: make variable const int
-	float window_height = GetScreenHeight();
+	const float window_height = GetScreenHeight();
 
 	DrawTexturePro(texture,
 		{

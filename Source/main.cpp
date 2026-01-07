@@ -36,20 +36,14 @@ int main(void)
     SetTargetFPS(60);
 
     Game game{};
-    
-    //--------------------------------------------------------------------------------------
 
     InitAudioDevice();
-
     auto sound = LoadSound("./hitHurt.ogg");
+    //--------------------------------------------------------------------------------------
     
     // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    while (!WindowShouldClose())
     {
-        // Update
-        //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
-        //----------------------------------------------------------------------------------
 
         if (IsKeyPressed(KEY_SPACE))
         {
@@ -75,12 +69,11 @@ int main(void)
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
-
-    CloseAudioDevice();
     
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
+    CloseAudioDevice();
+    CloseWindow();
     //--------------------------------------------------------------------------------------
 
     return 0;

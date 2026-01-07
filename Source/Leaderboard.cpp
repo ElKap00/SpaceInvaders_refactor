@@ -4,7 +4,6 @@
 
 Leaderboard::Leaderboard()
 {
-	// Initialize with default leaderboard entries
 	entries_ = { 
 		{"Player 1", 500}, 
 		{"Player 2", 400}, 
@@ -61,7 +60,6 @@ void Leaderboard::handleTextInput()
 
 	while (key > 0)
 	{
-		// NOTE: Only allow keys in range [32..125]
 		if ((key >= 32) && (key <= 125) && (letterCount_ < 9))
 		{
 			name_[letterCount_] = (char)key;
@@ -107,7 +105,6 @@ void Leaderboard::handleNameSubmission()
 {
 	if (isNameValid() && IsKeyReleased(KEY_ENTER))
 	{
-		// Don't insert here - will be done externally with actual score
 		isEnteringName_ = false;
 	}
 }
@@ -128,7 +125,6 @@ void Leaderboard::updateHighScoreNameEntry()
 
 void Leaderboard::renderLeaderboard()
 {
-	// If no highscore or name is entered, show scoreboard and call it a day
 	DrawText("PRESS ENTER TO CONTINUE", 600, 200, 40, YELLOW);
 
 	DrawText("LEADERBOARD", 50, 100, 40, YELLOW);
@@ -147,7 +143,6 @@ void Leaderboard::renderHighScoreNameInput()
 	{
 		if (letterCount_ < 9)
 		{
-			// Draw blinking underscore char
 			if (((cursorFrameCounter_ / 20) % 2) == 0)
 			{
 				DrawText("_", (int)textBox_.x + 8 + MeasureText(name_, 40), (int)textBox_.y + 12, 40, MAROON);
@@ -155,12 +150,10 @@ void Leaderboard::renderHighScoreNameInput()
 		}
 		else
 		{
-			//Name needs to be shorter
 			DrawText("Press BACKSPACE to delete chars...", 600, 650, 20, YELLOW);
 		}
 	}
 
-	// Explain how to continue when name is input
 	if (letterCount_ > 0 && letterCount_ < 9)
 	{
 		DrawText("PRESS ENTER TO CONTINUE", 600, 800, 40, YELLOW);
@@ -171,13 +164,11 @@ void Leaderboard::renderHighScoreEntry()
 {
 	DrawText("NEW HIGHSCORE!", 600, 300, 60, YELLOW);
 
-	// BELOW CODE IS FOR NAME INPUT RENDER
 	DrawText("PLACE MOUSE OVER INPUT BOX!", 600, 400, 20, YELLOW);
 
 	DrawRectangleRec(textBox_, LIGHTGRAY);
 	if (isTextBoxHovered_)
 	{
-		// HOVER CONFIRMIATION
 		DrawRectangleLines((int)textBox_.x, (int)textBox_.y, (int)textBox_.width, (int)textBox_.height, RED);
 	}
 	else
@@ -185,10 +176,8 @@ void Leaderboard::renderHighScoreEntry()
 		DrawRectangleLines((int)textBox_.x, (int)textBox_.y, (int)textBox_.width, (int)textBox_.height, DARKGRAY);
 	}
 
-	//Draw the name being typed out
 	DrawText(name_, (int)textBox_.x + 5, (int)textBox_.y + 8, 40, MAROON);
 
-	//Draw the text explaining how many characters are used
 	DrawText(TextFormat("INPUT CHARS: %i/%i", letterCount_, 8), 600, 600, 20, YELLOW);
 }
 

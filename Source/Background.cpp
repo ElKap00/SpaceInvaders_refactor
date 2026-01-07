@@ -6,7 +6,6 @@ Background::Background() noexcept
 	initialize(600);
 }
 
-//BACKGROUND
 void Star::update(float starOffset) noexcept
 {
 	position_.x = initPosition_.x + starOffset;

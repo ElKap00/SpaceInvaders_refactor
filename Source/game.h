@@ -27,7 +27,6 @@ struct AlienFormation
 	int formationY_ = 50;
 };
 
-// TODO: write Game constructor for proper initialization
 struct Game
 {
 	State gameState_ = State::STARTSCREEN;

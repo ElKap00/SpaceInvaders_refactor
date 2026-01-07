@@ -239,7 +239,6 @@ void Game::renderEndScreen()
 
 void Game::updateEndScreen()
 {
-	//Exit endscreen
 	if (IsKeyReleased(KEY_ENTER) && !isNewHighScore_)
 	{
 		resume();
@@ -249,10 +248,8 @@ void Game::updateEndScreen()
 	{
 		leaderboard_.updateHighScoreNameEntry();
 
-		// Check if name entry is complete
 		if (!leaderboard_.isEnteringName())
 		{
-			// Insert the high score with the player's name
 			leaderboard_.insertNewHighScore(leaderboard_.getEnteredName(), score_);
 			isNewHighScore_ = false;
 		}
@@ -339,7 +336,6 @@ void Game::aliensShoot()
 	}
 }
 
-// TODO: move this to Projectile class?
 void Game::playerShoot()
 {
 	if (IsKeyPressed(KEY_SPACE))
@@ -373,7 +369,6 @@ void Game::removeInactiveEntities() noexcept
 
 void Game::checkCollisions()
 {
-	//CHECK ALL COLLISONS HERE
 	for (auto& projectile : projectiles_)
 	{
 		if (projectile.type_ == EntityType::PLAYER_PROJECTILE)
@@ -382,9 +377,6 @@ void Game::checkCollisions()
 			{
 				if (doCollide(alien.position_, alien.radius_, projectile.lineStart_, projectile.lineEnd_))
 				{
-					// Kill!
-					std::cout << "Hit! \n";
-					// Set them as inactive, will be killed later
 					projectile.setActive(false);
 					alien.setActive(false);
 					score_ += 100;
@@ -396,7 +388,6 @@ void Game::checkCollisions()
 		{
 			if (doCollide({ player_.positionX_, GetScreenHeight() - player_.height_ }, player_.radius_, projectile.lineStart_, projectile.lineEnd_))
 			{
-				std::cout << "dead!\n";
 				projectile.setActive(false);
 				player_.lives_ -= 1;
 			}
@@ -406,9 +397,6 @@ void Game::checkCollisions()
 		{
 			if (doCollide(wall.position_, wall.radius_, projectile.lineStart_, projectile.lineEnd_))
 			{
-				// Kill!
-				std::cout << "Hit! \n";
-				// Set them as inactive, will be killed later
 				projectile.setActive(false);
 				wall.health_ -= 1;
 			}
