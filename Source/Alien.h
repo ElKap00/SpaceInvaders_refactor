@@ -17,6 +17,6 @@ public:
 
 	void setActive(bool isActive) noexcept;
 
-	void update();
-	void render(Texture2D texture);
+	void update() noexcept;
+	void render(Texture2D texture) noexcept;
 };

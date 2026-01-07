@@ -22,7 +22,7 @@ Projectile::Projectile(Vector2 position, int speed, EntityType type) noexcept
 
 void Projectile::setActive(bool isActive) noexcept { isActive_ = isActive; }
 
-void Projectile::update()
+void Projectile::update() noexcept
 {
 	position_.y -= speed_;
 
@@ -39,7 +39,7 @@ void Projectile::update()
 	}
 }
 
-void Projectile::render(Texture2D texture)
+void Projectile::render(Texture2D texture) noexcept
 {
 	DrawTexturePro(texture,
 		{

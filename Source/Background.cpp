@@ -1,21 +1,21 @@
 #include "raylib_wrapper.h"
 #include "Background.h"
 
-Background::Background()
+Background::Background() noexcept
 {
 	initialize(600);
 }
 
 // TODO: write constructor for Star?
 //BACKGROUND
-void Star::update(float starOffset)
+void Star::update(float starOffset) noexcept
 {
 	position_.x = initPosition_.x + starOffset;
 	position_.y = initPosition_.y;
 
 }
 
-void Star::render()
+void Star::render() noexcept
 {
 	// TODO: fix C-style casts
 	DrawCircle((int)position_.x, (int)position_.y, size_, color_);
@@ -42,20 +42,19 @@ void Background::initialize(int starAmount)
 	}
 }
 
-// TODO: use ranged for-loops
-void Background::update(float offset)
+void Background::update(float offset) noexcept
 {
-	for (int i = 0; i < stars_.size(); i++)
+	for (auto& star : stars_)
 	{
-		stars_[i].update(offset);
+		star.update(offset);
 	}
 
 }
 
-void Background::render()
+void Background::render() noexcept
 {
-	for (int i = 0; i < stars_.size(); i++)
+	for (auto& star : stars_)
 	{
-		stars_[i].render();
+		star.render();
 	}
 }

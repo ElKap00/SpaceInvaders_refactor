@@ -1,10 +1,10 @@
 #include "player.h"
 #include <iostream>
 
-Player::Player(float positionX)
+Player::Player(float positionX) noexcept
 	: positionX_(positionX) {}
 
-int Player::getLives()
+int Player::getLives() noexcept
 {
 	return lives_;
 }
@@ -17,7 +17,7 @@ void Player::initialize()
 	std::cout << "Find Player -X:" << GetScreenWidth() / 2 << "Find Player -Y" << GetScreenHeight() - height_ << std::endl;
 }
 
-void Player::update()
+void Player::update() noexcept
 {
 	//Movement
 	direction_ = 0;
@@ -56,7 +56,7 @@ void Player::update()
 	}
 }
 
-void Player::render(Texture2D texture)
+void Player::render(Texture2D texture) noexcept
 {
 	// TODO: make variable const int
 	float window_height = GetScreenHeight();

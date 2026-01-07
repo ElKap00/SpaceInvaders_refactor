@@ -19,12 +19,12 @@ public:
 
 	EntityType type_ = EntityType::PLAYER;
 
-	Player() = default;
-	Player(float positionX);
+	Player() noexcept = default;
+	Player(float positionX) noexcept;
 
-	int getLives();
+	int getLives() noexcept;
 
 	void initialize();
-	void render(Texture2D texture);
-	void update();
+	void render(Texture2D texture) noexcept;
+	void update() noexcept;
 };

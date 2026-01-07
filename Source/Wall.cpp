@@ -16,7 +16,7 @@ void Wall::makeInactive() noexcept
 }
 
 
-void Wall::render(Texture2D texture)
+void Wall::render(Texture2D texture) noexcept
 {
 	DrawTexturePro(texture,
 		{

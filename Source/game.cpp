@@ -7,18 +7,16 @@
 
 
 // MATH FUNCTIONS
-float lineLength(Vector2 A, Vector2 B) //Uses pythagoras to calculate the length of a line
+float lineLength(Vector2 A, Vector2 B) noexcept //Uses pythagoras to calculate the length of a line
 {
-	// TODO: make variable const
-	float length = sqrtf(pow(B.x - A.x, 2) + pow(B.y - A.y, 2));
+	const float length = sqrtf(powf(B.x - A.x, 2.0f) + powf(B.y - A.y, 2.0f));
 
 	return length;
 }
 
 bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) // Uses pythagoras to calculate if a point is within a circle or not
 {
-	// TODO:  make variables const
-	float distanceToCentre = lineLength(circlePos, point);
+	const float distanceToCentre = lineLength(circlePos, point);
 
 	if (distanceToCentre < radius)
 	{
@@ -40,9 +38,9 @@ bool PointOnLine(Vector2 lineStart, Vector2 lineEnd, Vector2 point, float buffer
 	return (combinedDistance >= length - buffer && combinedDistance <= length + buffer);
 }
 
-void Game::setGameState(State state) { gameState_ = state; }
+void Game::setGameState(State state) noexcept { gameState_ = state; }
 
-void Game::setPlayer(Player player) { player_ = player; }
+void Game::setPlayer(Player player) noexcept { player_ = player; }
 
 void Game::setBackground(Background background) { background_ = background; }
 
@@ -81,7 +79,6 @@ void Game::resume()
 	setGameState(State::STARTSCREEN);
 }
 
-// TODO: break up this huge function into smaller functions
 void Game::update()
 {
 	switch (gameState_)
@@ -104,7 +101,6 @@ void Game::update()
 	}
 }
 
-// TODO: break up into smaller functions
 void Game::render()
 {
 	switch (gameState_)
@@ -169,7 +165,7 @@ bool Game::doCollide(Vector2 circlePos, float circleRadius, Vector2 lineStart, V
 	return false;
 }
 
-void Game::renderStartScreen()
+void Game::renderStartScreen() noexcept
 {
 	DrawText("SPACE INVADERS", 200, 100, 160, YELLOW);
 	DrawText("PRESS SPACE TO BEGIN", 200, 350, 40, YELLOW);
@@ -294,13 +290,13 @@ void Game::renderAliens()
 	}
 }
 
-void Game::renderUI()
+void Game::renderUI() noexcept
 {
 	DrawText(TextFormat("Score: %i", score_), 50, 20, 40, YELLOW);
 	DrawText(TextFormat("Lives: %i", player_.lives_), 50, 70, 40, YELLOW);
 }
 
-void Game::resetScore()
+void Game::resetScore() noexcept
 {
 	score_ = 0;
 }
@@ -313,7 +309,7 @@ void Game::createWalls()
 	const float wall_distance = window_width / (wallCount_ + 1);
 	for (int i = 0; i < wallCount_; i++)
 	{
-		Wall newWall{ {wall_distance * (i + 1), window_height - 250 } };
+		const Wall newWall{ {wall_distance * (i + 1), window_height - 250 } };
 		walls_.push_back(newWall);
 	}
 }
@@ -361,7 +357,7 @@ void Game::playerShoot()
 	}
 }
 
-void Game::removeInactiveEntities()
+void Game::removeInactiveEntities() noexcept
 {
 	projectiles_.erase(
 		std::remove_if(projectiles_.begin(), projectiles_.end(),

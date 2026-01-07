@@ -15,6 +15,6 @@ public:
 	bool isActive() const noexcept;
 	void makeInactive() noexcept;
 
-	void render(Texture2D texture);
+	void render(Texture2D texture) noexcept;
 	void update() noexcept;
 };

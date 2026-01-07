@@ -23,8 +23,8 @@ public:
 	void renderHighScoreNameInput();
 	void renderLeaderboard();
 
-	bool isEnteringName() const { return isEnteringName_; }
-	void startNameEntry() { isEnteringName_ = true; }
+	bool isEnteringName() const noexcept { return isEnteringName_; }
+	void startNameEntry() noexcept{ isEnteringName_ = true; }
 	void resetNameEntry();
 	
 	std::string getEnteredName() const { return std::string(name_); }

@@ -10,7 +10,7 @@ void Alien::setActive(bool isActive) noexcept
 	isActive_ = isActive;
 }
 
-void Alien::update()
+void Alien::update() noexcept
 {
 	if (moveRight_)
 	{
@@ -34,7 +34,7 @@ void Alien::update()
 	}
 }
 
-void Alien::render(Texture2D texture)
+void Alien::render(Texture2D texture) noexcept
 {
 	DrawTexturePro(texture,
 		{

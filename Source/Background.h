@@ -9,8 +9,8 @@ struct Star
 	Color color_ = GRAY;
 	float size_ = 0;
 
-	void update(float starOffset);
-	void render();
+	void update(float starOffset) noexcept;
+	void render() noexcept;
 };
 
 struct Background
@@ -20,9 +20,9 @@ struct Background
 	Vector2 cornerPos_;
 	float offset_;
 
-	Background();
+	Background() noexcept;
 
 	void initialize(int starAmount);
-	void update(float offset);
-	void render();
+	void update(float offset) noexcept;
+	void render() noexcept;
 };
