@@ -21,3 +21,12 @@
 #pragma warning(disable: 26812) // prefer enum class over enum
 #include "raylib.h"
 #pragma warning(pop)
+
+
+//void DrawRectangleLines(float x, float y, float width, float height, Color c) {
+//	//DrawRectangleLines(static_cast<int>(x), ); //TODO: provide full implementation
+//}
+//
+//void DrawRectangleLines(const Rectangle& r, Color c) {
+//	//TODO: call your float overload
+//}

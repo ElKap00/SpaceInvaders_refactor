@@ -13,22 +13,19 @@ Leaderboard::Leaderboard()
 	};
 }
 
-bool Leaderboard::isNewHighScore(int score) const
+bool Leaderboard::isNewHighScore(int score) const //TODO: use an algorithm 
 {
-	if (score > entries_[4].score_)
-	{
-		return true;
-	}
-
-	return false;
+	return (score > entries_[4].score_);
 }
 
 // TODO: change to string_view to avoid copy
 void Leaderboard::insertNewHighScore(const std::string& name, int score)
 {
-	PlayerData newData;
-	newData.name_ = name;
-	newData.score_ = score;
+	PlayerData newData{ name, score };
+	//TODO: use algorithms. 
+	// for example: push_back the new score. 
+	// sort the scores. 
+	// pop_back if the list is too long.
 
 	for (int i = 0; i < entries_.size(); i++)
 	{
@@ -75,6 +72,7 @@ void Leaderboard::handleTextInput()
 
 void Leaderboard::handleBackspace()
 {
+	//TODO: std::string::pop_back()
 	if (IsKeyPressed(KEY_BACKSPACE))
 	{
 		letterCount_--;
@@ -131,17 +129,17 @@ void Leaderboard::renderLeaderboard()
 
 	DrawText("LEADERBOARD", 50, 100, 40, YELLOW);
 
-	for (int i = 0; i < entries_.size(); i++)
+	for (int i = 0; i < std::ssize(entries_); i++) 
 	{
-		char* tempNameDisplay = entries_[i].name_.data();
-		DrawText(tempNameDisplay, 50, 140 + (i * 40), 40, YELLOW);
-		DrawText(TextFormat("%i", entries_[i].score_), 350, 140 + (i * 40), 40, YELLOW);
+		const auto& entry = entries_[i];		
+		DrawText(entry.name_.data(), 50, 140 + (i * 40), 40, YELLOW);
+		DrawText(TextFormat("%i", entry.score_), 350, 140 + (i * 40), 40, YELLOW);
 	}
 }
 
 void Leaderboard::renderHighScoreNameInput()
 {
-	if (isTextBoxHovered_)
+	if (isTextBoxHovered_) //reverse and quick bail. Move code left
 	{
 		if (letterCount_ < 9)
 		{

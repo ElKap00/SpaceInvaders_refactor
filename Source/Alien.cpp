@@ -5,13 +5,15 @@ Alien::Alien(Vector2 position) noexcept
 	position_ = position;
 }
 
+//TODO: _isActive is a public member, so don't bother with accessors. 
 void Alien::setActive(bool isActive) noexcept
 {
 	isActive_ = isActive;
 }
 
-void Alien::update() noexcept
+void Alien::update() noexcept 
 {
+	//TODO: both branches are identical. Refactor.
 	if (moveRight_)
 	{
 		position_.x += speed_;
@@ -36,6 +38,8 @@ void Alien::update() noexcept
 
 void Alien::render(Texture2D texture) noexcept
 {
+	//scale the image on the harddrive instead
+	// and then use DrawTexture() instead of DrawTexturePro()
 	DrawTexturePro(texture,
 		{
 			0.0f,

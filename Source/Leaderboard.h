@@ -33,7 +33,7 @@ private:
 	std::vector<PlayerData> entries_;
 	
 	// Name input state
-	char name_[9 + 1] = "\0";
+	char name_[9 + 1] = "\0"; //TODO: we don't do strings like this. 
 	int letterCount_ = 0;
 	Rectangle textBox_ = { 600, 500, 225, 50 };
 	bool isTextBoxHovered_ = false;

@@ -13,7 +13,7 @@ struct Star
 		: initPosition_(initPos), position_(initPos), color_(col), size_(sz) {}
 
 	void update(float starOffset) noexcept;
-	void render() noexcept;
+	void render() noexcept; //TODO: it is almost always possible to make render() const noexcept
 };
 
 struct Background

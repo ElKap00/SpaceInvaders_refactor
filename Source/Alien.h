@@ -4,13 +4,12 @@
 
 struct Alien
 {
-public:
 	EntityType type_ = EntityType::ENEMY;
 	Color color_ = WHITE;
 	Vector2 position_ = {0.0f, 0.0f};
 	float radius_ = 30.0f;
 	bool isActive_ = true;
-	bool moveRight_ = true;
+	bool moveRight_ = true; // TODO: consider removing. "speed" (eg. velcoity) already implies direction
 	int speed_ = 2;
 
 	Alien(Vector2 position) noexcept;

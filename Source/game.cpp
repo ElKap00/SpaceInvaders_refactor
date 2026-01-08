@@ -1,9 +1,9 @@
 #include "game.h"
-#include <iostream>
-#include <vector>
 #include <chrono>
-#include <thread>
 #include <fstream>
+#include <iostream>
+#include <thread>
+#include <vector>
 
 
 // MATH FUNCTIONS
@@ -201,14 +201,13 @@ void Game::updateGamePlay()
 	}
 
 	getPlayer().update();
-	updateAliens();
+	updateAliens(); //TODO: consider making this a generic "update(Range)", "update(begin, end)"
 
 	if (aliens_.size() < 1)
 	{
 		createAlienFormation();
 	}
-
-	checkCollisions();
+	
 
 	background_.updateWithPlayerPosition(player_.positionX_, player_.height_);
 
@@ -221,9 +220,9 @@ void Game::updateGamePlay()
 	{
 		wall.update();
 	}
-
 	playerShoot();
 	aliensShoot();
+	checkCollisions();
 	removeInactiveEntities();
 }
 
@@ -367,9 +366,10 @@ void Game::removeInactiveEntities() noexcept
 
 void Game::checkCollisions()
 {
+	//TODO: everything is a rectangle. Raylib has a CheckCollisionRecs() function that could be used instead.
 	for (auto& projectile : projectiles_)
 	{
-		if (projectile.type_ == EntityType::PLAYER_PROJECTILE)
+		if (projectile.type_ == EntityType::PLAYER_PROJECTILE) //TODO: just use two lists. One for player shots, one for enemies. No branching on types needed.
 		{
 			for (auto& alien : aliens_)
 			{

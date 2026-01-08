@@ -1,5 +1,6 @@
 #pragma once
 
+//TODO: Delete with great prejudice
 enum struct EntityType
 {
 	PLAYER,
