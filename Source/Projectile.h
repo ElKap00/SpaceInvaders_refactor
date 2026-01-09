@@ -8,8 +8,7 @@ public:
 	int speed_ = 15;
 	bool isActive_ = true;
 
-	Vector2 lineStart_ = {0.0f, 0.0f};
-	Vector2 lineEnd_ = {0.0f, 0.0f};
+	Rectangle collisionBox_ = {0.0f, 0.0f, 10.0f, 30.0f}; // Small width, tall height for laser beam
 
 	Projectile(Vector2 position) noexcept;
 	Projectile(Vector2 position, int speed) noexcept;

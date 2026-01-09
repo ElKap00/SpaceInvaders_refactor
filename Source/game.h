@@ -34,6 +34,7 @@ private:
 	int score_ = 0;
 	int wallCount_ = 5;
 	bool isNewHighScore_ = false;
+	bool debugCollisionBoxes_ = false; // Toggle for debug rendering
 
 	const float windowHeight_ = GetScreenHeightF();
 	const float windowWidth_ = GetScreenWidthF();
@@ -80,6 +81,7 @@ private:
 	void renderWalls();
 	void renderAliens();
 	void renderUI() noexcept;
+	void renderCollisionBoxes() noexcept; // Debug rendering
 
 	void createWalls();
 	void createAlienFormation();
@@ -89,7 +91,8 @@ private:
 	void playerShoot();
 
 	void checkCollisions();
-	bool doCollide(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
+	void checkPlayerProjectileCollisions();
+	void checkAlienProjectileCollisions();
 
 	void resetScore() noexcept;
 	void removeInactiveEntities() noexcept;

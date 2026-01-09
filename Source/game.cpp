@@ -124,10 +124,21 @@ void Game::renderGamePlay()
 	renderProjectiles();
 	renderWalls();
 	renderAliens();
+	
+	if (debugCollisionBoxes_)
+	{
+		renderCollisionBoxes();
+	}
 }
 
 void Game::updateGamePlay()
 {
+	// Toggle debug collision boxes with 'D' key
+	if (IsKeyReleased(KEY_D))
+	{
+		debugCollisionBoxes_ = !debugCollisionBoxes_;
+	}
+
 	if (IsKeyReleased(KEY_Q))
 	{
 		end();
@@ -231,6 +242,41 @@ void Game::renderUI() noexcept
 {
 	DrawText(TextFormat("Score: %i", score_), 50, 20, 40, YELLOW);
 	DrawText(TextFormat("Lives: %i", player_.lives_), 50, 70, 40, YELLOW);
+	
+	if (debugCollisionBoxes_)
+	{
+		DrawText("DEBUG: Collision Boxes ON (Press D to toggle)", 50, 120, 20, GREEN);
+	}
+}
+
+void Game::renderCollisionBoxes() noexcept
+{
+	// Draw player collision box
+	DrawRectangleLinesEx(player_.collisionBox_, 2.0f, GREEN);
+
+	// Draw alien collision boxes
+	for (const auto& alien : aliens_)
+	{
+		DrawRectangleLinesEx(alien.collisionBox_, 2.0f, RED);
+	}
+
+	// Draw wall collision boxes
+	for (const auto& wall : walls_)
+	{
+		DrawRectangleLinesEx(wall.collisionBox_, 2.0f, BLUE);
+	}
+
+	// Draw player projectile collision boxes
+	for (const auto& projectile : playerProjectiles_)
+	{
+		DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, YELLOW);
+	}
+
+	// Draw alien projectile collision boxes
+	for (const auto& projectile : alienProjectiles_)
+	{
+		DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, ORANGE);
+	}
 }
 
 void Game::resetScore() noexcept
@@ -284,7 +330,11 @@ void Game::playerShoot()
 {
 	if (IsKeyPressed(KEY_SPACE))
 	{
-		const Projectile newProjectile({ player_.getPositionX(), player_.position_.y});
+		const Vector2 projectileSpawnPos = {
+			player_.position_.x,
+			player_.position_.y - 50.0f  // Spawn from top of player collision box
+		};
+		const Projectile newProjectile(projectileSpawnPos);
 		playerProjectiles_.push_back(newProjectile);
 	}
 }
@@ -318,17 +368,18 @@ void Game::removeInactiveEntities() noexcept
 
 void Game::checkCollisions()
 {
-	// Player projectiles vs Aliens and Walls
+	checkPlayerProjectileCollisions();
+	checkAlienProjectileCollisions();
+}
+
+void Game::checkPlayerProjectileCollisions()
+{
 	for (auto& projectile : playerProjectiles_)
 	{
-		const Vector2 projectileTop = projectile.lineStart_;
-		const Vector2 projectileBottom = projectile.lineEnd_;
-
 		// Check collision with aliens
 		for (auto& alien : aliens_)
 		{
-			if (CheckCollisionPointRec(projectileTop, alien.collisionBox_) ||
-				CheckCollisionPointRec(projectileBottom, alien.collisionBox_))
+			if (CheckCollisionRecs(projectile.collisionBox_, alien.collisionBox_))
 			{
 				projectile.setActive(false);
 				alien.setActive(false);
@@ -340,8 +391,7 @@ void Game::checkCollisions()
 		// Check collision with walls
 		for (auto& wall : walls_)
 		{
-			if (CheckCollisionPointRec(projectileTop, wall.collisionBox_) ||
-				CheckCollisionPointRec(projectileBottom, wall.collisionBox_))
+			if (CheckCollisionRecs(projectile.collisionBox_, wall.collisionBox_))
 			{
 				projectile.setActive(false);
 				wall.health_ -= 1;
@@ -349,16 +399,14 @@ void Game::checkCollisions()
 			}
 		}
 	}
+}
 
-	// Enemy projectiles vs Player and Walls
+void Game::checkAlienProjectileCollisions()
+{
 	for (auto& projectile : alienProjectiles_)
 	{
-		const Vector2 projectileTop = projectile.lineStart_;
-		const Vector2 projectileBottom = projectile.lineEnd_;
-
 		// Check collision with player
-		if (CheckCollisionPointRec(projectileTop, player_.collisionBox_) ||
-			CheckCollisionPointRec(projectileBottom, player_.collisionBox_))
+		if (CheckCollisionRecs(projectile.collisionBox_, player_.collisionBox_))
 		{
 			projectile.setActive(false);
 			player_.lives_ -= 1;
@@ -367,8 +415,7 @@ void Game::checkCollisions()
 		// Check collision with walls
 		for (auto& wall : walls_)
 		{
-			if (CheckCollisionPointRec(projectileTop, wall.collisionBox_) ||
-				CheckCollisionPointRec(projectileBottom, wall.collisionBox_))
+			if (CheckCollisionRecs(projectile.collisionBox_, wall.collisionBox_))
 			{
 				projectile.setActive(false);
 				wall.health_ -= 1;

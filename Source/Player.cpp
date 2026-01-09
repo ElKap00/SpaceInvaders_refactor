@@ -45,14 +45,14 @@ void Player::update() noexcept
 	}
 
 	//Update collision box
-	collisionBox_.x = position_.x - 50.0f;
+	collisionBox_ = { position_.x - 50.0f, position_.y - 50.0f, 100.0f, 100.0f };
 }
 
 void Player::render(Texture2D texture) noexcept
 {
 	DrawTexture(texture, 
-		static_cast<int>(position_.x - 100.0f),
-		static_cast<int>(position_.y - 100.0f),
+		static_cast<int>(position_.x - 50.0f),
+		static_cast<int>(position_.y - 50.0f),
 		WHITE);
 }
 
