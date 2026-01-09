@@ -141,7 +141,7 @@ void Game::updateGamePlay()
 	{
 		end();
 	}
-	if (player_.getLives() < 1)
+	if (player_.lives_ < 1)
 	{
 		end();
 	}

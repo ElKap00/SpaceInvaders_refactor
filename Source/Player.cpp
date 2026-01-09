@@ -1,25 +1,24 @@
 #include "player.h"
 #include <iostream>
 
-int Player::getLives() noexcept
-{
-	return lives_;
-}
-
 void Player::update() noexcept
 {
-	//Movement
-	direction_ = 0;
+	updateMovement();
+	updateAnimation();
+
+	collisionBox_ = { position_.x - 50.0f, position_.y - 50.0f, 100.0f, 100.0f };
+}
+
+void Player::updateMovement() noexcept
+{
 	if (IsKeyDown(KEY_LEFT))
 	{
-		direction_--;
+		position_.x -= speed_;
 	}
 	if (IsKeyDown(KEY_RIGHT))
 	{
-		direction_++;
+		position_.x += speed_;
 	}
-
-	position_.x += speed_ * direction_;
 
 	if (position_.x < 0.0f + radius_)
 	{
@@ -29,8 +28,10 @@ void Player::update() noexcept
 	{
 		position_.x = GetScreenWidthF() - radius_;
 	}
+}
 
-	//Determine frame for animation
+void Player::updateAnimation() noexcept
+{
 	timer_ += GetFrameTime();
 
 	if (timer_ > 0.4f && activeTexture_ == 2)
@@ -43,9 +44,6 @@ void Player::update() noexcept
 		activeTexture_++;
 		timer_ = 0.0f;
 	}
-
-	//Update collision box
-	collisionBox_ = { position_.x - 50.0f, position_.y - 50.0f, 100.0f, 100.0f };
 }
 
 void Player::render(Texture2D texture) noexcept
