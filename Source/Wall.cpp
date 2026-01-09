@@ -5,21 +5,11 @@ Wall::Wall(Vector2 position) noexcept
 	position_ = position;
 }
 
-bool Wall::isActive() const noexcept
-{
-	return isActive_;
-}
-
-void Wall::makeInactive() noexcept
-{
-	isActive_ = false;
-}
-
 void Wall::update() noexcept
 {
 	if (health_ < 1)
 	{
-		makeInactive();
+		isActive_ = false;
 	}
 
 	collisionBox_ = { position_.x - 75.0f, position_.y, 150.0f, 60.0f };
