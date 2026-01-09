@@ -5,39 +5,6 @@
 #include <thread>
 #include <vector>
 
-
-// MATH FUNCTIONS
-float lineLength(Vector2 A, Vector2 B) noexcept //Uses pythagoras to calculate the length of a line
-{
-	const float length = sqrtf(powf(B.x - A.x, 2.0f) + powf(B.y - A.y, 2.0f));
-
-	return length;
-}
-
-bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) // Uses pythagoras to calculate if a point is within a circle or not
-{
-	const float distanceToCentre = lineLength(circlePos, point);
-
-	if (distanceToCentre < radius)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool PointOnLine(Vector2 lineStart, Vector2 lineEnd, Vector2 point, float buffer = 0.1f)
-{
-	const float length = lineLength(lineStart, lineEnd);
-	const float distanceToStart = lineLength(lineStart, point);
-	const float distanceToEnd = lineLength(lineEnd, point);
-	const float combinedDistance = distanceToStart + distanceToEnd;
-
-	return (combinedDistance >= length - buffer && combinedDistance <= length + buffer);
-}
-
 void Game::setGameState(State state) noexcept { gameState_ = state; }
 
 void Game::setPlayer(Player player) noexcept { player_ = player; }
@@ -60,7 +27,8 @@ void Game::start()
 
 void Game::end()
 {
-	projectiles_.clear();
+	alienProjectiles_.clear();
+	playerProjectiles_.clear();
 	walls_.clear();
 	aliens_.clear();
 	isNewHighScore_ = leaderboard_.isNewHighScore(score_);
@@ -134,37 +102,6 @@ void Game::createAlienFormation()
 	}
 }
 
-bool Game::doCollide(Vector2 circlePos, float circleRadius, Vector2 lineStart, Vector2 lineEnd)
-{
-	if (pointInCircle(circlePos, circleRadius, lineStart) || pointInCircle(circlePos, circleRadius, lineEnd))
-	{
-		return true;
-	}
-
-	const float lineLen = lineLength(lineStart, lineEnd);
-	
-	const float dotProduct = static_cast<float>(
-		(((circlePos.x - lineStart.x) * (lineEnd.x - lineStart.x))
-			+ ((circlePos.y - lineStart.y) * (lineEnd.y - lineStart.y))) / pow(lineLen, 2)
-		);
-
-	const Vector2 closestPoint = {
-		lineStart.x + (dotProduct * (lineEnd.x - lineStart.x)),
-		lineStart.y + (dotProduct * (lineEnd.y - lineStart.y))
-	};
-
-	if (PointOnLine(lineStart, lineEnd, closestPoint))
-	{
-		const float closeToCentre = lineLength(circlePos, closestPoint);
-
-		if (closeToCentre < circleRadius)
-		{
-			return true;
-		}
-	}
-	return false;
-}
-
 void Game::renderStartScreen() noexcept
 {
 	DrawText("SPACE INVADERS", 200, 100, 160, YELLOW);
@@ -211,7 +148,12 @@ void Game::updateGamePlay()
 
 	background_.updateWithPlayerPosition(player_.getPositionX(), player_.height_);
 
-	for (auto& projectile : projectiles_)
+	for (auto& projectile : playerProjectiles_)
+	{
+		projectile.update();
+	}
+
+	for (auto& projectile : alienProjectiles_)
 	{
 		projectile.update();
 	}
@@ -259,7 +201,11 @@ void Game::updateEndScreen()
 
 void Game::renderProjectiles()
 {
-	for (auto& projectile : projectiles_)
+	for (auto& projectile : playerProjectiles_)
+	{
+		projectile.render(resources_.laserTexture_);
+	}
+	for (auto& projectile : alienProjectiles_)
 	{
 		projectile.render(resources_.laserTexture_);
 	}
@@ -328,8 +274,8 @@ void Game::aliensShoot()
 		}
 
 		const Vector2 projectilePosition = { aliens_[randomAlienIndex].position_.x, aliens_[randomAlienIndex].position_.y + 40.0f };
-		const Projectile newProjectile(projectilePosition, -15, EntityType::ENEMY_PROJECTILE);
-		projectiles_.push_back(newProjectile);
+		const Projectile newProjectile(projectilePosition, -15);
+		alienProjectiles_.push_back(newProjectile);
 		alienFormation_.shootTimerSeconds_ = 0.0f;
 	}
 }
@@ -338,17 +284,23 @@ void Game::playerShoot()
 {
 	if (IsKeyPressed(KEY_SPACE))
 	{
-		const Projectile newProjectile({ player_.getPositionX(), player_.position_.y}, EntityType::PLAYER_PROJECTILE);
-		projectiles_.push_back(newProjectile);
+		const Projectile newProjectile({ player_.getPositionX(), player_.position_.y});
+		playerProjectiles_.push_back(newProjectile);
 	}
 }
 
 void Game::removeInactiveEntities() noexcept
 {
-	projectiles_.erase(
-		std::remove_if(projectiles_.begin(), projectiles_.end(),
+	playerProjectiles_.erase(
+		std::remove_if(playerProjectiles_.begin(), playerProjectiles_.end(),
 			[](const Projectile& projectile) { return !projectile.isActive_; }),
-		projectiles_.end()
+		playerProjectiles_.end()
+	);
+
+	alienProjectiles_.erase(
+		std::remove_if(alienProjectiles_.begin(), alienProjectiles_.end(),
+			[](const Projectile& projectile) { return !projectile.isActive_; }),
+		alienProjectiles_.end()
 	);
 
 	aliens_.erase(
@@ -366,37 +318,61 @@ void Game::removeInactiveEntities() noexcept
 
 void Game::checkCollisions()
 {
-	//TODO: everything is a rectangle. Raylib has a CheckCollisionRecs() function that could be used instead.
-	for (auto& projectile : projectiles_)
+	// Player projectiles vs Aliens and Walls
+	for (auto& projectile : playerProjectiles_)
 	{
-		if (projectile.type_ == EntityType::PLAYER_PROJECTILE) //TODO: just use two lists. One for player shots, one for enemies. No branching on types needed.
-		{
-			for (auto& alien : aliens_)
-			{
-				if (doCollide(alien.position_, alien.radius_, projectile.lineStart_, projectile.lineEnd_))
-				{
-					projectile.setActive(false);
-					alien.setActive(false);
-					score_ += 100;
-				}
-			}
-		}
+		const Vector2 projectileTop = projectile.lineStart_;
+		const Vector2 projectileBottom = projectile.lineEnd_;
 
-		if (projectile.type_ == EntityType::ENEMY_PROJECTILE)
+		// Check collision with aliens
+		for (auto& alien : aliens_)
 		{
-			if (doCollide({ player_.getPositionX(), windowHeight_ - player_.height_}, player_.radius_, projectile.lineStart_, projectile.lineEnd_))
+			if (CheckCollisionPointRec(projectileTop, alien.collisionBox_) ||
+				CheckCollisionPointRec(projectileBottom, alien.collisionBox_))
 			{
 				projectile.setActive(false);
-				player_.lives_ -= 1;
+				alien.setActive(false);
+				score_ += 100;
+				break;
 			}
 		}
 
+		// Check collision with walls
 		for (auto& wall : walls_)
 		{
-			if (doCollide(wall.position_, static_cast<float>(wall.radius_), projectile.lineStart_, projectile.lineEnd_))
+			if (CheckCollisionPointRec(projectileTop, wall.collisionBox_) ||
+				CheckCollisionPointRec(projectileBottom, wall.collisionBox_))
 			{
 				projectile.setActive(false);
 				wall.health_ -= 1;
+				break;
+			}
+		}
+	}
+
+	// Enemy projectiles vs Player and Walls
+	for (auto& projectile : alienProjectiles_)
+	{
+		const Vector2 projectileTop = projectile.lineStart_;
+		const Vector2 projectileBottom = projectile.lineEnd_;
+
+		// Check collision with player
+		if (CheckCollisionPointRec(projectileTop, player_.collisionBox_) ||
+			CheckCollisionPointRec(projectileBottom, player_.collisionBox_))
+		{
+			projectile.setActive(false);
+			player_.lives_ -= 1;
+		}
+
+		// Check collision with walls
+		for (auto& wall : walls_)
+		{
+			if (CheckCollisionPointRec(projectileTop, wall.collisionBox_) ||
+				CheckCollisionPointRec(projectileBottom, wall.collisionBox_))
+			{
+				projectile.setActive(false);
+				wall.health_ -= 1;
+				break;
 			}
 		}
 	}

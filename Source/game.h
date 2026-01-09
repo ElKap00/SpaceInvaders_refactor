@@ -5,7 +5,6 @@
 #include <string>
 #include "player.h"
 #include "background.h"
-#include "entity_type.h"
 #include "alien.h"
 #include "projectile.h"
 #include "wall.h"
@@ -43,7 +42,8 @@ private:
 	// Entity Storage and Resources
 	Resources resources_ = Resources{};
 	Player player_ = Player{};
-	std::vector<Projectile> projectiles_;
+	std::vector<Projectile> playerProjectiles_;
+	std::vector<Projectile> alienProjectiles_;
 	std::vector<Wall> walls_;
 	std::vector<Alien> aliens_;
 	AlienFormation alienFormation_ = AlienFormation{};

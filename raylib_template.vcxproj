@@ -179,7 +179,6 @@
   <ItemGroup>
     <ClInclude Include="Source\alien.h" />
     <ClInclude Include="Source\background.h" />
-    <ClInclude Include="Source\entity_type.h" />
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\leaderboard.h" />
     <ClInclude Include="Source\player.h" />

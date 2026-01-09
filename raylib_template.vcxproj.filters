@@ -62,9 +62,6 @@
     <ClInclude Include="Source\background.h">
       <Filter>Header Files\GameEntities</Filter>
     </ClInclude>
-    <ClInclude Include="Source\entity_type.h">
-      <Filter>Header Files\GameEntities</Filter>
-    </ClInclude>
     <ClInclude Include="Source\leaderboard.h">
       <Filter>Header Files\GameEntities</Filter>
     </ClInclude>

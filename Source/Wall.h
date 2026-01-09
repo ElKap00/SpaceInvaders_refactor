@@ -9,6 +9,8 @@ public:
 	int health_ = 50;
 	int radius_ = 60;
 
+	Rectangle collisionBox_ = { position_.x - 50.0f, position_.y - 50.0f, 100.0f, 100.0f };
+
 	Wall() = default;
 	Wall(Vector2 position) noexcept;
 

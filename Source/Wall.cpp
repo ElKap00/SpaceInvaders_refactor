@@ -15,6 +15,15 @@ void Wall::makeInactive() noexcept
 	isActive_ = false;
 }
 
+void Wall::update() noexcept
+{
+	if (health_ < 1)
+	{
+		makeInactive();
+	}
+
+	collisionBox_ = { position_.x - 50.0f, position_.y - 50.0f, 100.0f, 100.0f };
+}
 
 void Wall::render(Texture2D texture) noexcept
 {
@@ -24,12 +33,4 @@ void Wall::render(Texture2D texture) noexcept
 		WHITE);
 
 	DrawText(TextFormat("%i", health_), position_.x - 21, position_.y + 10, 40, RED);
-}
-
-void Wall::update() noexcept
-{
-	if (health_ < 1)
-	{
-		makeInactive();
-	}
 }

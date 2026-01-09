@@ -34,6 +34,8 @@ void Alien::update() noexcept
 			position_.y += 50.0f;
 		}
 	}
+
+	collisionBox_ = { position_.x - 25.0f, position_.y - 25.0f, 50.0f, 50.0f };
 }
 
 void Alien::render(Texture2D texture) noexcept

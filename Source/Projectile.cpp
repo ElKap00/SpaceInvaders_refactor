@@ -1,7 +1,7 @@
 #include "projectile.h"
 
-Projectile::Projectile(Vector2 position, EntityType type) noexcept
-	: position_(position), type_(type)
+Projectile::Projectile(Vector2 position) noexcept
+	: position_(position)
 {
 	// INITIAL LINE POSITIONS
 	lineStart_.y = position_.y - 15.0f;
@@ -10,8 +10,8 @@ Projectile::Projectile(Vector2 position, EntityType type) noexcept
 	lineEnd_.x = position_.x;
 }
 
-Projectile::Projectile(Vector2 position, int speed, EntityType type) noexcept
-	: position_(position), speed_(speed), type_(type)
+Projectile::Projectile(Vector2 position, int speed) noexcept
+	: position_(position), speed_(speed)
 {
 	// INITIAL LINE POSITIONS
 	lineStart_.y = position_.y - 15.0f;
