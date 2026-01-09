@@ -16,9 +16,6 @@
     <Filter Include="Header Files\GameEntities">
       <UniqueIdentifier>{8ee7c364-bfb3-4dc3-b932-bb6f280125a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GameEntities">
-      <UniqueIdentifier>{88902467-ab44-49c7-9c70-bdf752f0dbc9}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -26,27 +23,6 @@
     </ClCompile>
     <ClCompile Include="Source\game.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\alien.cpp">
-      <Filter>Source Files\GameEntities</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\background.cpp">
-      <Filter>Source Files\GameEntities</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\leaderboard.cpp">
-      <Filter>Source Files\GameEntities</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\player.cpp">
-      <Filter>Source Files\GameEntities</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\projectile.cpp">
-      <Filter>Source Files\GameEntities</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\resources.cpp">
-      <Filter>Source Files\GameEntities</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\wall.cpp">
-      <Filter>Source Files\GameEntities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
