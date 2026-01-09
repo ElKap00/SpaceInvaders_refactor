@@ -13,14 +13,15 @@ struct Star
 		: initPosition_(initPos), position_(initPos), color_(col), size_(sz) {}
 
 	void update(float starOffset) noexcept;
-	void render() noexcept; //TODO: it is almost always possible to make render() const noexcept
+	void render() noexcept;
 };
 
 struct Background
 {
 	std::vector<Star> stars_;
 
-	Background() noexcept;
+	Background();
+	~Background() = default;
 
 	void initialize(int starAmount);
 	void updateWithPlayerPosition(float playerX) noexcept;

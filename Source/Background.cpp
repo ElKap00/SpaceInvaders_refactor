@@ -1,7 +1,7 @@
 #include "raylib_wrapper.h"
 #include "Background.h"
 
-Background::Background() noexcept
+Background::Background()
 {
 	initialize(600);
 }
@@ -15,8 +15,7 @@ void Star::update(float starOffset) noexcept
 
 void Star::render() noexcept
 {
-	// TODO: fix C-style casts
-	DrawCircle((int)position_.x, (int)position_.y, size_, color_);
+	DrawCircle(static_cast<int>(position_.x), static_cast<int>(position_.y), size_, color_);
 }
 
 void Background::initialize(int starAmount)

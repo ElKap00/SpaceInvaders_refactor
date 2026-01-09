@@ -11,8 +11,4 @@ struct Resources
 
 	Resources();
 	~Resources();
-	Resources(const Resources& other);
-	Resources& operator=(const Resources& other);
-	Resources(Resources&& other) noexcept;
-	Resources& operator=(Resources&& other) noexcept;
 };
