@@ -106,7 +106,7 @@ void Game::updateStartScreen()
 	}
 }
 
-void Game::renderGamePlay()
+void Game::renderGamePlay() noexcept
 {
 	background_.render();
 	player_.render(resources_.shipTextures_[player_.activeTexture_]);
@@ -200,7 +200,7 @@ void Game::updateEndScreen()
 	}
 }
 
-void Game::renderProjectiles()
+void Game::renderProjectiles() noexcept
 {
 	for (auto& projectile : playerProjectiles_)
 	{
@@ -212,7 +212,7 @@ void Game::renderProjectiles()
 	}
 }
 
-void Game::renderWalls()
+void Game::renderWalls() noexcept
 {
 	for (auto& wall : walls_)
 	{
@@ -220,7 +220,7 @@ void Game::renderWalls()
 	}
 }
 
-void Game::renderAliens()
+void Game::renderAliens() noexcept
 {
 	for (auto& alien : aliens_)
 	{
@@ -281,10 +281,10 @@ void Game::resetLives() noexcept
 
 void Game::createWalls()
 {
-	const float wall_distance = windowWidth_ / (wallCount_ + 1);
+	const float wall_distance = window_.width_ / (wallCount_ + 1);
 	for (int i = 0; i < wallCount_; i++)
 	{
-		const Wall newWall{ {wall_distance * (i + 1), windowHeight_ - 250.0f } };
+		const Wall newWall{ {wall_distance * (i + 1), window_.height_ - 250.0f } };
 		walls_.push_back(newWall);
 	}
 }
@@ -314,16 +314,20 @@ void Game::aliensShoot()
 		return;
 	}
 
-	static std::default_random_engine rng(std::random_device{}());
-	std::uniform_int_distribution<size_t> dist(0, aliens_.size() - 1);
-	const size_t randomAlienIndex = dist(rng);
-
-	const Alien& shootingAlien = aliens_[randomAlienIndex];
+	const Alien& shootingAlien = selectRandomAlien();
 
 	const Vector2 projectilePosition = { shootingAlien.position_.x, shootingAlien.position_.y + 40.0f };
 	const Projectile newProjectile(projectilePosition, -15);
 	alienProjectiles_.push_back(newProjectile);
 	alienFormation_.shootTimerSeconds_ = 0.0f;
+}
+
+Alien& Game::selectRandomAlien()
+{
+	static std::default_random_engine rng(std::random_device{}());
+	std::uniform_int_distribution<size_t> dist(0, aliens_.size() - 1);
+	const size_t randomAlienIndex = dist(rng);
+	return aliens_[randomAlienIndex];
 }
 
 void Game::playerShoot()
@@ -355,23 +359,14 @@ void Game::removeInactiveEntities() noexcept
 	removeInactive(walls_);
 }
 
-void Game::checkCollisions()
-{
-	checkPlayerProjectileCollisions();
-	checkAlienProjectileCollisions();
-}
-
-void Game::checkPlayerProjectileCollisions()
+void Game::checkCollisions() noexcept
 {
 	for (auto& projectile : playerProjectiles_)
 	{
 		checkAlienCollision(projectile);
 		checkWallCollision(projectile);
 	}
-}
 
-void Game::checkAlienProjectileCollisions()
-{
 	for (auto& projectile : alienProjectiles_)
 	{
 		checkPlayerCollision(projectile);
@@ -379,7 +374,7 @@ void Game::checkAlienProjectileCollisions()
 	}
 }
 
-void Game::checkWallCollision(Projectile& projectile)
+void Game::checkWallCollision(Projectile& projectile) noexcept 
 {
 	for (auto& wall : walls_)
 	{
@@ -392,7 +387,7 @@ void Game::checkWallCollision(Projectile& projectile)
 	}
 }
 
-void Game::checkPlayerCollision(Projectile& projectile)
+void Game::checkPlayerCollision(Projectile& projectile) noexcept 
 {
 	if (CheckCollisionRecs(projectile.collisionBox_, player_.collisionBox_))
 	{
@@ -401,7 +396,7 @@ void Game::checkPlayerCollision(Projectile& projectile)
 	}
 }
 
-void Game::checkAlienCollision(Projectile& projectile)
+void Game::checkAlienCollision(Projectile& projectile) noexcept 
 {
 	for (auto& alien : aliens_)
 	{

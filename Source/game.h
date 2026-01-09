@@ -26,29 +26,46 @@ struct AlienFormation
 	float shootTimerSeconds_ = 0.0f;
 };
 
+struct Window
+{
+	const float height_ = 1080.0f;
+	const float width_ = 1920.0f;
+	const std::string title_ = "SPACE INVADERS";
+
+	Window() noexcept
+	{
+		InitWindow(static_cast<int>(width_), static_cast<int>(height_), title_.c_str());
+		SetTargetFPS(60);
+	}
+
+	~Window() noexcept
+	{
+		CloseWindow();
+	}
+};
+
 class Game
 {
 private:
+	const Window window_{};
+
 	State gameState_ = State::STARTSCREEN;
 	int score_ = 0;
 	int wallCount_ = 5;
 	bool isNewHighScore_ = false;
 	bool debugCollisionBoxes_ = false; // Toggle for debug rendering
 
-	const float windowHeight_ = GetScreenHeightF();
-	const float windowWidth_ = GetScreenWidthF();
-
 	// TODO: consider EntityManager class for better organization
 	// Entity Storage and Resources
-	Resources resources_ = Resources{};
-	Player player_ = Player{};
+	Resources resources_{};
+	Player player_{};
 	std::vector<Projectile> playerProjectiles_;
 	std::vector<Projectile> alienProjectiles_;
 	std::vector<Wall> walls_;
 	std::vector<Alien> aliens_;
-	AlienFormation alienFormation_ = AlienFormation{};
-	Leaderboard leaderboard_ = Leaderboard{};
-	Background background_ = Background{};
+	AlienFormation alienFormation_{};
+	Leaderboard leaderboard_{};
+	Background background_{};
 
 public:
 	Game() = default;
@@ -64,14 +81,14 @@ private:
 
 	void renderStartScreen() noexcept;
 	void updateStartScreen();
-	void renderGamePlay();
+	void renderGamePlay() noexcept;
 	void updateGamePlay();
 	void renderEndScreen();
 	void updateEndScreen();
 
-	void renderProjectiles();
-	void renderWalls();
-	void renderAliens();
+	void renderProjectiles() noexcept;
+	void renderWalls() noexcept;
+	void renderAliens() noexcept;
 	void renderUI() noexcept;
 	void renderCollisionBoxes() noexcept; // Debug rendering
 
@@ -80,14 +97,13 @@ private:
 	void updateAliens();
 
 	void aliensShoot();
+	Alien& selectRandomAlien();
 	void playerShoot();
 
-	void checkCollisions();
-	void checkPlayerProjectileCollisions();
-	void checkAlienProjectileCollisions();
-	void checkWallCollision(Projectile& projectile);
-	void checkPlayerCollision(Projectile& projectile);
-	void checkAlienCollision(Projectile& projectile);
+	void checkCollisions() noexcept;
+	void checkWallCollision(Projectile& projectile) noexcept;
+	void checkPlayerCollision(Projectile& projectile) noexcept;
+	void checkAlienCollision(Projectile& projectile) noexcept;
 
 	void resetScore() noexcept;
 	void resetLives() noexcept;
