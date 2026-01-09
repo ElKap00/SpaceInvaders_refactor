@@ -22,8 +22,7 @@ struct AlienFormation
 	int formationWidth_ = 8;
 	int formationHeight_ = 5;
 	int alienSpacing_ = 80;
-	int formationX_ = 100;
-	int formationY_ = 50;
+	Vector2 position_ = { 550.0f, 50.0f };
 	float shootTimerSeconds_ = 0.0f;
 };
 
@@ -54,13 +53,6 @@ private:
 public:
 	Game() = default;
 	~Game() = default;
-
-	void setGameState(State state) noexcept;
-	void setPlayer(Player player) noexcept;
-	void setBackground(Background background);
-
-	Player& getPlayer() noexcept;
-	State getGameState() const noexcept;
 
 	void update();
 	void render();
@@ -93,7 +85,11 @@ private:
 	void checkCollisions();
 	void checkPlayerProjectileCollisions();
 	void checkAlienProjectileCollisions();
+	void checkWallCollision(Projectile& projectile);
+	void checkPlayerCollision(Projectile& projectile);
+	void checkAlienCollision(Projectile& projectile);
 
 	void resetScore() noexcept;
+	void resetLives() noexcept;
 	void removeInactiveEntities() noexcept;
 };

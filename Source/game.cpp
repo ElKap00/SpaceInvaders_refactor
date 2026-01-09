@@ -4,25 +4,15 @@
 #include <iostream>
 #include <thread>
 #include <vector>
-
-void Game::setGameState(State state) noexcept { gameState_ = state; }
-
-void Game::setPlayer(Player player) noexcept { player_ = player; }
-
-void Game::setBackground(Background background) { background_ = background; }
-
-Player& Game::getPlayer() noexcept { return player_; }
-
-State Game::getGameState() const noexcept { return gameState_; }
-
+#include <random>
 
 void Game::start()
 {
 	resetScore();
+	resetLives();
 	createWalls();
 	createAlienFormation();
-	setPlayer(Player{});
-	setGameState(State::GAMEPLAY);
+	gameState_ = State::GAMEPLAY;
 }
 
 void Game::end()
@@ -36,13 +26,13 @@ void Game::end()
 	{
 		leaderboard_.startNameEntry();
 	}
-	setGameState(State::ENDSCREEN);
+	gameState_ = State::ENDSCREEN;
 }
 
 void Game::resume()
 {
 	leaderboard_.resetNameEntry();
-	setGameState(State::STARTSCREEN);
+	gameState_ = State::STARTSCREEN;
 }
 
 void Game::update()
@@ -94,8 +84,8 @@ void Game::createAlienFormation()
 {
 	for (int row = 0; row < alienFormation_.formationHeight_; row++) {
 		for (int col = 0; col < alienFormation_.formationWidth_; col++) {
-			const Vector2 alienPosition = { alienFormation_.formationX_ + 450.0f + (static_cast<float>(col) * static_cast<float>(alienFormation_.alienSpacing_)),
-											alienFormation_.formationY_ + (static_cast<float>(row) * static_cast<float>(alienFormation_.alienSpacing_)) };
+			const Vector2 alienPosition = { alienFormation_.position_.x + (static_cast<float>(col) * static_cast<float>(alienFormation_.alienSpacing_)),
+											alienFormation_.position_.y + (static_cast<float>(row) * static_cast<float>(alienFormation_.alienSpacing_)) };
 			const Alien newAlien = Alien(alienPosition);
 			aliens_.push_back(newAlien);
 		}
@@ -119,8 +109,8 @@ void Game::updateStartScreen()
 void Game::renderGamePlay()
 {
 	background_.render();
+	player_.render(resources_.shipTextures_[player_.activeTexture_]);
 	renderUI();
-	getPlayer().render(resources_.shipTextures_[player_.activeTexture_]);
 	renderProjectiles();
 	renderWalls();
 	renderAliens();
@@ -143,12 +133,12 @@ void Game::updateGamePlay()
 	{
 		end();
 	}
-	if (getPlayer().getLives() < 1)
+	if (player_.getLives() < 1)
 	{
 		end();
 	}
 
-	getPlayer().update();
+	player_.update();
 	updateAliens(); //TODO: consider making this a generic "update(Range)", "update(begin, end)"
 
 	if (aliens_.size() < 1)
@@ -284,6 +274,11 @@ void Game::resetScore() noexcept
 	score_ = 0;
 }
 
+void Game::resetLives() noexcept
+{
+	player_.lives_ = 3;
+}
+
 void Game::createWalls()
 {
 	const float wall_distance = windowWidth_ / (wallCount_ + 1);
@@ -300,7 +295,7 @@ void Game::updateAliens()
 	{
 		alien.update();
 
-		if (alien.position_.y > windowHeight_ - player_.height_)
+		if (alien.position_.y >= player_.position_.y - 50.0f)
 		{
 			end();
 		}
@@ -310,20 +305,25 @@ void Game::updateAliens()
 void Game::aliensShoot()
 {
 	alienFormation_.shootTimerSeconds_ += 1.0f;
-	if (alienFormation_.shootTimerSeconds_ > 59.0f) //once per second
+	if (alienFormation_.shootTimerSeconds_ < 60.0f)
 	{
-		int randomAlienIndex = 0;
-
-		if (aliens_.size() > 1)
-		{
-			randomAlienIndex = rand() % aliens_.size();
-		}
-
-		const Vector2 projectilePosition = { aliens_[randomAlienIndex].position_.x, aliens_[randomAlienIndex].position_.y + 40.0f };
-		const Projectile newProjectile(projectilePosition, -15);
-		alienProjectiles_.push_back(newProjectile);
-		alienFormation_.shootTimerSeconds_ = 0.0f;
+		return;
 	}
+	if (aliens_.empty())
+	{
+		return;
+	}
+
+	static std::default_random_engine rng(std::random_device{}());
+	std::uniform_int_distribution<size_t> dist(0, aliens_.size() - 1);
+	const size_t randomAlienIndex = dist(rng);
+
+	const Alien& shootingAlien = aliens_[randomAlienIndex];
+
+	const Vector2 projectilePosition = { shootingAlien.position_.x, shootingAlien.position_.y + 40.0f };
+	const Projectile newProjectile(projectilePosition, -15);
+	alienProjectiles_.push_back(newProjectile);
+	alienFormation_.shootTimerSeconds_ = 0.0f;
 }
 
 void Game::playerShoot()
@@ -341,29 +341,18 @@ void Game::playerShoot()
 
 void Game::removeInactiveEntities() noexcept
 {
-	playerProjectiles_.erase(
-		std::remove_if(playerProjectiles_.begin(), playerProjectiles_.end(),
-			[](const Projectile& projectile) { return !projectile.isActive_; }),
-		playerProjectiles_.end()
-	);
+	auto removeInactive = [](auto& container) {
+		container.erase(
+			std::remove_if(container.begin(), container.end(),
+				[](const auto& entity) { return !entity.isActive_; }),
+			container.end()
+		);
+	};
 
-	alienProjectiles_.erase(
-		std::remove_if(alienProjectiles_.begin(), alienProjectiles_.end(),
-			[](const Projectile& projectile) { return !projectile.isActive_; }),
-		alienProjectiles_.end()
-	);
-
-	aliens_.erase(
-		std::remove_if(aliens_.begin(), aliens_.end(),
-			[](const Alien& alien) { return !alien.isActive_; }),
-		aliens_.end()
-	);
-
-	walls_.erase(
-		std::remove_if(walls_.begin(), walls_.end(),
-			[](const Wall& wall) { return !wall.isActive(); }),
-		walls_.end()
-	);
+	removeInactive(playerProjectiles_);
+	removeInactive(alienProjectiles_);
+	removeInactive(aliens_);
+	removeInactive(walls_);
 }
 
 void Game::checkCollisions()
@@ -376,28 +365,8 @@ void Game::checkPlayerProjectileCollisions()
 {
 	for (auto& projectile : playerProjectiles_)
 	{
-		// Check collision with aliens
-		for (auto& alien : aliens_)
-		{
-			if (CheckCollisionRecs(projectile.collisionBox_, alien.collisionBox_))
-			{
-				projectile.setActive(false);
-				alien.setActive(false);
-				score_ += 100;
-				break;
-			}
-		}
-
-		// Check collision with walls
-		for (auto& wall : walls_)
-		{
-			if (CheckCollisionRecs(projectile.collisionBox_, wall.collisionBox_))
-			{
-				projectile.setActive(false);
-				wall.health_ -= 1;
-				break;
-			}
-		}
+		checkAlienCollision(projectile);
+		checkWallCollision(projectile);
 	}
 }
 
@@ -405,22 +374,43 @@ void Game::checkAlienProjectileCollisions()
 {
 	for (auto& projectile : alienProjectiles_)
 	{
-		// Check collision with player
-		if (CheckCollisionRecs(projectile.collisionBox_, player_.collisionBox_))
+		checkPlayerCollision(projectile);
+		checkWallCollision(projectile);
+	}
+}
+
+void Game::checkWallCollision(Projectile& projectile)
+{
+	for (auto& wall : walls_)
+	{
+		if (CheckCollisionRecs(projectile.collisionBox_, wall.collisionBox_))
 		{
 			projectile.setActive(false);
-			player_.lives_ -= 1;
+			wall.health_ -= 1;
+			break;
 		}
+	}
+}
 
-		// Check collision with walls
-		for (auto& wall : walls_)
+void Game::checkPlayerCollision(Projectile& projectile)
+{
+	if (CheckCollisionRecs(projectile.collisionBox_, player_.collisionBox_))
+	{
+		projectile.setActive(false);
+		player_.lives_ -= 1;
+	}
+}
+
+void Game::checkAlienCollision(Projectile& projectile)
+{
+	for (auto& alien : aliens_)
+	{
+		if (CheckCollisionRecs(projectile.collisionBox_, alien.collisionBox_))
 		{
-			if (CheckCollisionRecs(projectile.collisionBox_, wall.collisionBox_))
-			{
-				projectile.setActive(false);
-				wall.health_ -= 1;
-				break;
-			}
+			projectile.setActive(false);
+			alien.setActive(false);
+			score_ += 100;
+			break;
 		}
 	}
 }
