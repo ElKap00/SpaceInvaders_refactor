@@ -155,7 +155,7 @@ void Game::updateGamePlay()
 	}
 	
 
-	background_.updateWithPlayerPosition(player_.getPositionX(), player_.height_);
+	background_.updateWithPlayerPosition(player_.getPositionX());
 
 	for (auto& projectile : playerProjectiles_)
 	{

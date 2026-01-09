@@ -23,7 +23,7 @@ struct Background
 	Background() noexcept;
 
 	void initialize(int starAmount);
-	void updateWithPlayerPosition(float playerX, float playerHeight) noexcept;
+	void updateWithPlayerPosition(float playerX) noexcept;
 	void render() noexcept;
 
 private:

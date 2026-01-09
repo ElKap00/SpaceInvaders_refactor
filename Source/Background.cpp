@@ -41,17 +41,9 @@ void Background::update(float offset) noexcept
 	}
 }
 
-void Background::updateWithPlayerPosition(float playerX, float playerHeight) noexcept
+void Background::updateWithPlayerPosition(float playerX) noexcept
 {
-	const Vector2 playerPos = { playerX, playerHeight };
-	const Vector2 cornerPos = { 0.0f, playerHeight };
-	
-	const float dx = playerPos.x - cornerPos.x;
-	const float dy = playerPos.y - cornerPos.y;
-	const float distance = sqrtf(dx * dx + dy * dy);
-	
-	const float offset = distance * -1.0f / 15.0f;
-	update(offset);
+	update(-playerX / 15.0f);
 }
 
 void Background::render() noexcept

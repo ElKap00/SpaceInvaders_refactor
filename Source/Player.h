@@ -5,7 +5,6 @@ struct Player
 {
 	Vector2 position_ = { GetScreenWidthF() / 2.0f, GetScreenHeightF() - 100.0f };
 	float speed_ = 7.0f;
-	float height_ = 70.0f;
 	float radius_ = 50.0f;
 	int lives_ = 3;
 	int direction_ = 0;
