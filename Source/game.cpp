@@ -249,9 +249,9 @@ void Game::updateEndScreen()
 	{
 		leaderboard_.updateHighScoreNameEntry();
 
-		if (!leaderboard_.isEnteringName())
+		if (!leaderboard_.getIsEnteringName())
 		{
-			leaderboard_.insertNewHighScore(leaderboard_.getEnteredName(), score_);
+			leaderboard_.insertNewHighScore(score_);
 			isNewHighScore_ = false;
 		}
 	}

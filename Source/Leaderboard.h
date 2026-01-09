@@ -12,10 +12,11 @@ struct PlayerData
 class Leaderboard
 {
 public:
-	Leaderboard();
+	Leaderboard() noexcept = default;
+	~Leaderboard() noexcept = default;
 
 	bool isNewHighScore(int score) const;
-	void insertNewHighScore(const std::string& name, int score);
+	void insertNewHighScore(int score);
 
 	// High score name entry UI
 	void updateHighScoreNameEntry();
@@ -23,28 +24,30 @@ public:
 	void renderHighScoreNameInput();
 	void renderLeaderboard();
 
-	bool isEnteringName() const noexcept { return isEnteringName_; }
+	bool getIsEnteringName() const noexcept { return isEnteringName_; }
 	void startNameEntry() noexcept{ isEnteringName_ = true; }
 	void resetNameEntry();
-	
-	std::string getEnteredName() const { return std::string(name_); }
 
 private:
-	std::vector<PlayerData> entries_;
+	std::vector<PlayerData> entries_ = {
+		{"Player 1", 500},
+		{"Player 2", 400},
+		{"Player 3", 300},
+		{"Player 4", 200},
+		{"Player 5", 100}
+	};;
 	
 	// Name input state
-	char name_[9 + 1] = "\0"; //TODO: we don't do strings like this. 
-	int letterCount_ = 0;
+	std::string name_;
 	Rectangle textBox_ = { 600, 500, 225, 50 };
-	bool isTextBoxHovered_ = false;
 	int cursorFrameCounter_ = 0;
+	bool isTextBoxHovered_ = false;
 	bool isEnteringName_ = false;
 
 	// Helper methods
 	void updateMouseCursor();
 	void handleTextInput();
 	void handleBackspace();
+	void renderTextBox();
 	void updateFrameCounter();
-	bool isNameValid() const;
-	void handleNameSubmission();
 };

@@ -1,40 +1,29 @@
 #include "leaderboard.h"
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
-Leaderboard::Leaderboard()
+bool Leaderboard::isNewHighScore(int score) const
 {
-	entries_ = { 
-		{"Player 1", 500}, 
-		{"Player 2", 400}, 
-		{"Player 3", 300}, 
-		{"Player 4", 200}, 
-		{"Player 5", 100} 
-	};
+	return std::any_of(entries_.begin(), entries_.end(),
+		[score](const PlayerData& entry) {
+			return score > entry.score_;
+		});
 }
 
-bool Leaderboard::isNewHighScore(int score) const //TODO: use an algorithm 
+void Leaderboard::insertNewHighScore(const int score)
 {
-	return (score > entries_[4].score_);
-}
-
-// TODO: change to string_view to avoid copy
-void Leaderboard::insertNewHighScore(const std::string& name, int score)
-{
-	PlayerData newData{ name, score };
-	//TODO: use algorithms. 
-	// for example: push_back the new score. 
-	// sort the scores. 
-	// pop_back if the list is too long.
-
-	for (int i = 0; i < entries_.size(); i++)
+	PlayerData newData{ name_, score };
+	entries_.push_back(newData);
+	
+	std::sort(entries_.begin(), entries_.end(), 
+		[](const PlayerData& a, const PlayerData& b) {
+			return a.score_ > b.score_;
+		});
+	
+	if (entries_.size() > 5)
 	{
-		if (newData.score_ > entries_[i].score_)
-		{
-			entries_.insert(entries_.begin() + i, newData);
-			entries_.pop_back();
-			i = entries_.size();
-		}
+		entries_.pop_back();
 	}
 }
 
@@ -54,33 +43,19 @@ void Leaderboard::updateMouseCursor()
 
 void Leaderboard::handleTextInput()
 {
-	int key = GetCharPressed();
+	const int key = GetCharPressed();
 
-	while (key > 0)
+	if ((key >= 32) && (key <= 125) && (name_.size() < 9))
 	{
-		// TODO: fix C-style casts and indexing
-		if ((key >= 32) && (key <= 125) && (letterCount_ < 9))
-		{
-			name_[letterCount_] = (char)key;
-			name_[letterCount_ + 1] = '\0';
-			letterCount_++;
-		}
-
-		key = GetCharPressed();
+		name_ += static_cast<char>(key);
 	}
 }
 
 void Leaderboard::handleBackspace()
 {
-	//TODO: std::string::pop_back()
-	if (IsKeyPressed(KEY_BACKSPACE))
+	if (IsKeyPressed(KEY_BACKSPACE) && !name_.empty())
 	{
-		letterCount_--;
-		if (letterCount_ < 0)
-		{
-			letterCount_ = 0;
-		}
-		name_[letterCount_] = '\0';
+		name_.pop_back();
 	}
 }
 
@@ -96,19 +71,6 @@ void Leaderboard::updateFrameCounter()
 	}
 }
 
-bool Leaderboard::isNameValid() const
-{
-	return letterCount_ > 0 && letterCount_ < 9;
-}
-
-void Leaderboard::handleNameSubmission()
-{
-	if (isNameValid() && IsKeyReleased(KEY_ENTER))
-	{
-		isEnteringName_ = false;
-	}
-}
-
 void Leaderboard::updateHighScoreNameEntry()
 {
 	updateMouseCursor();
@@ -120,7 +82,11 @@ void Leaderboard::updateHighScoreNameEntry()
 	}
 
 	updateFrameCounter();
-	handleNameSubmission();
+
+	if (IsKeyReleased(KEY_ENTER))
+	{
+		isEnteringName_ = false;
+	}
 }
 
 void Leaderboard::renderLeaderboard()
@@ -139,7 +105,7 @@ void Leaderboard::renderLeaderboard()
 
 void Leaderboard::renderHighScoreNameInput()
 {	
-	if (letterCount_ >= 9)
+	if (name_.size() >= 9)
 	{
 		DrawText("Press BACKSPACE to delete chars...", 600, 650, 20, YELLOW);
 		return;
@@ -147,10 +113,10 @@ void Leaderboard::renderHighScoreNameInput()
 
 	if (isTextBoxHovered_ && (cursorFrameCounter_ / 20) % 2 == 0)
 	{
-		DrawText("_", static_cast<int>(textBox_.x) + 8 + MeasureText(name_, 40), static_cast<int>(textBox_.y) + 12, 40, MAROON);
+		DrawText("_", static_cast<int>(textBox_.x) + 8 + MeasureText(name_.c_str(), 40), static_cast<int>(textBox_.y) + 12, 40, MAROON);
 	}
 
-	if (letterCount_ > 0 && letterCount_ < 9)
+	if (!name_.empty() && name_.size() < 9)
 	{
 		DrawText("PRESS ENTER TO CONTINUE", 600, 800, 40, YELLOW);
 	}
@@ -162,6 +128,13 @@ void Leaderboard::renderHighScoreEntry()
 
 	DrawText("PLACE MOUSE OVER INPUT BOX!", 600, 400, 20, YELLOW);
 
+	renderTextBox();
+
+	DrawText(TextFormat("INPUT CHARS: %i/%i", static_cast<int>(name_.size()), 8), 600, 600, 20, YELLOW);
+}
+
+void Leaderboard::renderTextBox()
+{
 	DrawRectangleRec(textBox_, LIGHTGRAY);
 	if (isTextBoxHovered_)
 	{
@@ -171,16 +144,12 @@ void Leaderboard::renderHighScoreEntry()
 	{
 		DrawRectangleLines(textBox_, DARKGRAY);
 	}
-
-	DrawText(name_, static_cast<int>(textBox_.x) + 5, static_cast<int>(textBox_.y) + 8, 40, MAROON);
-
-	DrawText(TextFormat("INPUT CHARS: %i/%i", letterCount_, 8), 600, 600, 20, YELLOW);
+	DrawText(name_.c_str(), static_cast<int>(textBox_.x) + 5, static_cast<int>(textBox_.y) + 8, 40, MAROON);
 }
 
 void Leaderboard::resetNameEntry()
 {
-	letterCount_ = 0;
-	name_[0] = '\0';
+	name_.clear();
 	isTextBoxHovered_ = false;
 	cursorFrameCounter_ = 0;
 	isEnteringName_ = false;
