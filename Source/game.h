@@ -73,6 +73,7 @@ public:
 
 	void update();
 	void render();
+	void draw();
 
 private:
 	void start();

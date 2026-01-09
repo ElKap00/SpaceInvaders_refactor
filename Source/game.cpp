@@ -80,6 +80,14 @@ void Game::render()
 	}
 }
 
+void Game::draw()
+{
+	BeginDrawing();
+	ClearBackground(BLACK);
+	render();
+	EndDrawing();
+}
+
 void Game::createAlienFormation()
 {
 	for (int row = 0; row < alienFormation_.formationHeight_; row++) {
