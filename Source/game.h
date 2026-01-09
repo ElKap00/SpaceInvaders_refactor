@@ -36,8 +36,8 @@ private:
 	int wallCount_ = 5;
 	bool isNewHighScore_ = false;
 
-	const float windowHeight_ = static_cast<float>(GetScreenHeight());
-	const float windowWidth_ = static_cast<float>(GetScreenWidth());
+	const float windowHeight_ = GetScreenHeightF();
+	const float windowWidth_ = GetScreenWidthF();
 
 	// TODO: consider EntityManager class for better organization
 	// Entity Storage and Resources

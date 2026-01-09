@@ -23,10 +23,9 @@
 #pragma warning(pop)
 
 
-//void DrawRectangleLines(float x, float y, float width, float height, Color c) {
-//	//DrawRectangleLines(static_cast<int>(x), ); //TODO: provide full implementation
-//}
-//
-//void DrawRectangleLines(const Rectangle& r, Color c) {
-//	//TODO: call your float overload
-//}
+inline void DrawRectangleLines(const Rectangle& r, Color c) noexcept {
+	DrawRectangleLines(static_cast<int>(r.x), static_cast<int>(r.y), static_cast<int>(r.width), static_cast<int>(r.height), c);
+}
+
+inline float GetScreenWidthF() noexcept { return static_cast<float>(GetScreenWidth()); }
+inline float GetScreenHeightF() noexcept { return static_cast<float>(GetScreenHeight()); }

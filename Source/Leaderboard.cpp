@@ -138,21 +138,16 @@ void Leaderboard::renderLeaderboard()
 }
 
 void Leaderboard::renderHighScoreNameInput()
-{
-	if (isTextBoxHovered_) //reverse and quick bail. Move code left
+{	
+	if (letterCount_ >= 9)
 	{
-		if (letterCount_ < 9)
-		{
-			// TODO: fix C-style casts
-			if (((cursorFrameCounter_ / 20) % 2) == 0)
-			{
-				DrawText("_", (int)textBox_.x + 8 + MeasureText(name_, 40), (int)textBox_.y + 12, 40, MAROON);
-			}
-		}
-		else
-		{
-			DrawText("Press BACKSPACE to delete chars...", 600, 650, 20, YELLOW);
-		}
+		DrawText("Press BACKSPACE to delete chars...", 600, 650, 20, YELLOW);
+		return;
+	}
+
+	if (isTextBoxHovered_ && (cursorFrameCounter_ / 20) % 2 == 0)
+	{
+		DrawText("_", static_cast<int>(textBox_.x) + 8 + MeasureText(name_, 40), static_cast<int>(textBox_.y) + 12, 40, MAROON);
 	}
 
 	if (letterCount_ > 0 && letterCount_ < 9)
@@ -168,17 +163,16 @@ void Leaderboard::renderHighScoreEntry()
 	DrawText("PLACE MOUSE OVER INPUT BOX!", 600, 400, 20, YELLOW);
 
 	DrawRectangleRec(textBox_, LIGHTGRAY);
-	// TODO: fix C-style casts
 	if (isTextBoxHovered_)
 	{
-		DrawRectangleLines((int)textBox_.x, (int)textBox_.y, (int)textBox_.width, (int)textBox_.height, RED);
+		DrawRectangleLines(textBox_, RED);
 	}
 	else
 	{
-		DrawRectangleLines((int)textBox_.x, (int)textBox_.y, (int)textBox_.width, (int)textBox_.height, DARKGRAY);
+		DrawRectangleLines(textBox_, DARKGRAY);
 	}
 
-	DrawText(name_, (int)textBox_.x + 5, (int)textBox_.y + 8, 40, MAROON);
+	DrawText(name_, static_cast<int>(textBox_.x) + 5, static_cast<int>(textBox_.y) + 8, 40, MAROON);
 
 	DrawText(TextFormat("INPUT CHARS: %i/%i", letterCount_, 8), 600, 600, 20, YELLOW);
 }

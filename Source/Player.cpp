@@ -28,10 +28,9 @@ void Player::update() noexcept
 	{
 		positionX_ = 0.0f + radius_;
 	}
-	// TODO: use screenWidth_ variable from Game class instead
-	else if (positionX_ > GetScreenWidth() - radius_)
+	else if (positionX_ > GetScreenWidthF() - radius_)
 	{
-		positionX_ = GetScreenWidth() - radius_;
+		positionX_ = GetScreenWidthF() - radius_;
 	}
 
 	//Determine frame for animation
