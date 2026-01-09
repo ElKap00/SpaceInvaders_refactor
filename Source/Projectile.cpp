@@ -41,19 +41,8 @@ void Projectile::update() noexcept
 
 void Projectile::render(Texture2D texture) noexcept
 {
-	DrawTexturePro(texture,
-		{
-			0.0f,
-			0.0f,
-			176.0f,
-			176.0f,
-		},
-		{
-			position_.x,
-			position_.y,
-			50.0f,
-			50.0f,
-		}, {25.0f , 25.0f},
-		0.0f,
+	DrawTexture(texture,
+		static_cast<int>(position_.x - 25.0f),
+		static_cast<int>(position_.y - 25.0f),
 		WHITE);
 }

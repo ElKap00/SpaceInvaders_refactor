@@ -4,9 +4,7 @@
 
 struct Player
 {
-	// TODO: make variables private and add getters/setters as needed
-public:
-	// TODO: change from float to int if no fractional values are needed
+	// TODO: give Player a position vector instead of just an X position
 	float positionX_ = GetScreenWidthF() / 2.0f;
 	float speed_ = 7.0f;
 	float height_ = 70.0f;

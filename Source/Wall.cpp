@@ -18,25 +18,12 @@ void Wall::makeInactive() noexcept
 
 void Wall::render(Texture2D texture) noexcept
 {
-	DrawTexturePro(texture,
-		{
-			0.0f,
-			0.0f,
-			704.0f,
-			704.0f,
-		},
-		{
-			position_.x,
-			position_.y,
-			200.0f,
-			200.0f,
-		}, {100.0f , 100.0f},
-		0.0f,
+	DrawTexture(texture,
+		static_cast<int>(position_.x - 100.0f),
+		static_cast<int>(position_.y - 100.0f),
 		WHITE);
 
-
 	DrawText(TextFormat("%i", health_), position_.x - 21, position_.y + 10, 40, RED);
-
 }
 
 void Wall::update() noexcept

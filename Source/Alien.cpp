@@ -38,21 +38,8 @@ void Alien::update() noexcept
 
 void Alien::render(Texture2D texture) noexcept
 {
-	//scale the image on the harddrive instead
-	// and then use DrawTexture() instead of DrawTexturePro()
-	DrawTexturePro(texture,
-		{
-			0.0f,
-			0.0f,
-			352.0f,
-			352.0f,
-		},
-		{
-			position_.x,
-			position_.y,
-			100.0f,
-			100.0f,
-		}, {50.0f , 50.0f},
-		0.0f,
+	DrawTexture(texture,
+		static_cast<int>(position_.x - 50.0f),
+		static_cast<int>(position_.y - 50.0f),
 		WHITE);
 }

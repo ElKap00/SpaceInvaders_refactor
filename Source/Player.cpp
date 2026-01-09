@@ -50,21 +50,9 @@ void Player::update() noexcept
 
 void Player::render(Texture2D texture) noexcept
 {
-	const float window_height = GetScreenHeight();
-
-	DrawTexturePro(texture,
-		{
-			0.0f,
-			0.0f,
-			352.0f,
-			352.0f,
-		},
-		{
-			positionX_, window_height - height_,
-			100.0f,
-			100.0f,
-		}, {50.0f, 50.0f},
-		0.0f,
+	DrawTexture(texture, 
+		static_cast<int>(positionX_ - 100.0f),
+		static_cast<int>(GetScreenHeight() - height_ - 100.0f),
 		WHITE);
 }
 
