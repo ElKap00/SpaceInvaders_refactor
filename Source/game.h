@@ -42,7 +42,7 @@ private:
 	// TODO: consider EntityManager class for better organization
 	// Entity Storage and Resources
 	Resources resources_ = Resources{};
-	Player player_{windowWidth_/2};
+	Player player_ = Player{};
 	std::vector<Projectile> projectiles_;
 	std::vector<Wall> walls_;
 	std::vector<Alien> aliens_;

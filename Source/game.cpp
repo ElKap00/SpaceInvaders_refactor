@@ -209,7 +209,7 @@ void Game::updateGamePlay()
 	}
 	
 
-	background_.updateWithPlayerPosition(player_.positionX_, player_.height_);
+	background_.updateWithPlayerPosition(player_.getPositionX(), player_.height_);
 
 	for (auto& projectile : projectiles_)
 	{
@@ -338,7 +338,7 @@ void Game::playerShoot()
 {
 	if (IsKeyPressed(KEY_SPACE))
 	{
-		const Projectile newProjectile({ player_.positionX_, windowHeight_ - 130.0f }, EntityType::PLAYER_PROJECTILE);
+		const Projectile newProjectile({ player_.getPositionX(), player_.position_.y}, EntityType::PLAYER_PROJECTILE);
 		projectiles_.push_back(newProjectile);
 	}
 }
@@ -384,7 +384,7 @@ void Game::checkCollisions()
 
 		if (projectile.type_ == EntityType::ENEMY_PROJECTILE)
 		{
-			if (doCollide({ player_.positionX_, windowHeight_ - player_.height_ }, player_.radius_, projectile.lineStart_, projectile.lineEnd_))
+			if (doCollide({ player_.getPositionX(), windowHeight_ - player_.height_}, player_.radius_, projectile.lineStart_, projectile.lineEnd_))
 			{
 				projectile.setActive(false);
 				player_.lives_ -= 1;
