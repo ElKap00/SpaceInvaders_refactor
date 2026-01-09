@@ -13,26 +13,17 @@ void Alien::setActive(bool isActive) noexcept
 
 void Alien::update() noexcept 
 {
-	//TODO: both branches are identical. Refactor.
-	if (moveRight_)
-	{
-		position_.x += speed_;
+	position_.x += speed_;
 
-		if (position_.x >= GetScreenWidthF())
-		{
-			moveRight_ = false;
-			position_.y += 50.0f;
-		}
+	if (position_.x >= GetScreenWidthF() - 25.0f)
+	{
+		speed_ = -speed_;
+		position_.y += 50.0f;
 	}
-	else
+	else if (position_.x <= 25.0f)
 	{
-		position_.x -= speed_;
-
-		if (position_.x <= 0.0f)
-		{
-			moveRight_ = true;
-			position_.y += 50.0f;
-		}
+		speed_ = -speed_;
+		position_.y += 50.0f;
 	}
 
 	collisionBox_ = { position_.x - 25.0f, position_.y - 25.0f, 50.0f, 50.0f };
