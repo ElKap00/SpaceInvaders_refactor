@@ -5,12 +5,6 @@ Alien::Alien(Vector2 position) noexcept
 	position_ = position;
 }
 
-//TODO: _isActive is a public member, so don't bother with accessors. 
-void Alien::setActive(bool isActive) noexcept
-{
-	isActive_ = isActive;
-}
-
 void Alien::update() noexcept 
 {
 	position_.x += speed_;

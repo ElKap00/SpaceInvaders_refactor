@@ -13,8 +13,6 @@ struct Alien
 
 	Alien(Vector2 position) noexcept;
 
-	void setActive(bool isActive) noexcept;
-
 	void update() noexcept;
 	void render(Texture2D texture) noexcept;
 };

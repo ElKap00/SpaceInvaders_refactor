@@ -411,7 +411,7 @@ void Game::checkAlienCollision(Projectile& projectile) noexcept
 		if (CheckCollisionRecs(projectile.collisionBox_, alien.collisionBox_))
 		{
 			projectile.setActive(false);
-			alien.setActive(false);
+			alien.isActive_ =false;
 			score_ += 100;
 			break;
 		}
