@@ -21,6 +21,7 @@ void Game::end()
 	playerProjectiles_.clear();
 	walls_.clear();
 	aliens_.clear();
+
 	isNewHighScore_ = leaderboard_.isNewHighScore(score_);
 	if (isNewHighScore_)
 	{
@@ -29,7 +30,7 @@ void Game::end()
 	gameState_ = State::ENDSCREEN;
 }
 
-void Game::resume()
+void Game::resume() noexcept
 {
 	leaderboard_.resetNameEntry();
 	gameState_ = State::STARTSCREEN;
@@ -119,9 +120,10 @@ void Game::renderGamePlay() noexcept
 	background_.render();
 	player_.render(resources_.shipTextures_[player_.activeTexture_]);
 	renderUI();
-	renderProjectiles();
-	renderWalls();
-	renderAliens();
+	renderRange<Projectile>(playerProjectiles_, resources_.laserTexture_);
+	renderRange<Projectile>(alienProjectiles_, resources_.laserTexture_);
+	renderRange<Wall>(walls_, resources_.barrierTexture_);
+	renderRange<Alien>(aliens_, resources_.alienTexture_);
 	
 	if (debugCollisionBoxes_)
 	{
@@ -152,32 +154,20 @@ void Game::updateGamePlay()
 	if (aliens_.size() < 1)
 	{
 		createAlienFormation();
-	}
-	
+	}	
 
+	updateRange<Projectile>(playerProjectiles_);
+	updateRange<Projectile>(alienProjectiles_);
+	updateRange<Wall>(walls_);
 	background_.updateWithPlayerPosition(player_.getPositionX());
 
-	for (auto& projectile : playerProjectiles_)
-	{
-		projectile.update();
-	}
-
-	for (auto& projectile : alienProjectiles_)
-	{
-		projectile.update();
-	}
-
-	for (auto& wall : walls_)
-	{
-		wall.update();
-	}
 	playerShoot();
 	aliensShoot();
 	checkCollisions();
 	removeInactiveEntities();
 }
 
-void Game::renderEndScreen()
+void Game::renderEndScreen() noexcept
 {
 	if (isNewHighScore_)
 	{
@@ -208,31 +198,12 @@ void Game::updateEndScreen()
 	}
 }
 
-void Game::renderProjectiles() noexcept
+template<typename T>
+void Game::renderRange(Range<T>& container, const Texture2D& texture) noexcept
 {
-	for (auto& projectile : playerProjectiles_)
+	for (auto& entity : container)
 	{
-		projectile.render(resources_.laserTexture_);
-	}
-	for (auto& projectile : alienProjectiles_)
-	{
-		projectile.render(resources_.laserTexture_);
-	}
-}
-
-void Game::renderWalls() noexcept
-{
-	for (auto& wall : walls_)
-	{
-		wall.render(resources_.barrierTexture_);
-	}
-}
-
-void Game::renderAliens() noexcept
-{
-	for (auto& alien : aliens_)
-	{
-		alien.render(resources_.alienTexture_);
+		entity.render(texture);
 	}
 }
 
@@ -249,28 +220,23 @@ void Game::renderUI() noexcept
 
 void Game::renderCollisionBoxes() noexcept
 {
-	// Draw player collision box
 	DrawRectangleLinesEx(player_.collisionBox_, 2.0f, GREEN);
 
-	// Draw alien collision boxes
 	for (const auto& alien : aliens_)
 	{
 		DrawRectangleLinesEx(alien.collisionBox_, 2.0f, RED);
 	}
 
-	// Draw wall collision boxes
 	for (const auto& wall : walls_)
 	{
 		DrawRectangleLinesEx(wall.collisionBox_, 2.0f, BLUE);
 	}
 
-	// Draw player projectile collision boxes
 	for (const auto& projectile : playerProjectiles_)
 	{
 		DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, YELLOW);
 	}
 
-	// Draw alien projectile collision boxes
 	for (const auto& projectile : alienProjectiles_)
 	{
 		DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, ORANGE);
@@ -294,6 +260,15 @@ void Game::createWalls()
 	{
 		const Wall newWall{ {wall_distance * (i + 1), window_.height_ - 250.0f } };
 		walls_.push_back(newWall);
+	}
+}
+
+template<typename T>
+void Game::updateRange(Range<T>& container) noexcept
+{
+	for (auto& entity : container)
+	{
+		entity.update();
 	}
 }
 

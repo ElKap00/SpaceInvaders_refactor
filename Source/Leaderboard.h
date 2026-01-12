@@ -59,7 +59,7 @@ public:
 		}
 	}
 
-	void updateMouseCursor()
+	void updateMouseCursor() noexcept
 	{
 		if (CheckCollisionPointRec(GetMousePosition(), textBox_))
 		{
@@ -121,7 +121,7 @@ public:
 		}
 	}
 
-	void renderLeaderboard()
+	void renderLeaderboard() noexcept
 	{
 		DrawText("PRESS ENTER TO CONTINUE", 600, 200, 40, YELLOW);
 
@@ -135,7 +135,7 @@ public:
 		}
 	}
 
-	void renderHighScoreNameInput()
+	void renderHighScoreNameInput() noexcept
 	{
 		if (name_.size() >= 9)
 		{
@@ -154,7 +154,7 @@ public:
 		}
 	}
 
-	void renderHighScoreEntry()
+	void renderHighScoreEntry() noexcept
 	{
 		DrawText("NEW HIGHSCORE!", 600, 300, 60, YELLOW);
 
@@ -165,7 +165,7 @@ public:
 		DrawText(TextFormat("INPUT CHARS: %i/%i", static_cast<int>(name_.size()), 8), 600, 600, 20, YELLOW);
 	}
 
-	void renderTextBox()
+	void renderTextBox() noexcept
 	{
 		DrawRectangleRec(textBox_, LIGHTGRAY);
 		if (isTextBoxHovered_)
@@ -183,7 +183,7 @@ public:
 
 	void startNameEntry() noexcept { isEnteringName_ = true; }
 
-	void resetNameEntry()
+	void resetNameEntry() noexcept
 	{
 		name_.clear();
 		isTextBoxHovered_ = false;

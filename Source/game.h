@@ -10,6 +10,9 @@
 #include "wall.h"
 #include "leaderboard.h"
 
+template<typename T>
+using Range = std::vector<T>;
+
 enum struct State
 {
 	STARTSCREEN,
@@ -78,23 +81,24 @@ public:
 private:
 	void start();
 	void end();
-	void resume();
+	void resume() noexcept;
 
 	void renderStartScreen() noexcept;
 	void updateStartScreen();
 	void renderGamePlay() noexcept;
 	void updateGamePlay();
-	void renderEndScreen();
+	void renderEndScreen() noexcept;
 	void updateEndScreen();
 
-	void renderProjectiles() noexcept;
-	void renderWalls() noexcept;
-	void renderAliens() noexcept;
+	template<typename T>
+	void renderRange(Range<T>& container, const Texture2D& texture) noexcept;
 	void renderUI() noexcept;
 	void renderCollisionBoxes() noexcept; // Debug rendering
 
 	void createWalls();
 	void createAlienFormation();
+	template<typename T>
+	void updateRange(Range<T>& container) noexcept;
 	void updateAliens();
 
 	void aliensShoot();
