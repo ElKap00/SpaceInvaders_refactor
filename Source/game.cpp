@@ -217,25 +217,25 @@ void Game::renderCollisionBoxes() noexcept
 {
 	DrawRectangleLinesEx(player_.collisionBox_, 2.0f, GREEN);
 
-	for (const auto& alien : aliens_)
-	{
-		DrawRectangleLinesEx(alien.collisionBox_, 2.0f, RED);
-	}
+	std::for_each(aliens_.begin(), aliens_.end(),
+		[](const auto& alien) {
+			DrawRectangleLinesEx(alien.collisionBox_, 2.0f, RED);
+		});
 
-	for (const auto& wall : walls_)
-	{
-		DrawRectangleLinesEx(wall.collisionBox_, 2.0f, BLUE);
-	}
+	std::for_each(walls_.begin(), walls_.end(),
+		[](const auto& wall) {
+			DrawRectangleLinesEx(wall.collisionBox_, 2.0f, BLUE);
+		});
 
-	for (const auto& projectile : playerProjectiles_)
-	{
-		DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, YELLOW);
-	}
+	std::for_each(playerProjectiles_.begin(), playerProjectiles_.end(),
+		[](const auto& projectile) {
+			DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, YELLOW);
+		});
 
-	for (const auto& projectile : alienProjectiles_)
-	{
-		DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, ORANGE);
-	}
+	std::for_each(alienProjectiles_.begin(), alienProjectiles_.end(),
+		[](const auto& projectile) {
+			DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, ORANGE);
+		});
 }
 
 void Game::resetScore() noexcept
@@ -259,14 +259,17 @@ void Game::createWalls()
 
 void Game::updateAliens()
 {
-	for (auto& alien : aliens_)
-	{
-		alien.update();
+	//TODO: consider refactoring complex tests into named functions. "isBehindPlayer(const Alien&)"
+	//TODO: or maybe: player.getBottom(). alien.bottom() > player.bottom()
+	std::for_each(aliens_.begin(), aliens_.end(),
+		[](auto& alien) noexcept { alien.update(); });
 
-		if (alien.position_.y >= player_.position_.y - 50.0f) //TODO: consider refactoring complex tests into named functions. "isBehindPlayer(const Alien&)"
-		{			//TODO: or maybe: player.getBottom(). alien.bottom() > player.bottom()
-			end();
-		}
+	if (std::any_of(aliens_.begin(), aliens_.end(),
+		[this](const auto& alien) {
+			return alien.position_.y >= player_.position_.y - 50.0f;
+		}))
+	{
+		end();
 	}
 }
 
@@ -330,29 +333,30 @@ void Game::removeInactiveEntities() noexcept
 
 void Game::checkCollisions() noexcept
 {
-	for (auto& projectile : playerProjectiles_)
-	{
-		checkAlienCollision(projectile);
-		checkWallCollision(projectile);
-	}
+	std::for_each(playerProjectiles_.begin(), playerProjectiles_.end(),
+		[this](auto& projectile) {
+			checkAlienCollision(projectile);
+			checkWallCollision(projectile);
+		});
 
-	for (auto& projectile : alienProjectiles_)
-	{
-		checkPlayerCollision(projectile);
-		checkWallCollision(projectile);
-	}
+	std::for_each(alienProjectiles_.begin(), alienProjectiles_.end(),
+		[this](auto& projectile) {
+			checkPlayerCollision(projectile);
+			checkWallCollision(projectile);
+		});
 }
 
 void Game::checkWallCollision(Projectile& projectile) noexcept 
 {
-	for (auto& wall : walls_)
+	auto it = std::find_if(walls_.begin(), walls_.end(),
+		[&projectile](auto& wall) noexcept {
+			return CheckCollisionRecs(projectile.collisionBox_, wall.collisionBox_);
+		});
+
+	if (it != walls_.end())
 	{
-		if (CheckCollisionRecs(projectile.collisionBox_, wall.collisionBox_))
-		{
-			projectile.setActive(false);
-			wall.health_ -= 1;
-			break;
-		}
+		projectile.setActive(false);
+		it->health_ -= 1;
 	}
 }
 
@@ -367,15 +371,16 @@ void Game::checkPlayerCollision(Projectile& projectile) noexcept
 
 void Game::checkAlienCollision(Projectile& projectile) noexcept 
 {
-	for (auto& alien : aliens_)
+	auto it = std::find_if(aliens_.begin(), aliens_.end(),
+		[&projectile](auto& alien) noexcept {
+			return CheckCollisionRecs(projectile.collisionBox_, alien.collisionBox_);
+		});
+
+	if (it != aliens_.end())
 	{
-		if (CheckCollisionRecs(projectile.collisionBox_, alien.collisionBox_))
-		{
-			projectile.setActive(false);
-			alien.isActive_ =false;
-			score_ += 100;
-			break;
-		}
+		projectile.setActive(false);
+		it->isActive_ = false;
+		score_ += 100;
 	}
 }
 
