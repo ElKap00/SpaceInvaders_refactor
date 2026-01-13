@@ -37,6 +37,7 @@ struct Player
 			position_.x += speed_;
 		}
 
+		// Keep player within screen bounds
 		if (position_.x < 0.0f + radius_)
 		{
 			position_.x = 0.0f + radius_;
@@ -63,10 +64,10 @@ struct Player
 		}
 	}
 
-	void render(Texture2D texture) noexcept
+	void render(Texture2D texture) noexcept //TODO: make const. 
 	{
 		DrawTexture(texture,
-			static_cast<int>(position_.x - 50.0f),
+			static_cast<int>(position_.x - 50.0f), //TODO: give this magic value a name, and make it static constexpr whatever. 
 			static_cast<int>(position_.y - 50.0f),
 			WHITE);
 	}

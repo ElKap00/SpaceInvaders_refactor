@@ -5,6 +5,7 @@
 #include <thread>
 #include <vector>
 #include <random>
+#include <cassert>
 
 void Game::start()
 {
@@ -94,9 +95,8 @@ void Game::createAlienFormation()
 	for (int row = 0; row < alienFormation_.formationHeight_; row++) {
 		for (int col = 0; col < alienFormation_.formationWidth_; col++) {
 			const Vector2 alienPosition = { alienFormation_.position_.x + (static_cast<float>(col) * static_cast<float>(alienFormation_.alienSpacing_)),
-											alienFormation_.position_.y + (static_cast<float>(row) * static_cast<float>(alienFormation_.alienSpacing_)) };
-			const Alien newAlien = Alien(alienPosition);
-			aliens_.push_back(newAlien);
+											alienFormation_.position_.y + (static_cast<float>(row) * static_cast<float>(alienFormation_.alienSpacing_)) };			
+			aliens_.emplace_back(alienPosition);
 		}
 	}
 }
@@ -143,7 +143,7 @@ void Game::updateGamePlay()
 	{
 		end();
 	}
-	if (player_.lives_ < 1)
+	if (player_.lives_ < 1) //TODO: consider making a "isAlive()" function on player
 	{
 		end();
 	}
@@ -151,7 +151,7 @@ void Game::updateGamePlay()
 	player_.update();
 	updateAliens(); //TODO: consider making this a generic "update(Range)", "update(begin, end)"
 
-	if (aliens_.size() < 1)
+	if (aliens_.size() < 1) //TODO: empty()
 	{
 		createAlienFormation();
 	}	
@@ -199,9 +199,9 @@ void Game::updateEndScreen()
 }
 
 template<typename T>
-void Game::renderRange(Range<T>& container, const Texture2D& texture) noexcept
+void Game::renderRange(std::span<const T> container, const Texture2D& texture) const noexcept
 {
-	for (auto& entity : container)
+	for (const auto& entity : container)
 	{
 		entity.render(texture);
 	}
@@ -264,7 +264,7 @@ void Game::createWalls()
 }
 
 template<typename T>
-void Game::updateRange(Range<T>& container) noexcept
+void Game::updateRange(std::span<const T>& container) noexcept
 {
 	for (auto& entity : container)
 	{
@@ -278,8 +278,8 @@ void Game::updateAliens()
 	{
 		alien.update();
 
-		if (alien.position_.y >= player_.position_.y - 50.0f)
-		{
+		if (alien.position_.y >= player_.position_.y - 50.0f) //TODO: consider refactoring complex tests into named functions. "isBehindPlayer(const Alien&)"
+		{			//TODO: or maybe: player.getBottom(). alien.bottom() > player.bottom()
 			end();
 		}
 	}
@@ -307,9 +307,12 @@ void Game::aliensShoot()
 
 Alien& Game::selectRandomAlien()
 {
+	assert(aliens_.empty() == false);
 	static std::default_random_engine rng(std::random_device{}());
 	std::uniform_int_distribution<size_t> dist(0, aliens_.size() - 1);
 	const size_t randomAlienIndex = dist(rng);
+	assert(randomAlienIndex < aliens_.size());
+	//TODO: feel free to silence the static analyzer here. You are guarantueed that index is in range
 	return aliens_[randomAlienIndex];
 }
 

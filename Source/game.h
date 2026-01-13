@@ -1,4 +1,5 @@
 #pragma once
+#include <span>
 #include "raylib_wrapper.h"
 #include <vector>
 #include "resources.h"
@@ -20,24 +21,24 @@ enum struct State
 	ENDSCREEN
 };
 
-struct AlienFormation 
+struct AlienFormation //TODO: is this a config? it doesn't seem to be an alien formation
 {
-	int formationWidth_ = 8;
+	int formationWidth_ = 8; //TODO: if these are settings / configs that never change, consider static constexpr
 	int formationHeight_ = 5;
 	int alienSpacing_ = 80;
 	Vector2 position_ = { 550.0f, 50.0f };
-	float shootTimerSeconds_ = 0.0f;
+	float shootTimerSeconds_ = 0.0f; //possibly move thisout of "config" and into game, it's a game logic thing
 };
 
 struct Window
 {
-	const float height_ = 1080.0f;
+	const float height_ = 1080.0f; //TODO: const member is almost always wrong. You meant "static const" or "static constexpr"
 	const float width_ = 1920.0f;
-	const std::string title_ = "SPACE INVADERS";
+	const std::string_view title_ = "SPACE INVADERS";
 
 	Window() noexcept
 	{
-		InitWindow(static_cast<int>(width_), static_cast<int>(height_), title_.c_str());
+		InitWindow(static_cast<int>(width_), static_cast<int>(height_), title_.data());
 		SetTargetFPS(60);
 	}
 
@@ -50,15 +51,13 @@ struct Window
 class Game
 {
 private:
-	const Window window_{};
-
+	Window window_{}; //TODO: const members break value semantics. We can't assign to these, can't move from them. Our "Game" no longer acts like a normal value.
 	State gameState_ = State::STARTSCREEN;
 	int score_ = 0;
 	int wallCount_ = 5;
 	bool isNewHighScore_ = false;
 	bool debugCollisionBoxes_ = false; // Toggle for debug rendering
 
-	// TODO: consider EntityManager class for better organization
 	// Entity Storage and Resources
 	Resources resources_{};
 	Player player_{};
@@ -71,12 +70,12 @@ private:
 	Background background_{};
 
 public:
-	Game() = default;
-	~Game() = default;
+		
 
+	//TODO: consider "run()" as the only entry point
 	void update();
 	void render();
-	void draw();
+	void draw(); //How is draw different from render?
 
 private:
 	void start();
@@ -90,15 +89,20 @@ private:
 	void renderEndScreen() noexcept;
 	void updateEndScreen();
 
+
+	//TODO: consider std::span<const T> instead of std::vector (puts less of a burden on the caller, they can pass anything span-like)
+	//TODO: consider making these free functions instead of member functions, unless they need access to private members
+
 	template<typename T>
-	void renderRange(Range<T>& container, const Texture2D& texture) noexcept;
+	void renderRange(std::span<const T> container, const Texture2D& texture) const noexcept;
 	void renderUI() noexcept;
 	void renderCollisionBoxes() noexcept; // Debug rendering
 
 	void createWalls();
 	void createAlienFormation();
+
 	template<typename T>
-	void updateRange(Range<T>& container) noexcept;
+	void updateRange(std::span<const T>& container) noexcept;
 	void updateAliens();
 
 	void aliensShoot();

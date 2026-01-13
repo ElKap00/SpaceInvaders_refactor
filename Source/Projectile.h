@@ -3,17 +3,19 @@
 
 struct Projectile
 {
-public:
 	Vector2 position_ = {0.0f, 0.0f};
+	//TODO: the position and collisionbox encode the sam einfromation. Try to get rid of one of them. 
+	//either position + width / height
+	//or just rectangle. 
+	// you can always have a Rectangle getCollisionBox() const noexcept { return {x, y, width, height}; } 
 	int speed_ = 15;
 	bool isActive_ = true;
 
-	Rectangle collisionBox_ = {0.0f, 0.0f, 10.0f, 30.0f}; // Small width, tall height for laser beam
+	Rectangle collisionBox_ = {0.0f, 0.0f, 10.0f, 30.0f};
 
 	Projectile(Vector2 position) noexcept
 		: position_(position)
 	{
-		// Initialize collision box
 		collisionBox_.x = position_.x - 5.0f;
 		collisionBox_.y = position_.y - 15.0f;
 	}
@@ -21,18 +23,17 @@ public:
 	Projectile(Vector2 position, int speed) noexcept
 		: position_(position), speed_(speed)
 	{
-		// Initialize collision box
 		collisionBox_.x = position_.x - 5.0f;
 		collisionBox_.y = position_.y - 15.0f;
 	}
 
+	// TODO: remove setter?
 	void setActive(bool isActive) noexcept { isActive_ = isActive; }
 
 	void update() noexcept
 	{
 		position_.y -= speed_;
 
-		// Update collision box position
 		collisionBox_.x = position_.x - 5.0f;
 		collisionBox_.y = position_.y - 15.0f;
 
