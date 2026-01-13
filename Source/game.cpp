@@ -128,7 +128,7 @@ void Game::renderGamePlay() noexcept
 	renderUI();
 	render<Projectile>(playerProjectiles_, resources_.laserTexture_);
 	render<Projectile>(alienProjectiles_, resources_.laserTexture_);
-	render<Wall>(walls_, resources_.barrierTexture_);
+	renderWall<Wall>(walls_);
 	render<Alien>(aliens_, resources_.alienTexture_);
 	
 	if (debugCollisionBoxes_)
@@ -255,8 +255,7 @@ void Game::createWalls()
 	const float wall_distance = window_.width_ / (wallCount_ + 1);
 	for (int i = 0; i < wallCount_; i++)
 	{
-		const Wall newWall{ {wall_distance * (i + 1), window_.height_ - 250.0f } };
-		walls_.push_back(newWall);
+		walls_.emplace_back(Vector2{ wall_distance * (i + 1), window_.height_ - 250.0f });
 	}
 }
 
@@ -392,6 +391,14 @@ void Game::render(std::span<T> container, const Texture2D& texture) noexcept
 	for (const auto& entity : container)
 	{
 		entity.render(texture);
+	}
+}
+template<typename T>
+void Game::renderWall(std::span<T> container) noexcept
+{
+	for (const auto& entity : container)
+	{
+		entity.render();
 	}
 }
 

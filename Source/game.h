@@ -80,6 +80,8 @@ private:
 	void render(std::span<T> container, const Texture2D& texture) noexcept;
 	template<typename T>
 	void update(std::span<T> container) noexcept;
+	template<typename T>
+	void renderWall(std::span<T> container) noexcept;
 
 	void renderStartScreen() noexcept;
 	void updateStartScreen();

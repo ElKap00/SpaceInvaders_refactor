@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib_wrapper.h"
+#include "resources.h"
 
 struct Wall
 {
@@ -7,15 +8,17 @@ public:
 	Vector2 position_ = {0.0f, 0.0f};
 	bool isActive_ = true;
 	int health_ = 50;
+	TextureResource barrierTexture_{ "./Assets/Barrier.png" };
 
 	Rectangle collisionBox_ = { position_.x - 75.0f, position_.y, 150.0f, 60.0f };
 
 	Wall() = default;
 
-	Wall(Vector2 position) noexcept
-	{
-		position_ = position;
-	}
+	explicit Wall(Vector2 position)
+		: position_(position)
+		, barrierTexture_("./Assets/Barrier.png")
+		, collisionBox_{ position_.x - 75.0f, position_.y, 150.0f, 60.0f }
+	{}
 
 	void update() noexcept
 	{
@@ -27,9 +30,9 @@ public:
 		collisionBox_ = { position_.x - 75.0f, position_.y, 150.0f, 60.0f };
 	}
 
-	void render(Texture2D texture) const noexcept
+	void render() const noexcept
 	{
-		DrawTexture(texture,
+		DrawTexture(barrierTexture_,
 			static_cast<int>(position_.x - 100.0f),
 			static_cast<int>(position_.y - 100.0f),
 			WHITE);
