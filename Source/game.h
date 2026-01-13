@@ -11,9 +11,6 @@
 #include "wall.h"
 #include "leaderboard.h"
 
-template<typename T>
-using Range = std::vector<T>;
-
 enum struct State
 {
 	STARTSCREEN,
@@ -70,17 +67,19 @@ private:
 	Background background_{};
 
 public:
-		
-
-	//TODO: consider "run()" as the only entry point
+	void run();
 	void update();
-	void render();
-	void draw(); //How is draw different from render?
+	void render() noexcept;
 
 private:
 	void start();
 	void end();
 	void resume() noexcept;
+
+	template<typename T>
+	void render(std::span<T> container, const Texture2D& texture) noexcept;
+	template<typename T>
+	void update(std::span<T> container) noexcept;
 
 	void renderStartScreen() noexcept;
 	void updateStartScreen();
@@ -89,20 +88,15 @@ private:
 	void renderEndScreen() noexcept;
 	void updateEndScreen();
 
-
 	//TODO: consider std::span<const T> instead of std::vector (puts less of a burden on the caller, they can pass anything span-like)
 	//TODO: consider making these free functions instead of member functions, unless they need access to private members
 
-	template<typename T>
-	void renderRange(std::span<const T> container, const Texture2D& texture) const noexcept;
 	void renderUI() noexcept;
 	void renderCollisionBoxes() noexcept; // Debug rendering
 
 	void createWalls();
 	void createAlienFormation();
 
-	template<typename T>
-	void updateRange(std::span<const T>& container) noexcept;
 	void updateAliens();
 
 	void aliensShoot();

@@ -18,6 +18,8 @@ struct Player
 
 	float getPositionX() noexcept { return position_.x; }
 
+	bool isAlive() const noexcept { return lives_ > 0; }
+
 	void update() noexcept
 	{
 		updateMovement();
@@ -64,7 +66,7 @@ struct Player
 		}
 	}
 
-	void render(Texture2D texture) noexcept //TODO: make const. 
+	void render(Texture2D texture) const noexcept
 	{
 		DrawTexture(texture,
 			static_cast<int>(position_.x - 50.0f), //TODO: give this magic value a name, and make it static constexpr whatever. 

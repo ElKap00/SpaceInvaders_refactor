@@ -43,7 +43,7 @@ struct Projectile
 		}
 	}
 
-	void render(Texture2D texture) noexcept
+	void render(Texture2D texture) const noexcept
 	{
 		DrawTexture(texture,
 			static_cast<int>(position_.x - 25.0f),

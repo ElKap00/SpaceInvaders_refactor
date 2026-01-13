@@ -5,12 +5,8 @@ int main(void)
 {    
     //TODO: wrap in try / catch, handle all exceptions you throw
     Game game{};
-	//consider: game.run(); method that contains the loop
-    while (!WindowShouldClose())
-    {
-        game.update();
-        game.draw();
-    }
+
+    game.run();
 
     return 0;
 }

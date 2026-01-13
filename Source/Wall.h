@@ -27,7 +27,7 @@ public:
 		collisionBox_ = { position_.x - 75.0f, position_.y, 150.0f, 60.0f };
 	}
 
-	void render(Texture2D texture) noexcept
+	void render(Texture2D texture) const noexcept
 	{
 		DrawTexture(texture,
 			static_cast<int>(position_.x - 100.0f),

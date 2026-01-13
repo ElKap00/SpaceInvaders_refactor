@@ -7,6 +7,15 @@
 #include <random>
 #include <cassert>
 
+void Game::run()
+{
+	while (!WindowShouldClose())
+	{
+		update();
+		render();
+	}
+}
+
 void Game::start()
 {
 	resetScore();
@@ -59,8 +68,11 @@ void Game::update()
 	}
 }
 
-void Game::render()
+void Game::render() noexcept
 {
+	BeginDrawing();
+	ClearBackground(BLACK);
+
 	switch (gameState_)
 	{
 	case State::STARTSCREEN:
@@ -80,13 +92,7 @@ void Game::render()
 		//SHOULD NOT HAPPEN
 		break;
 	}
-}
 
-void Game::draw()
-{
-	BeginDrawing();
-	ClearBackground(BLACK);
-	render();
 	EndDrawing();
 }
 
@@ -120,10 +126,10 @@ void Game::renderGamePlay() noexcept
 	background_.render();
 	player_.render(resources_.shipTextures_[player_.activeTexture_]);
 	renderUI();
-	renderRange<Projectile>(playerProjectiles_, resources_.laserTexture_);
-	renderRange<Projectile>(alienProjectiles_, resources_.laserTexture_);
-	renderRange<Wall>(walls_, resources_.barrierTexture_);
-	renderRange<Alien>(aliens_, resources_.alienTexture_);
+	render<Projectile>(playerProjectiles_, resources_.laserTexture_);
+	render<Projectile>(alienProjectiles_, resources_.laserTexture_);
+	render<Wall>(walls_, resources_.barrierTexture_);
+	render<Alien>(aliens_, resources_.alienTexture_);
 	
 	if (debugCollisionBoxes_)
 	{
@@ -143,7 +149,7 @@ void Game::updateGamePlay()
 	{
 		end();
 	}
-	if (player_.lives_ < 1) //TODO: consider making a "isAlive()" function on player
+	if (!player_.isAlive())
 	{
 		end();
 	}
@@ -151,14 +157,14 @@ void Game::updateGamePlay()
 	player_.update();
 	updateAliens(); //TODO: consider making this a generic "update(Range)", "update(begin, end)"
 
-	if (aliens_.size() < 1) //TODO: empty()
+	if (aliens_.empty())
 	{
 		createAlienFormation();
 	}	
 
-	updateRange<Projectile>(playerProjectiles_);
-	updateRange<Projectile>(alienProjectiles_);
-	updateRange<Wall>(walls_);
+	update<Projectile>(playerProjectiles_);
+	update<Projectile>(alienProjectiles_);
+	update<Wall>(walls_);
 	background_.updateWithPlayerPosition(player_.getPositionX());
 
 	playerShoot();
@@ -195,15 +201,6 @@ void Game::updateEndScreen()
 			leaderboard_.insertNewHighScore(score_);
 			isNewHighScore_ = false;
 		}
-	}
-}
-
-template<typename T>
-void Game::renderRange(std::span<const T> container, const Texture2D& texture) const noexcept
-{
-	for (const auto& entity : container)
-	{
-		entity.render(texture);
 	}
 }
 
@@ -260,15 +257,6 @@ void Game::createWalls()
 	{
 		const Wall newWall{ {wall_distance * (i + 1), window_.height_ - 250.0f } };
 		walls_.push_back(newWall);
-	}
-}
-
-template<typename T>
-void Game::updateRange(std::span<const T>& container) noexcept
-{
-	for (auto& entity : container)
-	{
-		entity.update();
 	}
 }
 
@@ -393,5 +381,25 @@ void Game::checkAlienCollision(Projectile& projectile) noexcept
 			score_ += 100;
 			break;
 		}
+	}
+}
+
+// Helper methods
+
+template<typename T>
+void Game::render(std::span<T> container, const Texture2D& texture) noexcept
+{
+	for (const auto& entity : container)
+	{
+		entity.render(texture);
+	}
+}
+
+template<typename T>
+void Game::update(std::span<T> container) noexcept
+{
+	for (auto& entity : container)
+	{
+		entity.update();
 	}
 }
