@@ -47,7 +47,7 @@
     <ClInclude Include="Source\projectile.h">
       <Filter>Header Files\GameEntities</Filter>
     </ClInclude>
-    <ClInclude Include="Source\resources.h">
+    <ClInclude Include="Source\texture_resource.h">
       <Filter>Header Files\GameEntities</Filter>
     </ClInclude>
     <ClInclude Include="Source\wall.h">

@@ -10,11 +10,16 @@ struct Player
 	int lives_ = 3;
 	int activeTexture_ = 0;
 	float timer_ = 0;
+	std::vector<TextureResource> shipTextures_;
 
 	Rectangle collisionBox_ = { position_.x - 50.0f, position_.y - 50.0f, 100.0f, 100.0f };
 
-	Player() noexcept = default;
-	~Player() noexcept = default;
+	Player()
+	{
+		shipTextures_.emplace_back("./Assets/Ship1.png");
+		shipTextures_.emplace_back("./Assets/Ship2.png");
+		shipTextures_.emplace_back("./Assets/Ship3.png");
+	}
 
 	float getPositionX() noexcept { return position_.x; }
 
@@ -66,9 +71,9 @@ struct Player
 		}
 	}
 
-	void render(Texture2D texture) const noexcept
+	void render() const noexcept
 	{
-		DrawTexture(texture,
+		DrawTexture(shipTextures_[activeTexture_],
 			static_cast<int>(position_.x - 50.0f), //TODO: give this magic value a name, and make it static constexpr whatever. 
 			static_cast<int>(position_.y - 50.0f),
 			WHITE);

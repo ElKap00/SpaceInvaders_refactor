@@ -1,6 +1,5 @@
 #pragma once
 #include "raylib_wrapper.h"
-#include "resources.h"
 
 struct Wall
 {

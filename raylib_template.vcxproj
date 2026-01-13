@@ -177,7 +177,7 @@
     <ClInclude Include="Source\player.h" />
     <ClInclude Include="Source\projectile.h" />
     <ClInclude Include="Source\raylib_wrapper.h" />
-    <ClInclude Include="Source\resources.h" />
+    <ClInclude Include="Source\texture_resource.h" />
     <ClInclude Include="Source\wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

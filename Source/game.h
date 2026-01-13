@@ -2,7 +2,7 @@
 #include <span>
 #include "raylib_wrapper.h"
 #include <vector>
-#include "resources.h"
+#include "texture_resource.h"
 #include <string>
 #include "player.h"
 #include "background.h"
@@ -56,7 +56,6 @@ private:
 	bool debugCollisionBoxes_ = false; // Toggle for debug rendering
 
 	// Entity Storage and Resources
-	Resources resources_{};
 	Player player_{};
 	std::vector<Projectile> playerProjectiles_;
 	std::vector<Projectile> alienProjectiles_;

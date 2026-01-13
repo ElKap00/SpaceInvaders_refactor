@@ -124,7 +124,7 @@ void Game::updateStartScreen()
 void Game::renderGamePlay() noexcept
 {
 	background_.render();
-	player_.render(resources_.shipTextures_[player_.activeTexture_]);
+	player_.render();
 	renderUI();
 	render<Projectile>(playerProjectiles_);
 	render<Projectile>(alienProjectiles_);
