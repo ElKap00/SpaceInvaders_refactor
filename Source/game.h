@@ -33,9 +33,15 @@ struct Window
 	const float width_ = 1920.0f;
 	const std::string_view title_ = "SPACE INVADERS";
 
-	Window() noexcept
+	Window()
 	{
 		InitWindow(static_cast<int>(width_), static_cast<int>(height_), title_.data());
+
+		if (!IsWindowReady())
+		{
+			throw std::runtime_error("Failed to initialize game window.");
+		}
+
 		SetTargetFPS(60);
 	}
 
@@ -75,8 +81,7 @@ private:
 	void end();
 	void resume() noexcept;
 
-	template<typename T>
-	void render(std::span<T> container, const Texture2D& texture) noexcept;
+	//TODO: consider making these free functions instead of member functions, unless they need access to private members
 	template<typename T>
 	void update(std::span<T> container) noexcept;
 	template<typename T>
@@ -88,9 +93,6 @@ private:
 	void updateGamePlay();
 	void renderEndScreen() noexcept;
 	void updateEndScreen();
-
-	//TODO: consider std::span<const T> instead of std::vector (puts less of a burden on the caller, they can pass anything span-like)
-	//TODO: consider making these free functions instead of member functions, unless they need access to private members
 
 	void renderUI() noexcept;
 	void renderCollisionBoxes() noexcept; // Debug rendering

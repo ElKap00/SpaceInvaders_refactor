@@ -63,7 +63,7 @@ void Game::update()
 		break;
 
 	default:
-		//SHOULD NOT HAPPEN
+		throw std::logic_error("Invalid game state in Game::update().");
 		break;
 	}
 }
@@ -88,8 +88,6 @@ void Game::render() noexcept
 		break;
 
 	default:
-		// TODO: add exception handling
-		//SHOULD NOT HAPPEN
 		break;
 	}
 
@@ -382,15 +380,6 @@ void Game::checkAlienCollision(Projectile& projectile) noexcept
 }
 
 // Helper methods
-
-template<typename T>
-void Game::render(std::span<T> container, const Texture2D& texture) noexcept
-{
-	for (const auto& entity : container)
-	{
-		entity.render(texture);
-	}
-}
 template<typename T>
 void Game::render(std::span<T> container) noexcept
 {

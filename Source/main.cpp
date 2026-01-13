@@ -3,9 +3,6 @@
 
 int main(void)
 {    
-    //TODO: wrap in try / catch, handle all exceptions you throw
-
-
     try
     {
         Game game{};
@@ -15,6 +12,11 @@ int main(void)
     {
         TraceLog(LOG_ERROR, "Runtime error: %s", e.what());
         return EXIT_FAILURE;
+    }
+	catch (const std::logic_error& e)
+    {
+		TraceLog(LOG_ERROR, "Logic error: %s", e.what());
+		return EXIT_FAILURE;
     }
     catch (const std::exception& e)
     {
@@ -26,7 +28,6 @@ int main(void)
         TraceLog(LOG_ERROR, "Unknown error occurred");
         return EXIT_FAILURE;
     }
-
 
     return 0;
 }
