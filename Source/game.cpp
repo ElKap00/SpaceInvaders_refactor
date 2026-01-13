@@ -126,10 +126,10 @@ void Game::renderGamePlay() noexcept
 	background_.render();
 	player_.render(resources_.shipTextures_[player_.activeTexture_]);
 	renderUI();
-	render<Projectile>(playerProjectiles_, resources_.laserTexture_);
-	render<Projectile>(alienProjectiles_, resources_.laserTexture_);
-	renderWall<Wall>(walls_);
-	render<Alien>(aliens_, resources_.alienTexture_);
+	render<Projectile>(playerProjectiles_);
+	render<Projectile>(alienProjectiles_);
+	render<Wall>(walls_);
+	render<Alien>(aliens_);
 	
 	if (debugCollisionBoxes_)
 	{
@@ -287,8 +287,7 @@ void Game::aliensShoot()
 	const Alien& shootingAlien = selectRandomAlien();
 
 	const Vector2 projectilePosition = { shootingAlien.position_.x, shootingAlien.position_.y + 40.0f };
-	const Projectile newProjectile(projectilePosition, -15);
-	alienProjectiles_.push_back(newProjectile);
+	alienProjectiles_.emplace_back(projectilePosition, -15);
 	alienFormation_.shootTimerSeconds_ = 0.0f;
 }
 
@@ -311,8 +310,7 @@ void Game::playerShoot()
 			player_.position_.x,
 			player_.position_.y - 50.0f  // Spawn from top of player collision box
 		};
-		const Projectile newProjectile(projectileSpawnPos);
-		playerProjectiles_.push_back(newProjectile);
+		playerProjectiles_.emplace_back(projectileSpawnPos);
 	}
 }
 
@@ -394,7 +392,7 @@ void Game::render(std::span<T> container, const Texture2D& texture) noexcept
 	}
 }
 template<typename T>
-void Game::renderWall(std::span<T> container) noexcept
+void Game::render(std::span<T> container) noexcept
 {
 	for (const auto& entity : container)
 	{

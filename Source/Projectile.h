@@ -10,17 +10,18 @@ struct Projectile
 	// you can always have a Rectangle getCollisionBox() const noexcept { return {x, y, width, height}; } 
 	int speed_ = 15;
 	bool isActive_ = true;
+	TextureResource laserTexture_{ "./Assets/Laser.png" };
 
 	Rectangle collisionBox_ = {0.0f, 0.0f, 10.0f, 30.0f};
 
-	Projectile(Vector2 position) noexcept
+	explicit Projectile(Vector2 position)
 		: position_(position)
 	{
 		collisionBox_.x = position_.x - 5.0f;
 		collisionBox_.y = position_.y - 15.0f;
 	}
 
-	Projectile(Vector2 position, int speed) noexcept
+	explicit Projectile(Vector2 position, int speed)
 		: position_(position), speed_(speed)
 	{
 		collisionBox_.x = position_.x - 5.0f;
@@ -43,9 +44,9 @@ struct Projectile
 		}
 	}
 
-	void render(Texture2D texture) const noexcept
+	void render() const noexcept
 	{
-		DrawTexture(texture,
+		DrawTexture(laserTexture_,
 			static_cast<int>(position_.x - 25.0f),
 			static_cast<int>(position_.y - 25.0f),
 			WHITE);

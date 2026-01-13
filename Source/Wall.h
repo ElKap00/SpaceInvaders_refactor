@@ -16,8 +16,6 @@ public:
 
 	explicit Wall(Vector2 position)
 		: position_(position)
-		, barrierTexture_("./Assets/Barrier.png")
-		, collisionBox_{ position_.x - 75.0f, position_.y, 150.0f, 60.0f }
 	{}
 
 	void update() noexcept
