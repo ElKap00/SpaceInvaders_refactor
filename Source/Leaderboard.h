@@ -79,8 +79,7 @@ public:
 
 		if ((key >= 32) && (key <= 125) && (name_.size() < 9))
 		{
-			// TODO: use narrow cast (copy from gsl)
-			name_ += static_cast<char>(key);
+			name_ += gsl::narrow_cast<char>(key);
 		}
 	}
 
@@ -163,8 +162,7 @@ public:
 
 		renderTextBox();
 
-		// TODO: use narrow cast
-		DrawText(TextFormat("INPUT CHARS: %i/%i", static_cast<int>(name_.size()), 8), 600, 600, 20, YELLOW);
+		DrawText(TextFormat("INPUT CHARS: %i/%i", gsl::narrow_cast<int>(name_.size()), 8), 600, 600, 20, YELLOW);
 	}
 
 	void renderTextBox() noexcept

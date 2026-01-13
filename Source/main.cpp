@@ -1,4 +1,3 @@
-#include "raylib_wrapper.h" //TODO: remove
 #include "game.h"
 
 int main(void)

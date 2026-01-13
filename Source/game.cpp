@@ -153,7 +153,7 @@ void Game::updateGamePlay()
 	}
 
 	player_.update();
-	updateAliens(); //TODO: consider making this a generic "update(Range)", "update(begin, end)"
+	updateAliens();
 
 	if (aliens_.empty())
 	{
@@ -355,7 +355,7 @@ void Game::checkWallCollision(Projectile& projectile) noexcept
 
 	if (it != walls_.end())
 	{
-		projectile.setActive(false);
+		projectile.isActive_ = false;
 		it->health_ -= 1;
 	}
 }
@@ -364,7 +364,7 @@ void Game::checkPlayerCollision(Projectile& projectile) noexcept
 {
 	if (CheckCollisionRecs(projectile.collisionBox_, player_.collisionBox_))
 	{
-		projectile.setActive(false);
+		projectile.isActive_ = false;
 		player_.lives_ -= 1;
 	}
 }
@@ -378,7 +378,7 @@ void Game::checkAlienCollision(Projectile& projectile) noexcept
 
 	if (it != aliens_.end())
 	{
-		projectile.setActive(false);
+		projectile.isActive_ = false;
 		it->isActive_ = false;
 		score_ += 100;
 	}

@@ -28,9 +28,6 @@ struct Projectile
 		collisionBox_.y = position_.y - 15.0f;
 	}
 
-	// TODO: remove setter?
-	void setActive(bool isActive) noexcept { isActive_ = isActive; }
-
 	void update() noexcept
 	{
 		position_.y -= speed_;
@@ -40,7 +37,7 @@ struct Projectile
 
 		if (position_.y < 0.0f || position_.y > GetScreenHeightF())
 		{
-			setActive(false);
+			isActive_ = false;
 		}
 	}
 

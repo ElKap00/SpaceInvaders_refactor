@@ -21,6 +21,14 @@
 #pragma warning(disable: 26812) // prefer enum class over enum
 #include "raylib.h"
 #pragma warning(pop)
+#include <utility>
+
+namespace gsl {
+	template <typename T, typename U>
+	[[nodiscard]] constexpr T narrow_cast(U&& u) noexcept {
+		return static_cast<T>(std::forward<U>(u));
+	}
+}
 
 
 inline void DrawRectangleLines(const Rectangle& r, Color c) noexcept {
