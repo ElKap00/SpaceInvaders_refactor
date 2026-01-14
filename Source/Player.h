@@ -5,20 +5,31 @@
 struct Player
 {
 	Vector2 position_ = { GetScreenWidthF() / 2.0f, GetScreenHeightF() - 100.0f };
+	static constexpr float width_ = 100.0f;
+	static constexpr float height_ = 100.0f;
 	float speed_ = 7.0f;
-	float radius_ = 50.0f;
 	int lives_ = 3;
-	int activeTexture_ = 0;
-	float timer_ = 0;
-	std::vector<TextureResource> shipTextures_;
 
-	Rectangle collisionBox_ = { position_.x - 50.0f, position_.y - 50.0f, 100.0f, 100.0f };
+	std::vector<TextureResource> shipTextures_;
+	float animationTimer_ = 0.0f;
+	int activeTexture_ = 0;
+	static constexpr float textureWidth_ = 100.0f;
+	static constexpr float textureHeight_ = 100.0f;
+	static constexpr float textureOffsetX_ = textureWidth_ / 2.0f;  // 50.0f
+	static constexpr float textureOffsetY_ = textureHeight_ / 2.0f; // 50.0f
+	static constexpr float collisionBoxOffsetX_ = width_ / 2.0f;   // 50.0f
+	static constexpr float collisionBoxOffsetY_ = height_ / 2.0f;  // 50.0f
 
 	Player()
 	{
 		shipTextures_.emplace_back("./Assets/Ship1.png");
 		shipTextures_.emplace_back("./Assets/Ship2.png");
 		shipTextures_.emplace_back("./Assets/Ship3.png");
+	}
+
+	Rectangle getCollisionBox() const noexcept
+	{
+		return { position_.x - collisionBoxOffsetX_, position_.y - collisionBoxOffsetY_, width_, height_ };
 	}
 
 	float getPositionX() const noexcept { return position_.x; }
@@ -29,8 +40,6 @@ struct Player
 	{
 		updateMovement();
 		updateAnimation();
-
-		collisionBox_ = { position_.x - 50.0f, position_.y - 50.0f, 100.0f, 100.0f };
 	}
 
 	void updateMovement() noexcept
@@ -45,37 +54,37 @@ struct Player
 		}
 
 		// Keep player within screen bounds
-		if (position_.x < 0.0f + radius_)
+		if (position_.x < 0.0f + textureOffsetX_)
 		{
-			position_.x = 0.0f + radius_;
+			position_.x = 0.0f + textureOffsetX_;
 		}
-		else if (position_.x > GetScreenWidthF() - radius_)
+		else if (position_.x > GetScreenWidthF() - textureOffsetX_)
 		{
-			position_.x = GetScreenWidthF() - radius_;
+			position_.x = GetScreenWidthF() - textureOffsetX_;
 		}
 	}
 
 	void updateAnimation() noexcept
 	{
-		timer_ += GetFrameTime();
+		animationTimer_ += GetFrameTime();
 
-		if (timer_ > 0.4f && activeTexture_ == 2)
+		if (animationTimer_ > 0.4f && activeTexture_ == 2)
 		{
 			activeTexture_ = 0;
-			timer_ = 0.0f;
+			animationTimer_ = 0.0f;
 		}
-		else if (timer_ > 0.4f)
+		else if (animationTimer_ > 0.4f)
 		{
 			activeTexture_++;
-			timer_ = 0.0f;
+			animationTimer_ = 0.0f;
 		}
 	}
 
 	void render() const noexcept
 	{
 		DrawTexture(shipTextures_[activeTexture_],
-			static_cast<int>(position_.x - 50.0f), //TODO: give this magic value a name, and make it static constexpr whatever. 
-			static_cast<int>(position_.y - 50.0f),
+			static_cast<int>(position_.x - textureOffsetX_),
+			static_cast<int>(position_.y - textureOffsetY_),
 			WHITE);
 	}
 };
