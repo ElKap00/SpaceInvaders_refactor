@@ -229,12 +229,12 @@ void Game::renderCollisionBoxes() noexcept
 
 	std::for_each(playerProjectiles_.begin(), playerProjectiles_.end(),
 		[](const auto& projectile) noexcept {
-			DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, YELLOW);
+			DrawRectangleLinesEx(projectile.getCollisionBox(), 2.0f, YELLOW);
 		});
 
 	std::for_each(alienProjectiles_.begin(), alienProjectiles_.end(),
 		[](const auto& projectile) noexcept {
-			DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, ORANGE);
+			DrawRectangleLinesEx(projectile.getCollisionBox(), 2.0f, ORANGE);
 		});
 }
 
@@ -350,7 +350,7 @@ void Game::checkWallCollision(Projectile& projectile) noexcept
 {
 	auto it = std::find_if(walls_.begin(), walls_.end(),
 		[&projectile](auto& wall) noexcept {
-			return CheckCollisionRecs(projectile.collisionBox_, wall.collisionBox_);
+			return CheckCollisionRecs(projectile.getCollisionBox(), wall.collisionBox_);
 		});
 
 	if (it != walls_.end())
@@ -362,7 +362,7 @@ void Game::checkWallCollision(Projectile& projectile) noexcept
 
 void Game::checkPlayerCollision(Projectile& projectile) noexcept 
 {
-	if (CheckCollisionRecs(projectile.collisionBox_, player_.collisionBox_))
+	if (CheckCollisionRecs(projectile.getCollisionBox(), player_.collisionBox_))
 	{
 		projectile.isActive_ = false;
 		player_.lives_ -= 1;
@@ -373,7 +373,7 @@ void Game::checkAlienCollision(Projectile& projectile) noexcept
 {
 	auto it = std::find_if(aliens_.begin(), aliens_.end(),
 		[&projectile](auto& alien) noexcept {
-			return CheckCollisionRecs(projectile.collisionBox_, alien.collisionBox_);
+			return CheckCollisionRecs(projectile.getCollisionBox(), alien.collisionBox_);
 		});
 
 	if (it != aliens_.end())

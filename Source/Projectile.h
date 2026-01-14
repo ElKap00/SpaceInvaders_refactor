@@ -4,36 +4,35 @@
 struct Projectile
 {
 	Vector2 position_ = {0.0f, 0.0f};
-	//TODO: the position and collisionbox encode the same information. Try to get rid of one of them. 
-	//either position + width / height
-	//or just rectangle. 
-	// you can always have a Rectangle getCollisionBox() const noexcept { return {x, y, width, height}; } 
+	static constexpr float width_ = 10.0f;
+	static constexpr float height_ = 30.0f;
 	int speed_ = 15;
 	bool isActive_ = true;
-	TextureResource laserTexture_{ "./Assets/Laser.png" };
 
-	Rectangle collisionBox_ = {0.0f, 0.0f, 10.0f, 30.0f};
+	TextureResource laserTexture_{ "./Assets/Laser.png" };
+	static constexpr float textureWidth_ = 50.0f;
+	static constexpr float textureHeight_ = 50.0f;
+	static constexpr float textureOffsetX_ = textureWidth_ / 2.0f;  // 25.0f
+	static constexpr float textureOffsetY_ = textureHeight_ / 2.0f; // 25.0f
+	static constexpr float collisionBoxOffsetX_ = width_ / 2.0f;   // 5.0f
+	static constexpr float collisionBoxOffsetY_ = height_ / 2.0f;  // 15.0f
 
 	explicit Projectile(Vector2 position)
 		: position_(position)
-	{
-		collisionBox_.x = position_.x - 5.0f;
-		collisionBox_.y = position_.y - 15.0f;
-	}
+	{}
 
 	explicit Projectile(Vector2 position, int speed)
 		: position_(position), speed_(speed)
+	{}
+
+	Rectangle getCollisionBox() const noexcept
 	{
-		collisionBox_.x = position_.x - 5.0f;
-		collisionBox_.y = position_.y - 15.0f;
+		return { position_.x - collisionBoxOffsetX_, position_.y - collisionBoxOffsetY_, width_, height_ };
 	}
 
 	void update() noexcept
 	{
 		position_.y -= speed_;
-
-		collisionBox_.x = position_.x - 5.0f;
-		collisionBox_.y = position_.y - 15.0f;
 
 		if (position_.y < 0.0f || position_.y > GetScreenHeightF())
 		{
@@ -44,8 +43,8 @@ struct Projectile
 	void render() const noexcept
 	{
 		DrawTexture(laserTexture_,
-			static_cast<int>(position_.x - 25.0f),
-			static_cast<int>(position_.y - 25.0f),
+			static_cast<int>(position_.x - textureOffsetX_),
+			static_cast<int>(position_.y - textureOffsetY_),
 			WHITE);
 	}
 };
