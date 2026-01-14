@@ -19,7 +19,7 @@ struct Star
 
 	}
 
-	void render() noexcept
+	void render() const noexcept
 	{
 		DrawCircle(static_cast<int>(position_.x), static_cast<int>(position_.y), size_, color_);
 	}

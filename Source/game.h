@@ -18,20 +18,19 @@ enum struct State
 	ENDSCREEN
 };
 
-struct AlienFormation //TODO: is this a config? it doesn't seem to be an alien formation
+struct AlienFormationConfig //TODO: is this a config? it doesn't seem to be an alien formation
 {
-	int formationWidth_ = 8; //TODO: if these are settings / configs that never change, consider static constexpr
-	int formationHeight_ = 5;
-	int alienSpacing_ = 80;
-	Vector2 position_ = { 550.0f, 50.0f };
-	float shootTimerSeconds_ = 0.0f; //possibly move thisout of "config" and into game, it's a game logic thing
+	static constexpr int formationWidth_ = 8; //TODO: if these are settings / configs that never change, consider static constexpr
+	static constexpr int formationHeight_ = 5;
+	static constexpr int alienSpacing_ = 80;
+	static constexpr Vector2 initialPosition_ = { 550.0f, 50.0f };
 };
 
 struct Window
 {
-	const float height_ = 1080.0f; //TODO: const member is almost always wrong. You meant "static const" or "static constexpr"
-	const float width_ = 1920.0f;
-	const std::string_view title_ = "SPACE INVADERS";
+	static constexpr float height_ = 1080.0f;
+	static constexpr float width_ = 1920.0f;
+	static constexpr std::string_view title_ = "SPACE INVADERS";
 
 	Window()
 	{
@@ -54,11 +53,12 @@ struct Window
 class Game
 {
 private:
-	Window window_{}; //TODO: const members break value semantics. We can't assign to these, can't move from them. Our "Game" no longer acts like a normal value.
+	Window window_{};
 	State gameState_ = State::STARTSCREEN;
 	int score_ = 0;
 	int wallCount_ = 5;
 	bool isNewHighScore_ = false;
+	float alienShootCooldown_ = 0.0f;
 	bool debugCollisionBoxes_ = false; // Toggle for debug rendering
 
 	// Entity Storage and Resources
@@ -67,7 +67,7 @@ private:
 	std::vector<Projectile> alienProjectiles_;
 	std::vector<Wall> walls_;
 	std::vector<Alien> aliens_;
-	AlienFormation alienFormation_{};
+	AlienFormationConfig alienFormation_{};
 	Leaderboard leaderboard_{};
 	Background background_{};
 
@@ -94,7 +94,7 @@ private:
 	void renderEndScreen() noexcept;
 	void updateEndScreen();
 
-	void renderUI() noexcept;
+	void renderUI() const noexcept;
 	void renderCollisionBoxes() noexcept; // Debug rendering
 
 	void createWalls();

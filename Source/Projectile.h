@@ -4,7 +4,7 @@
 struct Projectile
 {
 	Vector2 position_ = {0.0f, 0.0f};
-	//TODO: the position and collisionbox encode the sam einfromation. Try to get rid of one of them. 
+	//TODO: the position and collisionbox encode the same information. Try to get rid of one of them. 
 	//either position + width / height
 	//or just rectangle. 
 	// you can always have a Rectangle getCollisionBox() const noexcept { return {x, y, width, height}; } 

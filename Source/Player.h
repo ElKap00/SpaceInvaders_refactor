@@ -21,7 +21,7 @@ struct Player
 		shipTextures_.emplace_back("./Assets/Ship3.png");
 	}
 
-	float getPositionX() noexcept { return position_.x; }
+	float getPositionX() const noexcept { return position_.x; }
 
 	bool isAlive() const noexcept { return lives_ > 0; }
 

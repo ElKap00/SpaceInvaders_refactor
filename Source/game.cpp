@@ -98,8 +98,8 @@ void Game::createAlienFormation()
 {
 	for (int row = 0; row < alienFormation_.formationHeight_; row++) {
 		for (int col = 0; col < alienFormation_.formationWidth_; col++) {
-			const Vector2 alienPosition = { alienFormation_.position_.x + (static_cast<float>(col) * static_cast<float>(alienFormation_.alienSpacing_)),
-											alienFormation_.position_.y + (static_cast<float>(row) * static_cast<float>(alienFormation_.alienSpacing_)) };			
+			const Vector2 alienPosition = { alienFormation_.initialPosition_.x + (static_cast<float>(col) * static_cast<float>(alienFormation_.alienSpacing_)),
+											alienFormation_.initialPosition_.y + (static_cast<float>(row) * static_cast<float>(alienFormation_.alienSpacing_)) };			
 			aliens_.emplace_back(alienPosition);
 		}
 	}
@@ -202,7 +202,7 @@ void Game::updateEndScreen()
 	}
 }
 
-void Game::renderUI() noexcept
+void Game::renderUI() const noexcept
 {
 	DrawText(TextFormat("Score: %i", score_), 50, 20, 40, YELLOW);
 	DrawText(TextFormat("Lives: %i", player_.lives_), 50, 70, 40, YELLOW);
@@ -218,22 +218,22 @@ void Game::renderCollisionBoxes() noexcept
 	DrawRectangleLinesEx(player_.collisionBox_, 2.0f, GREEN);
 
 	std::for_each(aliens_.begin(), aliens_.end(),
-		[](const auto& alien) {
+		[](const auto& alien) noexcept {
 			DrawRectangleLinesEx(alien.collisionBox_, 2.0f, RED);
 		});
 
 	std::for_each(walls_.begin(), walls_.end(),
-		[](const auto& wall) {
+		[](const auto& wall) noexcept {
 			DrawRectangleLinesEx(wall.collisionBox_, 2.0f, BLUE);
 		});
 
 	std::for_each(playerProjectiles_.begin(), playerProjectiles_.end(),
-		[](const auto& projectile) {
+		[](const auto& projectile) noexcept {
 			DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, YELLOW);
 		});
 
 	std::for_each(alienProjectiles_.begin(), alienProjectiles_.end(),
-		[](const auto& projectile) {
+		[](const auto& projectile) noexcept {
 			DrawRectangleLinesEx(projectile.collisionBox_, 2.0f, ORANGE);
 		});
 }
@@ -275,8 +275,8 @@ void Game::updateAliens()
 
 void Game::aliensShoot()
 {
-	alienFormation_.shootTimerSeconds_ += 1.0f;
-	if (alienFormation_.shootTimerSeconds_ < 60.0f)
+	alienShootCooldown_ += 1.0f;
+	if (alienShootCooldown_ < 60.0f)
 	{
 		return;
 	}
@@ -289,7 +289,7 @@ void Game::aliensShoot()
 
 	const Vector2 projectilePosition = { shootingAlien.position_.x, shootingAlien.position_.y + 40.0f };
 	alienProjectiles_.emplace_back(projectilePosition, -15);
-	alienFormation_.shootTimerSeconds_ = 0.0f;
+	alienShootCooldown_ = 0.0f;
 }
 
 Alien& Game::selectRandomAlien()
@@ -334,13 +334,13 @@ void Game::removeInactiveEntities() noexcept
 void Game::checkCollisions() noexcept
 {
 	std::for_each(playerProjectiles_.begin(), playerProjectiles_.end(),
-		[this](auto& projectile) {
+		[this](auto& projectile) noexcept {
 			checkAlienCollision(projectile);
 			checkWallCollision(projectile);
 		});
 
 	std::for_each(alienProjectiles_.begin(), alienProjectiles_.end(),
-		[this](auto& projectile) {
+		[this](auto& projectile) noexcept {
 			checkPlayerCollision(projectile);
 			checkWallCollision(projectile);
 		});

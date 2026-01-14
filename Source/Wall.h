@@ -34,6 +34,7 @@ public:
 			static_cast<int>(position_.y - 100.0f),
 			WHITE);
 
-		DrawText(TextFormat("%i", health_), position_.x - 21.0f, position_.y + 10.0f, 40, RED);
+		DrawText(TextFormat("%i", health_), gsl::narrow_cast<int>(position_.x - 21.0f), 
+											gsl::narrow_cast<int>(position_.y + 10.0f), 40, RED);
 	}
 };
