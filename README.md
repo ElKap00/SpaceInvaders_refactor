@@ -1,3 +1,3 @@
-# SpaceInvaders_Liv_Erik
+# Refactoring Space Invaders
 
-pain game assignment 2
+Refactoring this basic remake of Space Invaders to use modern C++ and best practices.
