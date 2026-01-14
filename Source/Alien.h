@@ -22,6 +22,11 @@ struct Alien
 		: position_(position)
 	{}
 
+	float getPositionX() const noexcept { return position_.x; }
+	float getPositionY() const noexcept { return position_.y; }
+
+	float getBottomEdge() const noexcept { return position_.y + collisionBoxOffsetY_; }
+
 	Rectangle getCollisionBox() const noexcept
 	{
 		return { position_.x - collisionBoxOffsetX_, position_.y - collisionBoxOffsetY_, width_, height_ };

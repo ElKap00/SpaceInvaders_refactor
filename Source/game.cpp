@@ -259,14 +259,12 @@ void Game::createWalls()
 
 void Game::updateAliens()
 {
-	//TODO: consider refactoring complex tests into named functions. "isBehindPlayer(const Alien&)"
-	//TODO: or maybe: player.getBottom(). alien.bottom() > player.bottom()
 	std::for_each(aliens_.begin(), aliens_.end(),
 		[](auto& alien) noexcept { alien.update(); });
 
 	if (std::any_of(aliens_.begin(), aliens_.end(),
-		[this](const auto& alien) {
-			return alien.position_.y >= player_.position_.y - 50.0f;
+		[this](const auto& alien) noexcept {
+			return alien.getBottomEdge() >= player_.getTopEdge();
 		}))
 	{
 		end();
@@ -287,19 +285,18 @@ void Game::aliensShoot()
 
 	const Alien& shootingAlien = selectRandomAlien();
 
-	const Vector2 projectilePosition = { shootingAlien.position_.x, shootingAlien.position_.y + 40.0f };
+	const Vector2 projectilePosition = { shootingAlien.getPositionX(), shootingAlien.getPositionY() + 40.0f};
 	alienProjectiles_.emplace_back(projectilePosition, -15);
 	alienShootCooldown_ = 0.0f;
 }
 
 Alien& Game::selectRandomAlien()
 {
-	assert(aliens_.empty() == false);
+	assert(!aliens_.empty());
 	static std::default_random_engine rng(std::random_device{}());
 	std::uniform_int_distribution<size_t> dist(0, aliens_.size() - 1);
 	const size_t randomAlienIndex = dist(rng);
 	assert(randomAlienIndex < aliens_.size());
-	//TODO: feel free to silence the static analyzer here. You are guarantueed that index is in range
 	return aliens_[randomAlienIndex];
 }
 
@@ -308,8 +305,8 @@ void Game::playerShoot()
 	if (IsKeyPressed(KEY_SPACE))
 	{
 		const Vector2 projectileSpawnPos = {
-			player_.position_.x,
-			player_.position_.y - 50.0f  // Spawn from top of player collision box
+			player_.getPositionX(),
+			player_.getTopEdge()
 		};
 		playerProjectiles_.emplace_back(projectileSpawnPos);
 	}

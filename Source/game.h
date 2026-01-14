@@ -18,9 +18,9 @@ enum struct State
 	ENDSCREEN
 };
 
-struct AlienFormationConfig //TODO: is this a config? it doesn't seem to be an alien formation
+struct AlienFormationConfig
 {
-	static constexpr int formationWidth_ = 8; //TODO: if these are settings / configs that never change, consider static constexpr
+	static constexpr int formationWidth_ = 8;
 	static constexpr int formationHeight_ = 5;
 	static constexpr int alienSpacing_ = 80;
 	static constexpr Vector2 initialPosition_ = { 550.0f, 50.0f };

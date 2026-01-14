@@ -21,6 +21,12 @@
 #pragma warning(disable: 26812) // prefer enum class over enum
 #include "raylib.h"
 #pragma warning(pop)
+
+// Suppress warnings for project code
+#pragma warning(disable: 26432) // define or delete all default operations
+#pragma warning(disable: 26446) // prefer gsl::at over subscript operator
+#pragma warning(disable: 26455) // default constructor should not throw
+
 #include <utility>
 
 namespace gsl {
@@ -29,7 +35,6 @@ namespace gsl {
 		return static_cast<T>(std::forward<U>(u));
 	}
 }
-
 
 inline void DrawRectangleLines(const Rectangle& r, Color c) noexcept {
 	DrawRectangleLines(static_cast<int>(r.x), static_cast<int>(r.y), static_cast<int>(r.width), static_cast<int>(r.height), c);

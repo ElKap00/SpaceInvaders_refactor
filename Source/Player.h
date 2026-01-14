@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib_wrapper.h"
 #include <iostream>
+#include <cassert>
 
 struct Player
 {
@@ -31,6 +32,8 @@ struct Player
 	{
 		return { position_.x - collisionBoxOffsetX_, position_.y - collisionBoxOffsetY_, width_, height_ };
 	}
+
+	float getTopEdge() const noexcept { return position_.y - collisionBoxOffsetY_; }
 
 	float getPositionX() const noexcept { return position_.x; }
 
@@ -82,6 +85,7 @@ struct Player
 
 	void render() const noexcept
 	{
+		assert(activeTexture_ >= 0 && activeTexture_ < static_cast<int>(shipTextures_.size()));
 		DrawTexture(shipTextures_[activeTexture_],
 			static_cast<int>(position_.x - textureOffsetX_),
 			static_cast<int>(position_.y - textureOffsetY_),
